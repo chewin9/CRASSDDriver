@@ -5,10 +5,7 @@
 
 class TestScript {
 public:
-	void script1_FullWriteAndReadCompare()
-	{
-
-	}
+	void script1_FullWriteAndReadCompare();
 };
 
 #endif
