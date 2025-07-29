@@ -4,24 +4,36 @@
 #include "test.h"
 
 #include <memory>
+#include <string>
+#include <cctype>
 
-
-TEST(shell_write, ssd_write) {
-	// TC 시나리오 
-	// shell이 입력되어 사용자 입력'write'을 받으면, 
-	// ssd app을 실행시키고 << mock 대상임
-	// 저장 명령을 수행한다. 
-	// 사용자 입력 예시는 "write 3 0xAAAABBBB" 
-	// 실제로는 아래처럼 내려감 >>"ssd.exe W 3 0xAAAABBBB"
-
-	// 매개 변수가 유효한지 검사를 수행한다. 
-
-	// 없는 명령어의 경우 invalid command를 콘솔에 출력한다. 
-
+class ShellWriteTestFixture : public ::testing::Test {
+public:
 	MockProcessExecutor executor;
-	ShellWrite shell_write(&executor);
+	ShellWrite* shell_write;
 
-	EXPECT_CALL(executor, Process);
+	void SetUp() override {
+		shell_write = new ShellWrite(&executor);
+	}
 
-	shell_write.IssueWrite("write 3 0xAAAABBBB");
+	void TearDown() override {
+		delete shell_write;
+	}
+};
+
+TEST_F(ShellWriteTestFixture, ssd_write) {
+
+	EXPECT_CALL(executor, Process).Times(1).WillOnce(testing::Return(0));
+
+	shell_write->IssueWrite("write 3 0xAAAABBBB");
+}
+
+TEST_F(ShellWriteTestFixture, ssd_write_checkWriteParam) {
+
+	/*
+	std::ostringstream oss;
+	oldCoutStreamBuf = std::cout.rdbuf();
+	std::cout.rdbuf(oss.rdbuf());
+	*/
+	shell_write->IssueWrite("write 100000 0xAAAABBBB");
 }
