@@ -38,7 +38,7 @@ TEST_F(ShellWriteTestFixture, ssd_write_checkparam_writeLBA) {
 	shell_write->IssueWrite("write 100000 0xAAAABBBB");
 
 	std::string originalStr = oss.str();
-	std::string INVALID_COMMAND = "INVALID_COMMAND";
+	std::string INVALID_COMMAND = "INVALID_COMMAND\n";
 	EXPECT_EQ(originalStr, INVALID_COMMAND);
 
 	//teardown 
