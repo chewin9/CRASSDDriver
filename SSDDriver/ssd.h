@@ -22,7 +22,7 @@ public:
             if (!fs_) return false;
         }
 
-        
+
 
         fs_ << LBA << " " << value << std::endl;
 
