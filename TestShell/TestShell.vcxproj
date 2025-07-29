@@ -131,6 +131,8 @@
     <ClCompile Include="shell_write.h" />
     <ClCompile Include="shell_write_test.cpp" />
     <ClCompile Include="test.cpp" />
+    <ClCompile Include="testscript.cpp" />
+    <ClCompile Include="testscript_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -138,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="process_executor.h" />
+    <ClInclude Include="testscript.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
