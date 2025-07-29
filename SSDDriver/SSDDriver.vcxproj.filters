@@ -18,8 +18,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include=".gitignore" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
@@ -37,9 +37,18 @@
     <ClCompile Include="file_io.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="readcommand.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="readcommand_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="file_io.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="readcommand.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
