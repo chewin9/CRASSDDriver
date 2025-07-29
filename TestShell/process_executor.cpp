@@ -1,6 +1,6 @@
 #include "process_executor.h"
 #include <cstdlib>
 
-void ProcessExecutor::readExecutor(const std::string& command) {
-    system(command.c_str());
+void ProcessExecutor::Process(const std::string& commandLine) {
+    system(commandLine.c_str());
 }

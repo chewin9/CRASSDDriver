@@ -4,5 +4,5 @@
 class IProcessExecutor {
 public:
     virtual ~IProcessExecutor() = default;
-    virtual void readExecutor(const std::string& command) = 0;
+    virtual void Process(const std::string& command) = 0;
 };

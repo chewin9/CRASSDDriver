@@ -7,7 +7,7 @@
 Shell::Shell(ProcessExecutor* executor) : executor_(executor) {}
 
 std::string Shell::read(int index) {
-	executor_->readExecutor("aa.exe");
+	executor_->Process("ssd_executor.exe");
 
 	std::ifstream ssdOutputFp("ssd_output.txt");
 
