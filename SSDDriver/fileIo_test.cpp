@@ -1,26 +1,28 @@
 #include "gmock/gmock.h"
 #include <iostream>
-#include "ssd.h"
+#include "file_io.h"
 
 using namespace::testing;
 
-TEST(SSD, Wirte3) {
-	FileIO file;
-
-	int LBA = 3;
-	std::string value = "0x1298CDEF";
-
-	EXPECT_EQ(true, file.Write(LBA, value));
-
-
-}
-//ssd W 2 0xAAAABBBB
-TEST(SSD, Write2) {
+TEST(SSD, WriteNewFile) {
 	FileIO file;
 
 	int LBA = 2;
 	std::string value = "0xAAAABBBB";
 
 	EXPECT_EQ(true, file.Write(LBA, value));
+}
 
+TEST(SSD, OverwirteNewLBA) {
+	FileIO file;
+
+	
+	int LBA = 2;
+	std::string value = "0xAAAABBBB";
+	file.Write(LBA, value);
+
+	LBA = 3;
+	value = "0x1298CDEF";
+
+	EXPECT_EQ(true, file.Write(LBA, value));
 }
