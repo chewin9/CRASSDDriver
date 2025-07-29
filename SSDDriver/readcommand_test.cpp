@@ -19,18 +19,18 @@ class ReadCommandFixture : public Test {
 
 TEST_F(ReadCommandFixture, NormalRead) {
   for (int i = 0; i < MAX_VAL_SIZE; i++) {
-    EXPECT_TRUE(rc.Read(normalLba, normalValue));
+    EXPECT_TRUE(rc.Execute(normalLba, normalValue));
   }
 }
 
 TEST_F(ReadCommandFixture, ReadWithAbnormalLba) {
   for (int i = 0; i < abnormalValue.size(); i++) {
-    EXPECT_FALSE(rc.Read(normalLba, abnormalValue[i]));
+    EXPECT_FALSE(rc.Execute(normalLba, abnormalValue[i]));
   }
 }
 
 TEST_F(ReadCommandFixture, ReadWithAbnormalLbaAndAbnormalValue) {
   for (int i = 0; i < abnormalValue.size(); i++) {
-    EXPECT_FALSE(rc.Read(abnormalLba, abnormalValue[i]));
+    EXPECT_FALSE(rc.Execute(abnormalLba, abnormalValue[i]));
   }
 }
