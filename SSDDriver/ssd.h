@@ -6,6 +6,9 @@
 #include <filesystem>
 #include <sstream>
 
+#include <vector>
+#include <cstdio> 
+
 class FileIO {
 public:
     static constexpr int LBA_BYTE = 4;
@@ -13,11 +16,16 @@ public:
     static constexpr int LBA_MAX = 99;
 
     bool Write(const int LBA, const std::string& value) {
+
         if (!fs_.is_open()) {
             fs_.open(SSD_NAND_FILE, std::ios::out | std::ios::app);
             if (!fs_) return false;
         }
+
+        
+
         fs_ << LBA << " " << value << std::endl;
+
         fs_.flush();
         return true;
     }
