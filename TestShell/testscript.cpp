@@ -1,6 +1,5 @@
 #include "testscript.h"
 
-void script1_FullWriteAndReadCompare()
-{
-	
+void TestScript::script1_FullWriteAndReadCompare() {
+
 }
