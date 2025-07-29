@@ -26,6 +26,14 @@ public:
 	}
 };
 
+class PartialLBAWrite : public TestScript {
+public:
+	PartialLBAWrite(std::string name) : TestScript(name) {}
+	void Run(void) override {
+
+	}
+};
+
 class TestScriptRunner {
 public:
 	TestScriptRunner(IProcessExecutor* exe);

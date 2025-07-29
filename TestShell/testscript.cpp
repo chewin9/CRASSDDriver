@@ -1,4 +1,5 @@
 #include "testscript.h"
+#include <iostream>
 
 TestScriptRunner::TestScriptRunner(IProcessExecutor* exe) : execute(exe) {
 	addScripts();
@@ -20,4 +21,9 @@ void TestScriptRunner::addScripts() {
 int TestScriptRunner::parseCommandLine(const std::string& commandLine) {
 
 	return 1;
+}
+
+void TestScript::script2_PartialLBAWrite(void)
+{
+	
 }
