@@ -1,12 +1,12 @@
 #include "gmock/gmock.h"
 #include "testscript.h"
-
-class SSDMock : public IProcessExecutor {
-public:
-	MOCK_METHOD((int), Process, (const std::string&), (override));
-};
+#include "test.h"
 
 TEST(testscript, 1_FullWriteAndReadCompare) {
-	SSDMock mock;
+	MockProcessExecutor mock;
+	TestScript script{&mock};
+
 	EXPECT_CALL(mock, Process("copy")).Times(1);
+
+	script.script1_FullWriteAndReadCompare();
 }

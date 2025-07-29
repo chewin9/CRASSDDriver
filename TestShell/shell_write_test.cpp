@@ -1,13 +1,9 @@
 #include "gmock/gmock.h"
 #include "iprocess_executor.h"
 #include "shell_write.h"
+#include "test.h"
 
 #include <memory>
-
-class MockProcessExecutor : public IProcessExecutor {
-public:
-	MOCK_METHOD(int, Process, (const std::string& commandLine), (override));
-};
 
 TEST(shell_write, ssd_write) {
 	// TC 시나리오 
