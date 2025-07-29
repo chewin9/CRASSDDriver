@@ -9,7 +9,7 @@
 
 class ShellWriteTestFixture : public ::testing::Test {
 public:
-	MockProcessExecutor executor;
+	testing::NiceMock<MockProcessExecutor> executor;
 	ShellWrite* shell_write;
 
 	void SetUp() override {
@@ -28,12 +28,19 @@ TEST_F(ShellWriteTestFixture, ssd_write) {
 	shell_write->IssueWrite("write 3 0xAAAABBBB");
 }
 
-TEST_F(ShellWriteTestFixture, ssd_write_checkWriteParam) {
-
-	/*
+TEST_F(ShellWriteTestFixture, ssd_write_checkparam_writeLBA) {
+	//setup 
 	std::ostringstream oss;
+	std::streambuf* oldCoutStreamBuf;
 	oldCoutStreamBuf = std::cout.rdbuf();
 	std::cout.rdbuf(oss.rdbuf());
-	*/
+
 	shell_write->IssueWrite("write 100000 0xAAAABBBB");
+
+	std::string originalStr = oss.str();
+	std::string INVALID_COMMAND = "INVALID_COMMAND";
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
+
+	//teardown 
+	std::cout.rdbuf(oldCoutStreamBuf);
 }
