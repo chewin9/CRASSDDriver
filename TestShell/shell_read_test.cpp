@@ -10,9 +10,10 @@ public:
 TEST(TS, TSRead01) {
 	MockProcessExecutor mockExecutor;
 	EXPECT_CALL(mockExecutor, readExecutor("aa.exe"))
-		.Times(1);
+		.Times(2);
 
 	Shell shell(&mockExecutor);
 
 	EXPECT_EQ(shell.read(0), "0x12345678");
+	EXPECT_EQ(shell.read(1), "0x23456789");
 }

@@ -1,24 +1,24 @@
 #include "shell.h"
-#include<string>
-#include<fstream>
-#include<iostream>
+#include <string>
+#include <fstream>
+#include <iostream>
 #include <sstream>
 
 Shell::Shell(ProcessExecutor* executor) : executor_(executor) {}
 
-std::string Shell::read(int command) {
+std::string Shell::read(int index) {
 	executor_->readExecutor("aa.exe");
 
 	std::ifstream ssdOutputFp("ssd_output.txt");
-	std::string outputData = "";
 
 	if (!ssdOutputFp.is_open()) {
 		std::cout << "open fail\n";
 	}
-	if (!std::getline(ssdOutputFp, outputData)) return "";
+	std::string outputData((std::istreambuf_iterator<char>(ssdOutputFp)),
+		std::istreambuf_iterator<char>());
 	ssdOutputFp.close();
 
-	std::string ret = findOutput(outputData, 0);
+	std::string ret = findOutput(outputData, index);
 	return ret;
 }
 
