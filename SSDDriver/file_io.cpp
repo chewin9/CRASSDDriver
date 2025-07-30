@@ -5,12 +5,7 @@
 #include <sstream>
 #include <vector>
 
-bool FileIO::WriteErrorOutput() {
-  if (!OpenOutput(SSD_OUTPUT_FILE)) return false;
-  m_output << "ERROR" << "\n";
-  CloseOutput();
-  return true;
-}
+
 
 bool FileIO::OpenInput() {
   m_input.open(SSD_NAND_FILE);
@@ -63,6 +58,15 @@ void FileIO::CloseOutput() {
     m_output.close();
   }
 }
+
+
+bool FileIO::WriteErrorOutput() {
+    if (!OpenOutput(SSD_OUTPUT_FILE)) return false;
+    m_output << "ERROR" << "\n";
+    CloseOutput();
+    return true;
+}
+
 
 void FileIO::WriteOutput(ParsedCommand pc) {
   if (pc.errorFlag) {
