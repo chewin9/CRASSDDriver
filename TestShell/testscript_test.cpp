@@ -183,3 +183,31 @@ TEST(testscript, 2_CmdTestFail) {
 
 	EXPECT_EQ(false, script.runScript("2_"));
 }
+
+TEST(testscript, DISABLED_3_WriteReadAgingNormal) {
+	NiceMock<MockProcessExecutor> mock;
+	TestScriptRunner script{ &mock };
+
+	EXPECT_TRUE(script.runScript("3_WriteReadAgingNormal"));
+}
+
+TEST(testscript, DISABLED_3_WriteReadAgingShort) {
+	NiceMock<MockProcessExecutor> mock;
+	TestScriptRunner script{ &mock };
+
+	EXPECT_TRUE(script.runScript("3_"));
+}
+
+TEST(testscript, 3_WriteReadAgingNotMatch) {
+	NiceMock<MockProcessExecutor> mock;
+	TestScriptRunner script{ &mock };
+
+	EXPECT_FALSE(script.runScript("3_3"));
+}
+
+TEST(testscript, 3_WriteReadAgingRunFail) {
+	NiceMock<MockProcessExecutor> mock;
+	TestScriptRunner script{ &mock };
+
+	EXPECT_FALSE(script.runScript("3_"));
+}
