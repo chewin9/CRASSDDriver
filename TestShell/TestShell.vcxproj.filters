@@ -11,6 +11,7 @@
     <ClCompile Include="process_executor.cpp" />
     <ClCompile Include="shell_read_test.cpp" />
     <ClCompile Include="shell_read.cpp" />
+    <ClCompile Include="shell_write.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">

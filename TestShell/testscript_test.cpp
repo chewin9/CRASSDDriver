@@ -4,11 +4,40 @@
 
 using namespace testing;
 
-TEST(testscript, 1_FullWriteAndReadCompare) {
-	testing::NiceMock<MockProcessExecutor> mock;
+TEST(testscript, 1_FullWriteAndReadCompareBasic) {
+	NiceMock<MockProcessExecutor> mock;
 	TestScriptRunner script{&mock};
 
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
+
 	EXPECT_TRUE(script.runScript("1_FullWriteAndReadCompare"));
+}
+
+TEST(testscript, 1_FullWriteAndReadCompareShortType) {
+	NiceMock<MockProcessExecutor> mock;
+	TestScriptRunner script{&mock};
+
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
+
+	EXPECT_TRUE(script.runScript("1_"));
+}
+
+TEST(testscript, 1_FullWriteAndReadCompareInvalidScript) {
+	NiceMock<MockProcessExecutor> mock;
+	TestScriptRunner script{&mock};
+
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
+
+	EXPECT_FALSE(script.runScript("1_1"));
+}
+
+TEST(testscript, 1_FullWriteAndReadCompareScriptRunFail) {
+	NiceMock<MockProcessExecutor> mock;
+	TestScriptRunner script{ &mock };
+
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(4));
+
+	EXPECT_FALSE(script.runScript("1_"));
 }
 
 TEST(testscript, 2_PartialLBAWriteCmdTestPass) {
