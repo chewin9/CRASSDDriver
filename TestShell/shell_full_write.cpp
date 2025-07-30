@@ -7,30 +7,12 @@
 #include <vector>
 #include <sstream>
 
-const int START_LBA = 0;
-const int END_LBA = 100;
-
 void ShellFullWrite::IssueFullWrite(std::string cmd) 
 {
 	std::vector<std::string> cmds = splitBySpace(cmd);
-
-	if (cmds.size() != 2) {
-		std::cout << "INVALID_COMMAND" << std::endl;
-		return;
-	}
-
 	std::string value = cmds[1];
-	if (value.size() != 10) {
-		std::cout << "INVALID_COMMAND" << std::endl;
-		return;
-	}
-
-	if (value.find("0x") != 0) {
-		std::cout << "INVALID_COMMAND" << std::endl;
-		return;
-	}
-
-	if (false == is_valid_unsigned(value)){
+	
+	if (false == checkParameterValid(cmd)) {
 		std::cout << "INVALID_COMMAND" << std::endl;
 		return;
 	}
@@ -40,6 +22,28 @@ void ShellFullWrite::IssueFullWrite(std::string cmd)
 		executor_->Process(cmdLine);
 	}
 	std::cout << "[WriteFull] Done" << std::endl;
+}
+
+bool ShellFullWrite::checkParameterValid(std::string& cmd)
+{
+	std::vector<std::string> cmds = splitBySpace(cmd);
+	std::string value = cmds[1];
+	if (cmds.size() != 2) {
+		return false;
+	}
+
+	if (value.size() != 10) {
+		return false;
+	}
+
+	if (value.find("0x") != 0) {
+		return false;
+	}
+
+	if (false == is_valid_unsigned(value)) {
+		return false;
+	}
+	return true;
 }
 
 std::vector<std::string> ShellFullWrite::splitBySpace(const std::string& str) {
