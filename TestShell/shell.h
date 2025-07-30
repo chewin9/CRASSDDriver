@@ -16,7 +16,16 @@ public:
         script_runner = new TestScriptRunner(&executor);
         shell_help = new ShellHelp(&executor);
     };
+
+    Shell(IProcessExecutor * exe) {
+        shell_read = new ShellRead(exe);
+        shell_write = new ShellWrite(exe);
+        shell_fullwrite = new ShellFullWrite(exe);
+        script_runner = new TestScriptRunner(exe);
+    }
+
     int Run(void);
+    virtual string get_command(string& input);
 
 private:
     ProcessExecutor executor;
@@ -26,4 +35,6 @@ private:
     ShellHelp* shell_help;
 
     TestScriptRunner* script_runner;
+
+    std::tuple<std::string, std::string> parse_command(const std::string& input);
 };

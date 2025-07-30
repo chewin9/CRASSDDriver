@@ -22,6 +22,7 @@ public:
 	void WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value);
 	bool ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value);
 	std::string GetSSDName() { return SSD_NAME; }
+	std::string ReadOutputFile(const std::string& filename = "ssd_output.txt");
 
 protected:
 	std::string m_name = nullptr;
