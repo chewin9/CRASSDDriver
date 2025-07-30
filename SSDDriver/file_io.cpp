@@ -1,92 +1,120 @@
 #include "file_io.h"
+
+#include <fstream>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
-
 bool FileIO::WriteErrorOutput() {
-
-    if (!OpenOutput(SSD_OUTPUT_FILE)) return false;
-
-    m_output << "ERROR" << "\n";
-    CloseOutput();
-    return true;
+  if (!OpenOutput(SSD_OUTPUT_FILE)) return false;
+  m_output << "ERROR" << "\n";
+  CloseOutput();
+  return true;
 }
 
 bool FileIO::OpenInput() {
-    m_input.open(SSD_NAND_FILE);
-    if (!m_input.is_open()) return false;
+  m_input.open(SSD_NAND_FILE);
+  return m_input.is_open();
 }
 
-std::vector<std::pair<int, std::string>> FileIO::getEntriesFromInput(ParsedCommand pc) { 
-    OpenInput();
+std::vector<std::pair<int, std::string>> FileIO::getEntriesFromInput(
+    ParsedCommand pc) {
+  OpenInput();
+  bool updated = false;
+  std::vector<std::pair<int, std::string>> entries;
 
-    std::vector<std::pair<int, std::string>> entries;
-    bool updated = false;
+  std::string line;
+  while (std::getline(m_input, line)) {
+    std::istringstream iss(line);
+    int existing_LBA;
+    std::string existing_value;
 
-    std::string line;
-    while (std::getline(m_input, line)) {
-        std::istringstream iss(line);
-
-        int existing_LBA;
-        std::string existing_value;
-
-        if (iss >> existing_LBA >> existing_value) {
-            if (existing_LBA == pc.lba) {
-
-                entries.emplace_back(pc.lba, pc.value);
-                updated = true;
-            }
-            else {
-                entries.emplace_back(existing_LBA, existing_value);
-            }
-        }
-    }
-
-    if (!updated) {
+    if (iss >> existing_LBA >> existing_value) {
+      if (existing_LBA == pc.lba) {
         entries.emplace_back(pc.lba, pc.value);
+        updated = true;
+      } else {
+        entries.emplace_back(existing_LBA, existing_value);
+      }
     }
+  }
 
-    CloseInput();
+  if (!updated) {
+    entries.emplace_back(pc.lba, pc.value);
+  }
 
-    return entries;
+  CloseInput();
+  return entries;
 }
 
 void FileIO::CloseInput() {
-    if (m_input.is_open()) {
-        m_input.close();
-    }
+  if (m_input.is_open()) {
+    m_input.close();
+  }
 }
-
-
-void FileIO::WriteOutput(ParsedCommand pc) {
-
-    if (pc.errorFlag) {
-        WriteErrorOutput();
-        return;
-    }
-       
-    std::vector<std::pair<int, std::string>> entries =  getEntriesFromInput(pc);
-
-    OpenOutput(SSD_NAND_FILE);
-    for (const auto& entry : entries) {
-        m_output << entry.first << " " << entry.second << "\n";
-    }
-    CloseOutput();
-}
-
 
 bool FileIO::OpenOutput(std::string file) {
-
-    m_output.open(file, std::ios::out | std::ios::trunc);
-    if (!m_output.is_open()) return false;
-    return true;
+  m_output.open(file, std::ios::out | std::ios::trunc);
+  return m_output.is_open();
 }
 
 void FileIO::CloseOutput() {
-    if (m_output.is_open()) {
-        m_output.close();
-    }
+  if (m_output.is_open()) {
+    m_output.close();
+  }
 }
 
-FileIO::~FileIO() {
+void FileIO::WriteOutput(ParsedCommand pc) {
+  if (pc.errorFlag) {
+    WriteErrorOutput();
+    return;
+  }
+
+  std::vector<std::pair<int, std::string>> entries = getEntriesFromInput(pc);
+  OpenOutput(SSD_NAND_FILE);
+
+  for (const auto& entry : entries) {
+    m_output << entry.first << " " << entry.second << "\n";
+  }
+
+  CloseOutput();
 }
+
+void FileIO::WriteValueToOutputFile(std::string val) {
+  std::ofstream outFile(SSD_OUTPUT_FILE);
+  if (!outFile.is_open()) {
+    std::cerr << "오류: '" << SSD_OUTPUT_FILE << "' 파일을 열 수 없습니다.\n";
+    return;
+  }
+  outFile << val << std::endl;
+  outFile.close();
+}
+
+void FileIO::ReadNandFile(ParsedCommand pc) {
+  if (pc.errorFlag) {
+    WriteValueToOutputFile("ERROR");
+    return;
+  }
+
+  OpenInput();
+  std::string val = "0x00000000";
+  std::string line;
+
+  while (std::getline(m_input, line)) {
+    std::istringstream iss(line);
+    int existing_LBA;
+    std::string existing_value;
+
+    if (iss >> existing_LBA >> existing_value) {
+      if (existing_LBA == pc.lba) {
+        val = existing_value;
+        break;
+      }
+    }
+  }
+
+  CloseInput();
+  WriteValueToOutputFile(val);
+}
+
+FileIO::~FileIO() {}
