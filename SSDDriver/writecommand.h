@@ -1,10 +1,12 @@
 #pragma once
 
 #include "ICommand.h"
+#include "command_parser.h"
 
 class WriteCommand : public ICommand {
-public:
+  ParsedCommand cmdInfo;
 
-	bool Execute(int lba, std::string value) override;
-
+ public:
+  WriteCommand(ParsedCommand& cmdInfo) : cmdInfo{cmdInfo} {}
+  bool Execute() override;
 };

@@ -132,7 +132,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="command_runner_test.cpp" />
+    <ClCompile Include="command_factory.cpp" />
     <ClCompile Include="command_factory_test.cpp" />
     <ClCompile Include="command_parser.cpp" />
     <ClCompile Include="command_parser_test.cpp" />
@@ -144,6 +144,7 @@
     <ClCompile Include="writecommand.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="command_factory.h" />
     <ClInclude Include="command_parser.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="readcommand.h" />
