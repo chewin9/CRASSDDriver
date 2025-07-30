@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include "shell.h"
 
-#define UNIT_TEST (1)
+#define UNIT_TEST (0)
 
 #if (UNIT_TEST)
 int main(void) {

@@ -19,7 +19,7 @@ void ShellWrite::IssueWrite(const std::string& input) {
 }
 
 void ShellWrite::printError() {
-    std::cout << "INVALID_COMMAND" << std::endl;
+    std::cout << "INVALID COMMAND" << std::endl;
 }
 
 bool ShellWrite::checkParameterValid(const std::string& input)

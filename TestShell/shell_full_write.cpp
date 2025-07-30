@@ -10,7 +10,7 @@
 void ShellFullWrite::IssueFullWrite(const std::string& cmd) {
 
 	if (false == checkParameterValid(cmd)) {
-		std::cout << "INVALID_COMMAND" << std::endl;
+		std::cout << "INVALID COMMAND" << std::endl;
 		return;
 	}
 

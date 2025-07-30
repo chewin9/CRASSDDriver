@@ -36,7 +36,7 @@ int Shell::Run(void) {
             shell_fullwrite->IssueFullWrite(input);
         }
         else if (cmd == "read") {
-
+            shell_read->read(input);
         }
         else if (cmd == "fullread") {
 
@@ -45,7 +45,11 @@ int Shell::Run(void) {
 
         }
         else {
-            std::cout << "You typed: " << input << std::endl;
+            if (false == script_runner->runScript(input)) {
+                // no matching command
+                std::cout << "INVALID COMMAND" << std::endl;
+                std::cout << "You typed : " << input << std::endl;
+            }
         }
     }
     return 0;
