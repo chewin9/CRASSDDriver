@@ -12,11 +12,8 @@
     <ClCompile Include="shell_read_test.cpp" />
     <ClCompile Include="shell_read.cpp" />
     <ClCompile Include="shell_write.cpp" />
-<<<<<<< HEAD
-=======
     <ClCompile Include="shell_full_write.cpp" />
     <ClCompile Include="shell.cpp" />
->>>>>>> 12586fbc7df95da9fd14453a0a8c6f29de82f3b8
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
