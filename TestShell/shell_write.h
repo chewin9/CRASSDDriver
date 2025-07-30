@@ -11,6 +11,9 @@ public:
     void IssueWrite(const std::string& input);
 
 private:
+    const int START_LBA = 0;
+    const int END_LBA = 100;
+
     void printError();
 
     bool checkParameterValid(const std::string& input);

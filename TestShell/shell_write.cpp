@@ -15,6 +15,7 @@ void ShellWrite::IssueWrite(const std::string& input) {
 
     std::string cmdLine = "ssd.exe W " + input.substr(6);
     executor_->Process(cmdLine);
+    std::cout << "[Write] Done" << std::endl;
 }
 
 void ShellWrite::printError() {
@@ -36,12 +37,16 @@ bool ShellWrite::checkParameterValid(const std::string& input)
         return false;
     }
 
-    if (!((0 <= cmdLba) && (cmdLba < 100))) {
+    if (!((START_LBA <= cmdLba) && (cmdLba < END_LBA))) {
         return false;  // not valid command 
     }
 
     string data = cmdLineVector[2];
     if (data.length() != 10) {
+        return false;
+    }
+
+    if (data.find("0x") != 0) {
         return false;
     }
 
@@ -51,7 +56,6 @@ bool ShellWrite::checkParameterValid(const std::string& input)
 
     return true;
 }
-
 
 std::vector<std::string> ShellWrite::splitBySpace(const std::string& str) {
     std::istringstream iss(str);
