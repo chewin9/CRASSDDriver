@@ -16,7 +16,6 @@ public:
 	void TearDown() override {
 		delete readShell;
 		if (std::remove("ssd_output.txt") == 0) {
-			std::cout << "File remove Success\n";
 		}
 	}
 };

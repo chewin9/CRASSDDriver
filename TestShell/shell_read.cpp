@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <string>
+#include <iomanip>
 
 ShellRead::ShellRead(IProcessExecutor* executor) : executor_(executor) {}
 
@@ -13,6 +14,8 @@ std::string ShellRead::fullRead(const std::string input) {
 
 	std::string ret;
 	ret = appendSSDData();
+
+	std::cout << ret << "\n";
 
 	return ret;
 }
@@ -33,6 +36,14 @@ std::string ShellRead::read(const std::string input) {
 	int index = std::stoi(std::get<1>(parseCommand));
 	ret = getSSDOutputDataWithIndex(SsdData, index);
 
+	if (ret == ERROR_RETURN) {
+		std::cout << ret << "\n";
+	}
+	else {
+		std::cout << "[Read] LBA ";
+		std::cout << std::setw(2) << std::setfill('0') << index <<" ";
+		std::cout << ret << "\n";
+	}
 	return ret;
 }
 
