@@ -42,7 +42,7 @@
     <ClInclude Include="process_executor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="shell_read.h" />
+    <ClInclude Include="shell.h" />
     <ClInclude Include="shell_full_write.h" />
   </ItemGroup>
 </Project>

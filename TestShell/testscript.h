@@ -5,11 +5,12 @@
 
 class TestScript {
 public:
+
 	TestScript(std::string name) : m_name(name) {
 
 	}
 
-	virtual void Run() = 0;
+	virtual bool Run(IProcessExecutor* exe) = 0;
 	std::string GetName() {
 		return m_name;
 	}
@@ -21,15 +22,24 @@ protected:
 class FullWriteAndReadCompare : public TestScript {
 public:
 	FullWriteAndReadCompare(std::string name) : TestScript(name) {}
-	void Run() override {
+	bool Run(IProcessExecutor* exe) override {
 		//Script
+		return false;
 	}
+};
+
+class PartialLBAWrite : public TestScript {
+public:
+	PartialLBAWrite(std::string name) : TestScript(name) {}
+	bool Run(IProcessExecutor* exe) override;
+private:
+	const unsigned int MAX_LOOP_COUNT = 30;
 };
 
 class TestScriptRunner {
 public:
 	TestScriptRunner(IProcessExecutor* exe);
-	void runScript(const std::string& commandLine);
+	bool runScript(const std::string& commandLine);
 
 private:
 	//Method

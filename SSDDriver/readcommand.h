@@ -1,6 +1,10 @@
-#pragma once
 #include <string>
-class ReadCommand {
+#pragma once
+#include "ICommand.h"
+class ReadCommand : public ICommand {
+  ParsedCommand cmdInfo;
+
  public:
-  bool Execute(int lba, std::string value);
+  ReadCommand(ParsedCommand& cmdInfo) : cmdInfo{cmdInfo} {}
+  bool Execute() override;
 };
