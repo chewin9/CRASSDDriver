@@ -5,7 +5,7 @@
 
 using namespace testing;
 
-class PartialLBAWriteFixture : public Test
+class TestSciprtTestFixture : public Test
 {
 public:
 	void PartialWriteSetup(int callcount)
@@ -17,7 +17,7 @@ public:
 		}
 	}
 
-	void ReadSetUpPass()
+	void PartialReadSetUp()
 	{
 		for (int readcount = 0; readcount < MAX_TEST_BLOCK; ++readcount) {
 			std::string command = SSD_DRIVER_NAME + " R " + std::to_string(readcount);
@@ -46,34 +46,32 @@ private:
 	const std::string SSD_DRIVER_NAME = "ssd.exe";
 };
 
-TEST(testscript, 1_FullWriteAndReadCompare) {
-	testing::NiceMock<MockProcessExecutor> mock;
-	TestScriptRunner script{&mock};
+TEST_F(TestSciprtTestFixture, 1_FullWriteAndReadCompare) {
 
-	EXPECT_TRUE(script.runScript("1_FullWriteAndReadCompare"));
+	CheckResult(true, "1_FullWriteAndReadCompare");
 }
 
-TEST_F(PartialLBAWriteFixture, 2_PartialLBAWriteCmdTestPass) 
+TEST_F(TestSciprtTestFixture, 2_PartialLBAWriteCmdTestPass)
 {
 	PartialWriteSetup(30);
-	ReadSetUpPass();
+	PartialReadSetUp();
 	CheckResult(true, "2_PartialLBAWrite");
 }
 
-TEST_F(PartialLBAWriteFixture, 2_PartialLBAWriteCmdTestFail) 
+TEST_F(TestSciprtTestFixture, 2_PartialLBAWriteCmdTestFail)
 {
 	PartialWriteSetup(1);
 	ReadSetUpFail();
 	CheckResult(false, "2_PartialLBAWrite");
 }
 
-TEST_F(PartialLBAWriteFixture, 2_CmdTestPass) {
+TEST_F(TestSciprtTestFixture, 2_CmdTestPass) {
 	PartialWriteSetup(30);
-	ReadSetUpPass();
+	PartialReadSetUp();
 	CheckResult(true, "2_");
 }
 
-TEST_F(PartialLBAWriteFixture, 2_CmdTestFail) {
+TEST_F(TestSciprtTestFixture, 2_CmdTestFail) {
 	PartialWriteSetup(1);
 	ReadSetUpFail();
 	CheckResult(false, "2_");
