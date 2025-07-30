@@ -58,7 +58,7 @@ std::string TestScript::GetName() {
 	return m_name;
 }
 
-std::string TestScript::makeWriteCommand(IProcessExecutor* exe, unsigned int addr, unsigned int value) {
+std::string TestScript::makeWriteCommand(unsigned int addr, unsigned int value) {
 	std::string format;
 	char str[11];
 	sprintf_s(str, "0x%x", value);
@@ -67,21 +67,37 @@ std::string TestScript::makeWriteCommand(IProcessExecutor* exe, unsigned int add
 	return result;
 }
 
-std::string TestScript::makeReadCommand(IProcessExecutor* exe, unsigned int addr) {
+std::string TestScript::makeReadCommand(unsigned int addr) {
 	std::string str = "R " + std::to_string(addr);
 	return str;
 }
 
 void TestScript::WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value) {
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
-		exe->Process(makeWriteCommand(exe, index, value));
+		exe->Process(makeWriteCommand(index, value));
 	}
 }
 
 bool TestScript::ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value) {
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
-		if (exe->Process(makeReadCommand(exe, index)) != value) {
+		if (exe->Process(makeReadCommand(index)) != value) {
 			return false;
+		}
+	}
+
+	return true;
+}
+
+bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
+	//Script
+	int value = 5;
+	int start = 0;
+	const int length = 5;
+
+	for (start = 0; start < MAX_ADDR; start += length) {
+		for (int index = start;index < start + length; index++) {
+			WriteBlock(exe, start, 5, value);
+			if (ReadCompare(exe, start, length, value) == false) return false;
 		}
 	}
 
