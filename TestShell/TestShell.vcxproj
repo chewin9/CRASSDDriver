@@ -134,13 +134,13 @@
     <ClCompile Include="testscript_test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="process_executor.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="testscript.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
