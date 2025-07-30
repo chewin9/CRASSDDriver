@@ -5,7 +5,7 @@
 
 bool WriteCommand::Execute(int LBA, std::string value) {
 
-    std::ifstream input(ICommand::SSD_NAND_FILE);
+    std::ifstream input("ssd_nand.txt");
     std::vector<std::pair<int, std::string>> entries;
     bool updated = false;
 
@@ -25,14 +25,14 @@ bool WriteCommand::Execute(int LBA, std::string value) {
                 }
             }
         }
-        input.close();
+        input.close(); //TODO: move file io functions to file_io.cpp
     }
 
     if (!updated) {
         entries.emplace_back(LBA, value);
     }
 
-    std::ofstream output(SSD_NAND_FILE, std::ios::out | std::ios::trunc);
+    std::ofstream output("ssd_nand.txt", std::ios::out | std::ios::trunc);
     if (!output.is_open()) return false;
 
     for (const auto& entry : entries) {
@@ -43,8 +43,3 @@ bool WriteCommand::Execute(int LBA, std::string value) {
     return true;
 
 };
-
-bool WriteCommand::Execute() {
-    std::cerr << "Execute() without parameters is not supported in WriteCommand.\n";
-    return false;
-}

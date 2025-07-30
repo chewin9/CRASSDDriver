@@ -6,6 +6,5 @@ class WriteCommand : public ICommand {
 public:
 
 	bool Execute(int lba, std::string value) override;
-	bool Execute() override;
 
 };
