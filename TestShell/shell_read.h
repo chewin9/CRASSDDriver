@@ -12,5 +12,10 @@ private:
     std::string getSSDDataWithIndex(const std::string& data, int index);
     std::string getSSDData(void);
     std::tuple<std::string, std::string> parse_command(const std::string& input);
+    bool isInvalidIndex(int index);
     const std::string NO_SSD_DATA = "0x00000000";
+    const std::string OUT_OF_INDEX = "ERROR";
+    const std::string READ_COMMAND = "read";
+    const int MIN_INDEX = 0;
+    const int MAX_INDEX = 100;
 };

@@ -10,7 +10,7 @@ std::string ShellRead::read(const std::string input) {
     std::tuple<std::string, std::string> parseCommand = parse_command(input);
 
     //SSD ผ๖วเ
-    if (std::get<0>(parseCommand) == "READ") {
+    if (std::get<0>(parseCommand) == READ_COMMAND) {
         std::string cmdLine = "ssd.exe R " + std::get<1>(parseCommand);
         executor_->Process(cmdLine);
     }
@@ -27,6 +27,9 @@ std::string ShellRead::read(const std::string input) {
 
 
 std::string ShellRead::getSSDDataWithIndex(const std::string& data, int index) {
+    if (isInvalidIndex(index)) {
+        return OUT_OF_INDEX;
+    }
     std::istringstream iss(data);
     std::string line;
     while (std::getline(iss, line)) {
@@ -62,4 +65,11 @@ std::string ShellRead::getSSDData(void) {
     file.close();
 
     return ret;
+}
+
+bool ShellRead::isInvalidIndex(int index) {
+    if (index < MIN_INDEX || index >= MAX_INDEX) {
+        return true;
+    }
+    return false;
 }
