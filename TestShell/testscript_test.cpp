@@ -3,10 +3,8 @@
 #include "test.h"
 
 TEST(testscript, 1_FullWriteAndReadCompare) {
-	MockProcessExecutor mock;
+	testing::NiceMock<MockProcessExecutor> mock;
 	TestScriptRunner script{&mock};
 
-	EXPECT_CALL(mock, Process("copy")).Times(1);
-
-	script.runScript("1_FullWriteAndReadCompare");
+	EXPECT_TRUE(script.runScript("1_FullWriteAndReadCompare"));
 }
