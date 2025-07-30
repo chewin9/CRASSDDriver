@@ -10,7 +10,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -32,12 +31,10 @@
     <ClCompile Include="process_executor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-=======
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="process_executor.h" />
     <ClInclude Include="testscript.h" />
     <ClInclude Include="test.h" />
->>>>>>> origin/master
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
