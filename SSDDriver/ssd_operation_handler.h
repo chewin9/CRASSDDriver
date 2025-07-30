@@ -5,7 +5,7 @@ class SsdOperationHandler {
  private:
   std::vector<std::pair<int, std::string>> nandData;
   FileIO& fileHandler;
-  ParsedCommand cmdInfo;
+  ParsedCommand& cmdInfo;
 
  public:
   SsdOperationHandler(FileIO& handler, ParsedCommand& cmdInfo)
