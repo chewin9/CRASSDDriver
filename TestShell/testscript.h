@@ -68,6 +68,7 @@ class TestScriptRunner {
 public:
 	TestScriptRunner(IProcessExecutor* exe);
 	bool runScript(const std::string& commandLine);
+	bool IsValidSciprtCommand(const std::string& commandLine);
 
 private:
 	//Method

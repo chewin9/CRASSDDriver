@@ -21,6 +21,14 @@ bool TestScriptRunner::runScript(const std::string& commandLine) {
 	return testScripts.at(commandIdx)->Run(execute);
 }
 
+bool TestScriptRunner::IsValidSciprtCommand(const std::string& commandLine) {
+	if (parseCommandLine(commandLine) == INVALID_INDEX) {
+		return false;
+	}
+
+	return true;
+}
+
 void TestScriptRunner::addScripts() {
 	testScripts.push_back(new DummyScript("0_Dummy"));
 	testScripts.push_back(new FullWriteAndReadCompare("1_FullWriteAndReadCompare"));
@@ -86,7 +94,8 @@ void TestScript::WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsig
 bool TestScript::ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value) {
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeReadCommand(index));
-		if (stoi(ReadOutputFile().substr(2, 10)) != value) {
+		if (std::stoi(ReadOutputFile().substr(2, 10), nullptr, 16) != value) {
+			
 			return false;
 		}
 	}
@@ -144,7 +153,8 @@ bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe)
 	bool IsPass = true;
 
 	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
-		IsPass = IsPass && (exe->Process(makeReadCommand(readcount)) == std::stoul(value_list[readcount], nullptr, 16));
+		exe->Process(makeReadCommand(readcount));
+		IsPass = IsPass && (stoi(ReadOutputFile().substr(2, 10)) == std::stoul(value_list[readcount], nullptr, 16));
 	}
 
 	return IsPass;
@@ -161,11 +171,14 @@ void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
 bool WriteReadAging::Run(IProcessExecutor* exe) {
 	//Script
 	std::srand(std::time({}));
+	unsigned int data = rand();
 
 	for (int count = 0; count < 200; count++) {
-		unsigned int data = rand();
+		
 		WriteBlock(exe, 0, 1, data);
+		if (ReadCompare(exe, 0, 1, data) == false) return false;
 
+		WriteBlock(exe, 99, 1, data);
 		if (ReadCompare(exe, 99, 1, data) == false) return false;
 	}
 
