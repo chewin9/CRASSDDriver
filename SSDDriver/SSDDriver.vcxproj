@@ -140,12 +140,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="readcommand.cpp" />
     <ClCompile Include="readcommand_test.cpp" />
+    <ClCompile Include="writecommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command_parser.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="readcommand.h" />
     <ClInclude Include="ssd_driver_config.h" />
+    <ClInclude Include="writecommand.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="file_io.h" />

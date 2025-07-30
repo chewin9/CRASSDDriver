@@ -46,6 +46,9 @@
     <ClCompile Include="ICommand.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="writecommand.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="file_io.h">
@@ -61,6 +64,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ICommand.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="writecommand.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
