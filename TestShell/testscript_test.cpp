@@ -38,17 +38,34 @@ public:
 	{
 		EXPECT_EQ(expected, script.runScript(cmdline));
 	}
-private:
+protected:
 	NiceMock<MockProcessExecutor> mock;
+
+private:
 	TestScriptRunner script{ &mock };
-	std::vector<std::string> value_list = { "0x1", "0x2", "0x3","0x4","0x5" };
+	std::vector<std::string> value_list = { "0x00000001", "0x00000002", "0x00000003","0x00000004","0x00000005" };
 	const int MAX_TEST_BLOCK = 5;
-	const std::string SSD_DRIVER_NAME = "ssd.exe";
+	const std::string SSD_DRIVER_NAME = "SSDDriver.exe";
 };
 
 TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompare) {
-
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
 	CheckResult(true, "1_FullWriteAndReadCompare");
+}
+
+TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompareShortType) {
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
+	CheckResult(true, "1_");
+}
+
+TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompareInvalidScript) {
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
+	CheckResult(false, "1_1");
+}
+
+TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompareScriptRunFail) {
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(4));
+	CheckResult(false, "1_");
 }
 
 TEST_F(TestScriptTestFixture, 2_PartialLBAWriteCmdTestPass)
@@ -75,4 +92,16 @@ TEST_F(TestScriptTestFixture, 2_CmdTestFail) {
 	PartialWriteSetup(1);
 	ReadSetUpFail();
 	CheckResult(false, "2_");
+}
+
+TEST_F(TestScriptTestFixture, DISABLED_3_WriteReadAgingNormal) {
+	CheckResult(true, "3_WriteReadAgingNormal");
+}
+
+TEST_F(TestScriptTestFixture, DISABLED_3_WriteReadAgingShort) {
+	CheckResult(true, "3_");
+}
+
+TEST_F(TestScriptTestFixture, 3_WriteReadAgingNotMatch) {
+	CheckResult(false, "3_3");
 }

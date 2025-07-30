@@ -25,7 +25,7 @@ public:
 
 protected:
 	std::string m_name = nullptr;
-	const std::string SSD_NAME = "ssd.exe";
+	const std::string SSD_NAME = "SSDDriver.exe";
 };
 
 class DummyScript : public TestScript {
@@ -55,6 +55,12 @@ private:
 
 	bool GetPartialReadAndCompareResult(IProcessExecutor* exe);
 	void PartialBlockWrite(IProcessExecutor* exe);
+};
+
+class WriteReadAging : public TestScript {
+public:
+	WriteReadAging(std::string name) : TestScript(name) {}
+	bool Run(IProcessExecutor* exe) override;
 };
 
 class TestScriptRunner {
