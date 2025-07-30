@@ -17,7 +17,7 @@ public:
 TEST_F(FileIOFixture, WriteErrorOutput) {
 
     std::remove("ssd_output.txt");
-    file_io.WriteErrorOutput();
+    file_io.WriteValueToOutputFile("ERROR");
 
     std::ifstream inFile("ssd_output.txt");
     bool fileExists = inFile.is_open();

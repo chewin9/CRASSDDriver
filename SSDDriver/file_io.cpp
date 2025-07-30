@@ -5,12 +5,17 @@
 #include <sstream>
 #include <vector>
 
-
-
 bool FileIO::OpenInput() {
   m_input.open(SSD_NAND_FILE);
   return m_input.is_open();
 }
+
+void FileIO::CloseInput() {
+    if (m_input.is_open()) {
+        m_input.close();
+    }
+}
+
 
 std::vector<std::pair<int, std::string>> FileIO::getEntriesFromInput(
     ParsedCommand pc) {
@@ -25,12 +30,12 @@ std::vector<std::pair<int, std::string>> FileIO::getEntriesFromInput(
     std::string existing_value;
 
     if (iss >> existing_LBA >> existing_value) {
-      if (existing_LBA == pc.lba) {
-        entries.emplace_back(pc.lba, pc.value);
-        updated = true;
-      } else {
-        entries.emplace_back(existing_LBA, existing_value);
-      }
+        std::string valueToStore = (existing_LBA == pc.lba) ? pc.value : existing_value;
+        entries.emplace_back(existing_LBA, valueToStore);
+
+        if (existing_LBA == pc.lba) {
+            updated = true;
+        }
     }
   }
 
@@ -42,11 +47,6 @@ std::vector<std::pair<int, std::string>> FileIO::getEntriesFromInput(
   return entries;
 }
 
-void FileIO::CloseInput() {
-  if (m_input.is_open()) {
-    m_input.close();
-  }
-}
 
 bool FileIO::OpenOutput(std::string file) {
   m_output.open(file, std::ios::out | std::ios::trunc);
@@ -59,18 +59,9 @@ void FileIO::CloseOutput() {
   }
 }
 
-
-bool FileIO::WriteErrorOutput() {
-    if (!OpenOutput(SSD_OUTPUT_FILE)) return false;
-    m_output << "ERROR" << "\n";
-    CloseOutput();
-    return true;
-}
-
-
 void FileIO::WriteOutput(ParsedCommand pc) {
   if (pc.errorFlag) {
-    WriteErrorOutput();
+    WriteValueToOutputFile("ERROR");
     return;
   }
 
