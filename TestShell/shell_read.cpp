@@ -104,6 +104,7 @@ std::string ShellRead::appendSSDData(void) {
 		executor_->Process(cmdLine);
 
 		std::string readSSDData = getSsdOutputData();
+		ret << std::setw(2) << std::setfill('0') << i << " ";
 		ret << readSSDData;
 	}
 	return ret.str();
