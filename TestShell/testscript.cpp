@@ -63,12 +63,12 @@ std::string TestScript::makeWriteCommand(unsigned int addr, unsigned int value) 
 	char str[11];
 	sprintf_s(str, "0x%x", value);
 	format = str;
-	std::string result = "W " + std::to_string(addr) + " " + format;
+	std::string result = GetSSDName() + " W " + std::to_string(addr) + " " + format;
 	return result;
 }
 
 std::string TestScript::makeReadCommand(unsigned int addr) {
-	std::string str = "R " + std::to_string(addr);
+	std::string str = GetSSDName() + " R " + std::to_string(addr);
 	return str;
 }
 
@@ -112,14 +112,11 @@ bool PartialLBAWrite::Run(IProcessExecutor* exe)
 	{
 		for (int writecount = 0; writecount < MAX_TEST_AREA; writecount++)
 		{
-			std::string command = "ssd.exe W " + std::to_string(writecount) + " " + value_list[writecount];
-			exe->Process(command);
+			exe->Process(makeWriteCommand(writecount, std::stoul(value_list[writecount], nullptr, 16)));
 		}
 
 		for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
-			std::string command = "ssd.exe R " + std::to_string(readcount);
-			unsigned int expected = std::stoul(value_list[readcount], nullptr, 16);
-			IsPass = IsPass && (exe->Process(command) == expected);
+			IsPass = IsPass && (exe->Process(makeReadCommand(readcount)) == std::stoul(value_list[readcount], nullptr, 16));
 		}
 
 		if (IsPass == false) {

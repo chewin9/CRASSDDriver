@@ -21,9 +21,11 @@ public:
 	std::string makeReadCommand(unsigned int addr);
 	void WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value);
 	bool ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value);
+	std::string GetSSDName() { return SSD_NAME; }
 
 protected:
 	std::string m_name = nullptr;
+	const std::string SSD_NAME = "ssd.exe";
 };
 
 class DummyScript : public TestScript {
