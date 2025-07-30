@@ -25,7 +25,7 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="fileIo_test.cpp">
+    <ClCompile Include="writecommand_test.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
     <ClCompile Include="file_io.cpp">

@@ -134,7 +134,7 @@
   <ItemGroup>
     <ClCompile Include="command_parser.cpp" />
     <ClCompile Include="command_parser_test.cpp" />
-    <ClCompile Include="fileIo_test.cpp" />
+    <ClCompile Include="writecommand_test.cpp" />
     <ClCompile Include="file_io.cpp" />
     <ClCompile Include="ICommand.cpp" />
     <ClCompile Include="main.cpp" />
