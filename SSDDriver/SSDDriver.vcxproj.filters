@@ -43,9 +43,6 @@
     <ClCompile Include="command_parser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ICommand.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="writecommand.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>

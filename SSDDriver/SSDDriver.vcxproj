@@ -136,7 +136,6 @@
     <ClCompile Include="command_parser_test.cpp" />
     <ClCompile Include="writecommand_test.cpp" />
     <ClCompile Include="file_io.cpp" />
-    <ClCompile Include="ICommand.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="readcommand.cpp" />
     <ClCompile Include="readcommand_test.cpp" />
