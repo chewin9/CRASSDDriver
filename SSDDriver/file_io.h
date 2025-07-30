@@ -4,19 +4,27 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <vector>
+#include "command_parser.h"
 
 class FileIO {
 public:
-    static constexpr int LBA_BYTE = 4;
-    static constexpr int LBA_MIN = 0;
-    static constexpr int LBA_MAX = 99;
 
-    const std::string SSD_NAND_FILE = "ssd_nand.txt";
-
-    void Close();
+    std::ifstream m_input;
+    std::ofstream m_output;
+    void WriteValueToOutputFile(std::string str);
+    bool OpenInput();
+    std::vector<std::pair<int, std::string>> getEntriesFromInput(ParsedCommand pc);
+    void WriteOutput(ParsedCommand pc);
+    bool WriteErrorOutput();
+    void CloseInput();
+    void ReadNandFile(ParsedCommand pc);
+    bool OpenOutput(std::string file);
+    void CloseOutput();
 
     ~FileIO();
 
 private:
-    std::fstream   fs_;
+    const std::string SSD_NAND_FILE = "ssd_nand.txt";
+    const std::string SSD_OUTPUT_FILE = "ssd_output.txt";
 };

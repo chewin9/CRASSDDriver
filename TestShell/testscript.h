@@ -21,9 +21,11 @@ public:
 	std::string makeReadCommand(unsigned int addr);
 	void WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value);
 	bool ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value);
+	std::string GetSSDName() { return SSD_NAME; }
 
 protected:
 	std::string m_name = nullptr;
+	const std::string SSD_NAME = "SSDDriver.exe";
 };
 
 class DummyScript : public TestScript {
@@ -45,8 +47,14 @@ class PartialLBAWrite : public TestScript {
 public:
 	PartialLBAWrite(std::string name) : TestScript(name) {}
 	bool Run(IProcessExecutor* exe) override;
+	std::vector<std::string> value_list = { "0x1", "0x2","0x3","0x4","0x5" };
+
 private:
 	const unsigned int MAX_LOOP_COUNT = 30;
+	const unsigned int MAX_TEST_AREA = 5;
+
+	bool GetPartialReadAndCompareResult(IProcessExecutor* exe);
+	void PartialBlockWrite(IProcessExecutor* exe);
 };
 
 class WriteReadAging : public TestScript {
