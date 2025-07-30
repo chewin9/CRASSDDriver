@@ -32,6 +32,8 @@ class PartialLBAWrite : public TestScript {
 public:
 	PartialLBAWrite(std::string name) : TestScript(name) {}
 	bool Run(IProcessExecutor* exe) override;
+private:
+	const unsigned int MAX_LOOP_COUNT = 30;
 };
 
 class TestScriptRunner {

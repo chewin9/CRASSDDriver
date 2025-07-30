@@ -34,7 +34,7 @@ bool PartialLBAWrite::Run(IProcessExecutor* exe)
 	bool Read_4 = false;
 
 
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < MAX_LOOP_COUNT; i++)
 	{
 		std::string R0 = "0xAAAAAAA0";
 		std::string R1 = "0xAAAAAAA1";
