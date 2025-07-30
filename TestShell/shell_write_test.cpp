@@ -16,6 +16,7 @@ public:
 	std::streambuf* oldCoutStreamBuf;
 
 	const std::string INVALID_COMMAND = "INVALID_COMMAND\n";
+	const std::string WRITE_DONE = "[Write] Done\n";
 
 	void SetUp() override {
 		shell_write = new ShellWrite(&executor);
@@ -34,6 +35,8 @@ public:
 TEST_F(ShellWriteTestFixture, ssd_write) {
 	EXPECT_CALL(executor, Process).Times(1).WillOnce(testing::Return(0));
 	shell_write->IssueWrite("write 3 0xAAAABBBB");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, WRITE_DONE);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_Read) {

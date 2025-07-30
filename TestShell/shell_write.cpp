@@ -15,6 +15,7 @@ void ShellWrite::IssueWrite(const std::string& input) {
 
     std::string cmdLine = "ssd.exe W " + input.substr(6);
     executor_->Process(cmdLine);
+    std::cout << "[Write] Done" << std::endl;
 }
 
 void ShellWrite::printError() {
@@ -51,7 +52,6 @@ bool ShellWrite::checkParameterValid(const std::string& input)
 
     return true;
 }
-
 
 std::vector<std::string> ShellWrite::splitBySpace(const std::string& str) {
     std::istringstream iss(str);
