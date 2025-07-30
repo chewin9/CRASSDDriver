@@ -7,15 +7,15 @@
 #include <vector>
 #include <sstream>
 
-void ShellFullWrite::IssueFullWrite(std::string cmd) 
-{
-	std::vector<std::string> cmds = splitBySpace(cmd);
-	std::string value = cmds[1];
-	
+void ShellFullWrite::IssueFullWrite(const std::string& cmd) {
+
 	if (false == checkParameterValid(cmd)) {
 		std::cout << "INVALID_COMMAND" << std::endl;
 		return;
 	}
+
+	std::vector<std::string> cmds = splitBySpace(cmd);
+	std::string value = cmds[1];
 
 	for (int nLBA = START_LBA; nLBA < END_LBA; nLBA++) {
 		std::string cmdLine = "ssd.exe W " + std::to_string(nLBA) + " " + value;
@@ -24,7 +24,7 @@ void ShellFullWrite::IssueFullWrite(std::string cmd)
 	std::cout << "[WriteFull] Done" << std::endl;
 }
 
-bool ShellFullWrite::checkParameterValid(std::string& cmd)
+bool ShellFullWrite::checkParameterValid(const std::string& cmd)
 {
 	std::vector<std::string> cmds = splitBySpace(cmd);
 	std::string value = cmds[1];

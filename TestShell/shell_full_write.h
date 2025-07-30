@@ -7,8 +7,8 @@ class ShellFullWrite {
 public:
 	ShellFullWrite(IProcessExecutor* executor) : executor_(executor) {}
 
-	void IssueFullWrite(std::string cmd);
-	bool checkParameterValid(std::string& cmd);
+	void IssueFullWrite(const std::string& cmd);
+	bool checkParameterValid(const std::string& cmd);
 private:
 	const int START_LBA = 0;
 	const int END_LBA = 100;
