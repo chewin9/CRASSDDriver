@@ -110,19 +110,31 @@ bool PartialLBAWrite::Run(IProcessExecutor* exe)
 
 	for (int loopcount = 0; loopcount < MAX_LOOP_COUNT; loopcount++)
 	{
-		for (int writecount = 0; writecount < MAX_TEST_AREA; writecount++)
-		{
-			exe->Process(makeWriteCommand(writecount, std::stoul(value_list[writecount], nullptr, 16)));
-		}
+		PartialBlockWrite(exe);
 
-		for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
-			IsPass = IsPass && (exe->Process(makeReadCommand(readcount)) == std::stoul(value_list[readcount], nullptr, 16));
-		}
+		IsPass = GetPartialReadAndCompareResult(exe);
 
-		if (IsPass == false) {
-			return false;
-		}
+		if (IsPass == false) break;
 	}
 
 	return IsPass;
+}
+
+bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe)
+{
+	bool IsPass = true;
+
+	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
+		IsPass = IsPass && (exe->Process(makeReadCommand(readcount)) == std::stoul(value_list[readcount], nullptr, 16));
+	}
+
+	return IsPass;
+}
+
+void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
+{
+	for (int writecount = 0; writecount < MAX_TEST_AREA; writecount++)
+	{
+		exe->Process(makeWriteCommand(writecount, std::stoul(value_list[writecount], nullptr, 16)));
+	}
 }
