@@ -138,6 +138,7 @@
     <ClCompile Include="command_parser_test.cpp" />
     <ClCompile Include="file_io_test.cpp" />
     <ClCompile Include="full_path_test.cpp" />
+    <ClCompile Include="ssd_operation_handler.cpp" />
     <ClCompile Include="writecommand_test.cpp" />
     <ClCompile Include="file_io.cpp" />
     <ClCompile Include="main.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="command_parser.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="readcommand.h" />
+    <ClInclude Include="ssd_operation_handler.h" />
     <ClInclude Include="writecommand.h" />
   </ItemGroup>
   <ItemGroup>
