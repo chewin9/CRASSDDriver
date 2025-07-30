@@ -40,6 +40,10 @@ bool ShellFullWrite::checkParameterValid(const std::string& cmd)
 		return false;
 	}
 
+	if (false == is_all_uppercase(value.substr(2, 8))){
+		return false;
+	}
+
 	if (false == is_valid_unsigned(value)) {
 		return false;
 	}
@@ -54,6 +58,16 @@ std::vector<std::string> ShellFullWrite::splitBySpace(const std::string& str) {
 		tokens.push_back(word);
 	}
 	return tokens;
+}
+
+bool ShellFullWrite::is_all_uppercase(const std::string& str) {
+
+	for (char ch : str) {
+		if ('A' <= ch && ch <= 'F') continue;
+		if ('0' <= ch && ch <= '9') continue;
+		return false;
+	}
+	return true;
 }
 
 bool ShellFullWrite::is_valid_unsigned(const std::string& str) {

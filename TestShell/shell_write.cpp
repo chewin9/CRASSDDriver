@@ -54,6 +54,10 @@ bool ShellWrite::checkParameterValid(const std::string& input)
         return false;
     }
 
+    if (false == is_all_uppercase(data.substr(2, 8))) {
+        return false;
+    }
+
     if (false == is_valid_unsigned(data)) {
         return false;
     }
@@ -83,6 +87,15 @@ bool ShellWrite::convertStoI(const std::string& str, int& val) {
     catch (const::std::out_of_range&) {
         return false;
     }
+}
+bool ShellWrite::is_all_uppercase(const std::string& str) {
+
+    for (char ch : str) {
+        if ('A' <= ch && ch <= 'F') continue;
+        if ('0' <= ch && ch <= '9') continue;
+        return false;
+    }
+    return true;
 }
 
 bool ShellWrite::is_valid_unsigned(const std::string& str) {
