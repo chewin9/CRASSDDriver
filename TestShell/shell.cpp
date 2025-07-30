@@ -1,0 +1,56 @@
+#pragma once
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <tuple>
+#include "shell.h"
+
+std::tuple<std::string, std::string> parse_command(const std::string& input) {
+    std::istringstream iss(input);
+    std::string cmd;
+    std::string num_str;
+    iss >> cmd >> num_str;
+    return { cmd, num_str };
+}
+
+int Shell::Run(void) {
+    std::string input;
+    while (true) {
+        std::cout << "> "; // Prompt
+        std::getline(std::cin, input);
+
+        std::tuple<std::string, std::string> parseCommand = parse_command(input);
+
+        //SSD ผ๖วเ
+        string cmd = std::get<0>(parseCommand);
+
+        if (cmd == "exit") {
+            std::cout << "Exiting program.\n";
+            break;
+        }
+        else if (cmd == "write") {
+            shell_write->IssueWrite(input);
+        }
+        else if (cmd == "fullwrite") {
+            shell_fullwrite->IssueFullWrite(input);
+        }
+        else if (cmd == "read") {
+            shell_read->read(input);
+        }
+        else if (cmd == "fullread") {
+
+        }
+        else if (cmd == "help") {
+
+        }
+        else {
+            if (false == script_runner->runScript(input)) {
+                // no matching command
+                std::cout << "INVALID COMMAND" << std::endl;
+                std::cout << "You typed : " << input << std::endl;
+            }
+        }
+    }
+    return 0;
+}

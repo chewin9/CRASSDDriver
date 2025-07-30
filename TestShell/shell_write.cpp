@@ -13,13 +13,13 @@ void ShellWrite::IssueWrite(const std::string& input) {
         return;
     }
 
-    std::string cmdLine = "ssd.exe W " + input.substr(6);
+    std::string cmdLine = "SSDDriver.exe W " + input.substr(6);
     executor_->Process(cmdLine);
     std::cout << "[Write] Done" << std::endl;
 }
 
 void ShellWrite::printError() {
-    std::cout << "INVALID_COMMAND" << std::endl;
+    std::cout << "INVALID COMMAND" << std::endl;
 }
 
 bool ShellWrite::checkParameterValid(const std::string& input)
@@ -27,6 +27,10 @@ bool ShellWrite::checkParameterValid(const std::string& input)
     // check input parameter valid
     //"write 3 0xAAAABBBB"   
     vector<string> cmdLineVector = splitBySpace(input);
+
+    if (cmdLineVector.size() != 3) {
+        return false;
+    }
 
     if (cmdLineVector[0] != "write") {
         return false; // not expected command
