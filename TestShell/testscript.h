@@ -1,7 +1,12 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <cstdio>
+#include <cstring>
+#include <stdio.h>
 #include "iprocess_executor.h"
+
+const int MAX_ADDR = 99;
 
 class TestScript {
 public:
@@ -11,21 +16,29 @@ public:
 	}
 
 	virtual bool Run(IProcessExecutor* exe) = 0;
-	std::string GetName() {
-		return m_name;
-	}
+	std::string GetName();
+	std::string makeWriteCommand(unsigned int addr, unsigned int value);
+	std::string makeReadCommand(unsigned int addr);
+	void WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value);
+	bool ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value);
 
 protected:
 	std::string m_name = nullptr;
 };
 
-class FullWriteAndReadCompare : public TestScript {
+class DummyScript : public TestScript {
 public:
-	FullWriteAndReadCompare(std::string name) : TestScript(name) {}
+	DummyScript(std::string name) : TestScript(name) {}
 	bool Run(IProcessExecutor* exe) override {
 		//Script
 		return false;
 	}
+};
+
+class FullWriteAndReadCompare : public TestScript {
+public:
+	FullWriteAndReadCompare(std::string name) : TestScript(name) {}
+	bool Run(IProcessExecutor* exe) override;
 };
 
 class PartialLBAWrite : public TestScript {
@@ -45,6 +58,7 @@ private:
 	//Method
 	IProcessExecutor* execute = nullptr;
 	int parseCommandLine(const std::string& commandLine);
+	int GetScriptIndex(const std::string& scriptname);
 	void addScripts();
 
 	//Variable

@@ -1,5 +1,8 @@
 #include "testscript.h"
+#include <string>
+#include <exception>
 #include <iostream>
+const int INVALID_INDEX = 0;
 
 TestScriptRunner::TestScriptRunner(IProcessExecutor* exe) : execute(exe) {
 	addScripts();
@@ -7,7 +10,7 @@ TestScriptRunner::TestScriptRunner(IProcessExecutor* exe) : execute(exe) {
 
 bool TestScriptRunner::runScript(const std::string& commandLine) {
 	int commandIdx = 0;
-	if ((commandIdx = parseCommandLine(commandLine)) == -1) {
+	if ((commandIdx = parseCommandLine(commandLine)) == INVALID_INDEX) {
 		return false;
 	}
 
@@ -15,14 +18,90 @@ bool TestScriptRunner::runScript(const std::string& commandLine) {
 }
 
 void TestScriptRunner::addScripts() {
+	testScripts.push_back(new DummyScript("0_Dummy"));
 	testScripts.push_back(new FullWriteAndReadCompare("1_FullWriteAndReadCompare"));
 	testScripts.push_back(new PartialLBAWrite("2_PartialLBAWrite"));
 }
 
+int TestScriptRunner::GetScriptIndex(const std::string& scriptname) {
+	int scriptidx = 0;
+
+	int seperator_position = scriptname.find('_');
+
+	if ((seperator_position + 1) < scriptname.size()) return INVALID_INDEX;
+
+	try {
+		scriptidx = std::stoi(scriptname.substr(0, seperator_position));
+	}
+	catch (std::exception e) {
+		return INVALID_INDEX;
+	}
+
+	return scriptidx;
+}
+
 int TestScriptRunner::parseCommandLine(const std::string& commandLine) {
-	if (commandLine == "1_FullWriteAndReadCompare" || commandLine == "1_") return 0;
-	if (commandLine == "2_PartialLBAWrite" || commandLine == "2_") return 1;
-	return -1;
+	int scriptidx = INVALID_INDEX;
+	if ((scriptidx = GetScriptIndex(commandLine)) != INVALID_INDEX && scriptidx > 0 && scriptidx < testScripts.size()) {
+		return scriptidx;
+	}
+
+	for (int index = 0; index < testScripts.size(); index++) {
+		if (commandLine == testScripts[index]->GetName()) {
+			return index;
+		}
+	}
+	return INVALID_INDEX;
+}
+
+std::string TestScript::GetName() {
+	return m_name;
+}
+
+std::string TestScript::makeWriteCommand(unsigned int addr, unsigned int value) {
+	std::string format;
+	char str[11];
+	sprintf_s(str, "0x%x", value);
+	format = str;
+	std::string result = "W " + std::to_string(addr) + " " + format;
+	return result;
+}
+
+std::string TestScript::makeReadCommand(unsigned int addr) {
+	std::string str = "R " + std::to_string(addr);
+	return str;
+}
+
+void TestScript::WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value) {
+	for (unsigned int index = startaddr; index < startaddr + len; index++) {
+		exe->Process(makeWriteCommand(index, value));
+	}
+}
+
+bool TestScript::ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value) {
+	for (unsigned int index = startaddr; index < startaddr + len; index++) {
+		if (exe->Process(makeReadCommand(index)) != value) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
+	//Script
+	int value = 5;
+	int start = 0;
+	const int length = 5;
+
+	for (start = 0; start < MAX_ADDR; start += length) {
+		for (int index = start;index < start + length; index++) {
+			WriteBlock(exe, start, 5, value);
+			if (ReadCompare(exe, start, length, value) == false) return false;
+		}
+	}
+
+	return true;
 }
 
 bool PartialLBAWrite::Run(IProcessExecutor* exe)
