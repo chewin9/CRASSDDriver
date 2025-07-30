@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 
+
 bool FileIO::OpenInput() {
   m_input.open(SSD_NAND_FILE);
   return m_input.is_open();
@@ -16,37 +17,33 @@ void FileIO::CloseInput() {
     }
 }
 
+std::unordered_map<int, std::string> FileIO::getEntriesFromInput(ParsedCommand& pc) {
+    OpenInput();
+    bool updated = false;
+    std::unordered_map<int, std::string> entries;
 
-std::vector<std::pair<int, std::string>> FileIO::getEntriesFromInput(
-    ParsedCommand& pc) {
-  OpenInput();
-  bool updated = false;
-  std::vector<std::pair<int, std::string>> entries;
+    std::string line;
+    while (std::getline(m_input, line)) {
+        std::istringstream iss(line);
+        int existing_LBA;
+        std::string existing_value;
 
-  std::string line;
-  while (std::getline(m_input, line)) {
-    std::istringstream iss(line);
-    int existing_LBA;
-    std::string existing_value;
+        if (iss >> existing_LBA >> existing_value) {
+            entries[existing_LBA] = (existing_LBA == pc.lba) ? pc.value : existing_value;
 
-    if (iss >> existing_LBA >> existing_value) {
-        std::string valueToStore = (existing_LBA == pc.lba) ? pc.value : existing_value;
-        entries.emplace_back(existing_LBA, valueToStore);
-
-        if (existing_LBA == pc.lba) {
-            updated = true;
+            if (existing_LBA == pc.lba) {
+                updated = true;
+            }
         }
     }
-  }
 
-  if (!updated) {
-    entries.emplace_back(pc.lba, pc.value);
-  }
+    if (!updated) {
+        entries[pc.lba] = pc.value;
+    }
 
-  CloseInput();
-  return entries;
+    CloseInput();
+    return entries;
 }
-
 
 bool FileIO::OpenOutput(std::string file) {
   m_output.open(file, std::ios::out | std::ios::trunc);
@@ -65,7 +62,7 @@ void FileIO::WriteOutput(ParsedCommand pc) {
     return;
   }
 
-  std::vector<std::pair<int, std::string>> entries = getEntriesFromInput(pc);
+  std::unordered_map<int, std::string> entries = getEntriesFromInput(pc);
   OpenOutput(SSD_NAND_FILE);
 
   for (const auto& entry : entries) {
