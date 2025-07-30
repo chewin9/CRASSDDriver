@@ -1,6 +1,7 @@
 #include "gmock/gmock.h"
 #include "iprocess_executor.h"
 #include "shell_write.h"
+#include "shell_full_write.h"
 #include "test.h"
 
 #include <memory>
@@ -71,4 +72,14 @@ TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data3) {
 	shell_write->IssueWrite("write aa 0xZXCVBNMA");
 	std::string originalStr = oss.str();
 	EXPECT_EQ(originalStr, INVALID_COMMAND);
+}
+
+TEST(TestFullWrite, Success) {
+	testing::NiceMock<MockProcessExecutor> executor;
+	ShellFullWrite* full_write = new ShellFullWrite(&executor);
+
+	EXPECT_CALL(executor, Process).Times(100).WillRepeatedly(testing::Return(0));
+
+	// expect all LBA write
+	full_write->IssueFullWrite("fullwrite 0xABCDFFFF");
 }
