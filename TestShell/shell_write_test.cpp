@@ -4,24 +4,68 @@
 #include "test.h"
 
 #include <memory>
+#include <string>
+#include <cctype>
 
+class ShellWriteTestFixture : public ::testing::Test {
+public:
+	testing::NiceMock<MockProcessExecutor> executor;
+	ShellWrite* shell_write;
 
-TEST(shell_write, ssd_write) {
-	// TC 시나리오 
-	// shell이 입력되어 사용자 입력'write'을 받으면, 
-	// ssd app을 실행시키고 << mock 대상임
-	// 저장 명령을 수행한다. 
-	// 사용자 입력 예시는 "write 3 0xAAAABBBB" 
-	// 실제로는 아래처럼 내려감 >>"ssd.exe W 3 0xAAAABBBB"
+	std::ostringstream oss;
+	std::streambuf* oldCoutStreamBuf;
 
-	// 매개 변수가 유효한지 검사를 수행한다. 
+	const std::string INVALID_COMMAND = "INVALID_COMMAND\n";
 
-	// 없는 명령어의 경우 invalid command를 콘솔에 출력한다. 
+	void SetUp() override {
+		shell_write = new ShellWrite(&executor);
 
-	MockProcessExecutor executor;
-	ShellWrite shell_write(&executor);
+		oldCoutStreamBuf = std::cout.rdbuf();
+		std::cout.rdbuf(oss.rdbuf());
+	}
 
-	EXPECT_CALL(executor, Process);
+	void TearDown() override {
+		std::cout.rdbuf(oldCoutStreamBuf);
 
-	shell_write.IssueWrite("write 3 0xAAAABBBB");
+		delete shell_write;
+	}
+};
+
+TEST_F(ShellWriteTestFixture, ssd_write) {
+	EXPECT_CALL(executor, Process).Times(1).WillOnce(testing::Return(0));
+	shell_write->IssueWrite("write 3 0xAAAABBBB");
+}
+
+TEST_F(ShellWriteTestFixture, ssd_write_checkparam_Read) {
+	shell_write->IssueWrite("read 3 0xAAAABBBB");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
+}
+
+TEST_F(ShellWriteTestFixture, ssd_write_checkparam_writeLBA) {
+
+	shell_write->IssueWrite("write 100000 0xAAAABBBB");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
+}
+
+TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data) {
+
+	shell_write->IssueWrite("write 22 ZXCVBNMAqp");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
+}
+
+TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data2) {
+
+	shell_write->IssueWrite("write 22 0xZXCVBNMA");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
+}
+
+TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data3) {
+
+	shell_write->IssueWrite("write aa 0xZXCVBNMA");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }
