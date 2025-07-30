@@ -39,7 +39,7 @@ int Shell::Run(void) {
             shell_read->read(input);
         }
         else if (cmd == "fullread") {
-
+            shell_read->fullRead(input);
         }
         else if (cmd == "help") {
 

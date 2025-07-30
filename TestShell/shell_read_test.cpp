@@ -77,3 +77,45 @@ TEST_F(ShellReadTestFixture, TSReadInvalidLBA02) {	//
 
 	EXPECT_EQ(readShell->read("read -1"), "ERROR");
 }
+
+TEST_F(ShellReadTestFixture, TSFullRead01) {	//
+	EXPECT_CALL(mockExecutor, Process)
+		.WillOnce([](const std::string& cmd) {
+		// 파일 생성
+		std::ofstream file("ssd_output.txt");
+		file << "2 0xABCDEEEE\n";
+		file.close();
+		// int 반환 (mock이므로 임의 값 반환)
+		return 0;
+			})
+		.WillRepeatedly([](const std::string& cmd) {
+		// 파일 생성
+		std::ofstream file("ssd_output.txt");
+		file << "0 0x12345678\n";
+		file.close();
+		// int 반환 (mock이므로 임의 값 반환)
+		return 0;
+			});
+
+		EXPECT_THAT(readShell->fullRead("fullread"), 
+			::testing::AllOf(
+				::testing::HasSubstr("2 0xABCDEEEE"),
+				::testing::HasSubstr("0 0x12345678")
+			)
+		);
+		
+}
+
+TEST_F(ShellReadTestFixture, TSFullRead02) {	//
+	EXPECT_CALL(mockExecutor, Process)
+		.WillRepeatedly([](const std::string& cmd) {
+		// 파일 생성
+		std::ofstream file("ssd_output.txt");
+		file << "0 0x12345678\n";
+		file.close();
+		// int 반환 (mock이므로 임의 값 반환)
+		return 0;
+			});
+
+	EXPECT_THAT(readShell->fullRead("fullread"), ::testing::HasSubstr("0 0x12345678"));
+}
