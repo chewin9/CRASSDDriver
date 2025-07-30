@@ -10,7 +10,7 @@
 void ShellFullWrite::IssueFullWrite(const std::string& cmd) {
 
 	if (false == checkParameterValid(cmd)) {
-		std::cout << "INVALID_COMMAND" << std::endl;
+		std::cout << "INVALID COMMAND" << std::endl;
 		return;
 	}
 
@@ -18,7 +18,7 @@ void ShellFullWrite::IssueFullWrite(const std::string& cmd) {
 	std::string value = cmds[1];
 
 	for (int nLBA = START_LBA; nLBA < END_LBA; nLBA++) {
-		std::string cmdLine = "ssd.exe W " + std::to_string(nLBA) + " " + value;
+		std::string cmdLine = "SSDDriver.exe W " + std::to_string(nLBA) + " " + value;
 		executor_->Process(cmdLine);
 	}
 	std::cout << "[WriteFull] Done" << std::endl;

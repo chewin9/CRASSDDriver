@@ -1,156 +1,78 @@
 #include "gmock/gmock.h"
 #include "testscript.h"
 #include "test.h"
+#include <vector>
 
 using namespace testing;
 
-TEST(testscript, 1_FullWriteAndReadCompare) {
-	testing::NiceMock<MockProcessExecutor> mock;
-	TestScriptRunner script{&mock};
+class TestScriptTestFixture : public Test
+{
+public:
+	void PartialWriteSetup(int callcount)
+	{
+		for (int writecount = 0; writecount < MAX_TEST_BLOCK; writecount++)
+		{
+			std::string command = SSD_DRIVER_NAME + " W " + std::to_string(writecount) + " " + value_list[writecount];
+			EXPECT_CALL(mock, Process(command)).Times(callcount);
+		}
+	}
 
-	EXPECT_TRUE(script.runScript("1_FullWriteAndReadCompare"));
-}
+	void PartialReadSetUp()
+	{
+		for (int readcount = 0; readcount < MAX_TEST_BLOCK; ++readcount) {
+			std::string command = SSD_DRIVER_NAME + " R " + std::to_string(readcount);
+			EXPECT_CALL(mock, Process(command))
+				.Times(30)
+				.WillRepeatedly(Return(readcount + 1));
+		}
+	}
 
-TEST(testscript, 2_PartialLBAWriteCmdTestPass) {
+	void ReadSetUpFail()
+	{
+		EXPECT_CALL(mock, Process(SSD_DRIVER_NAME + " R 0"))
+			.Times(1)
+			.WillRepeatedly(Return(0xFFFFFFFF));
+	}
+
+	void CheckResult(int expected, std::string cmdline)
+	{
+		EXPECT_EQ(expected, script.runScript(cmdline));
+	}
+private:
 	NiceMock<MockProcessExecutor> mock;
 	TestScriptRunner script{ &mock };
+	std::vector<std::string> value_list = { "0x1", "0x2", "0x3","0x4","0x5" };
+	const int MAX_TEST_BLOCK = 5;
+	const std::string SSD_DRIVER_NAME = "ssd.exe";
+};
 
-	// Loop 30
-	EXPECT_CALL(mock, Process("ssd.exe W 0 0xAAAAAAA0")).Times(30);
-	EXPECT_CALL(mock, Process("ssd.exe W 1 0xAAAAAAA1")).Times(30);
-	EXPECT_CALL(mock, Process("ssd.exe W 2 0xAAAAAAA2")).Times(30);
-	EXPECT_CALL(mock, Process("ssd.exe W 3 0xAAAAAAA3")).Times(30);
-	EXPECT_CALL(mock, Process("ssd.exe W 4 0xAAAAAAA4")).Times(30);
+TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompare) {
 
-	EXPECT_CALL(mock, Process("ssd.exe R 0"))
-		.Times(30)
-		.WillRepeatedly(Return(0xAAAAAAA0));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 1"))
-		.Times(30)
-		.WillRepeatedly(Return(0xAAAAAAA1));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 2"))
-		.Times(30)
-		.WillRepeatedly(Return(0xAAAAAAA2));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 3"))
-		.Times(30)
-		.WillRepeatedly(Return(0xAAAAAAA3));
-
-
-	EXPECT_CALL(mock, Process("ssd.exe R 4"))
-		.Times(30)
-		.WillRepeatedly(Return(0xAAAAAAA4));
-
-
-	EXPECT_EQ(true, script.runScript("2_PartialLBAWrite"));
+	CheckResult(true, "1_FullWriteAndReadCompare");
 }
 
-TEST(testscript, 2_PartialLBAWriteCmdTestFail) {
-	NiceMock<MockProcessExecutor> mock;
-	TestScriptRunner script{ &mock };
-
-	// Loop 30
-	EXPECT_CALL(mock, Process("ssd.exe W 0 0xAAAAAAA0")).Times(1);
-	EXPECT_CALL(mock, Process("ssd.exe W 1 0xAAAAAAA1")).Times(1);
-	EXPECT_CALL(mock, Process("ssd.exe W 2 0xAAAAAAA2")).Times(1);
-	EXPECT_CALL(mock, Process("ssd.exe W 3 0xAAAAAAA3")).Times(1);
-	EXPECT_CALL(mock, Process("ssd.exe W 4 0xAAAAAAA4")).Times(1);
-
-	EXPECT_CALL(mock, Process("ssd.exe R 0"))
-		.Times(1)
-		.WillRepeatedly(Return(0));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 1"))
-		.Times(1)
-		.WillRepeatedly(Return(0));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 2"))
-		.Times(1)
-		.WillRepeatedly(Return(0));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 3"))
-		.Times(1)
-		.WillRepeatedly(Return(0));
-
-
-	EXPECT_CALL(mock, Process("ssd.exe R 4"))
-		.Times(1)
-		.WillRepeatedly(Return(0));
-
-
-	EXPECT_EQ(false, script.runScript("2_PartialLBAWrite"));
+TEST_F(TestScriptTestFixture, 2_PartialLBAWriteCmdTestPass)
+{
+	PartialWriteSetup(30);
+	PartialReadSetUp();
+	CheckResult(true, "2_PartialLBAWrite");
 }
 
-TEST(testscript, 2_CmdTestPass) {
-	NiceMock<MockProcessExecutor> mock;
-	TestScriptRunner script{ &mock };
-
-	// Loop 30
-	EXPECT_CALL(mock, Process("ssd.exe W 0 0xAAAAAAA0")).Times(30);
-	EXPECT_CALL(mock, Process("ssd.exe W 1 0xAAAAAAA1")).Times(30);
-	EXPECT_CALL(mock, Process("ssd.exe W 2 0xAAAAAAA2")).Times(30);
-	EXPECT_CALL(mock, Process("ssd.exe W 3 0xAAAAAAA3")).Times(30);
-	EXPECT_CALL(mock, Process("ssd.exe W 4 0xAAAAAAA4")).Times(30);
-
-	EXPECT_CALL(mock, Process("ssd.exe R 0"))
-		.Times(30)
-		.WillRepeatedly(Return(0xAAAAAAA0));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 1"))
-		.Times(30)
-		.WillRepeatedly(Return(0xAAAAAAA1));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 2"))
-		.Times(30)
-		.WillRepeatedly(Return(0xAAAAAAA2));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 3"))
-		.Times(30)
-		.WillRepeatedly(Return(0xAAAAAAA3));
-
-
-	EXPECT_CALL(mock, Process("ssd.exe R 4"))
-		.Times(30)
-		.WillRepeatedly(Return(0xAAAAAAA4));
-
-
-	EXPECT_EQ(true, script.runScript("2_"));
+TEST_F(TestScriptTestFixture, 2_PartialLBAWriteCmdTestFail)
+{
+	PartialWriteSetup(1);
+	ReadSetUpFail();
+	CheckResult(false, "2_PartialLBAWrite");
 }
 
-TEST(testscript, 2_CmdTestFail) {
-	NiceMock<MockProcessExecutor> mock;
-	TestScriptRunner script{ &mock };
+TEST_F(TestScriptTestFixture, 2_CmdTestPass) {
+	PartialWriteSetup(30);
+	PartialReadSetUp();
+	CheckResult(true, "2_");
+}
 
-	// Loop 30
-	EXPECT_CALL(mock, Process("ssd.exe W 0 0xAAAAAAA0")).Times(1);
-	EXPECT_CALL(mock, Process("ssd.exe W 1 0xAAAAAAA1")).Times(1);
-	EXPECT_CALL(mock, Process("ssd.exe W 2 0xAAAAAAA2")).Times(1);
-	EXPECT_CALL(mock, Process("ssd.exe W 3 0xAAAAAAA3")).Times(1);
-	EXPECT_CALL(mock, Process("ssd.exe W 4 0xAAAAAAA4")).Times(1);
-
-	EXPECT_CALL(mock, Process("ssd.exe R 0"))
-		.Times(1)
-		.WillRepeatedly(Return(0));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 1"))
-		.Times(1)
-		.WillRepeatedly(Return(0));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 2"))
-		.Times(1)
-		.WillRepeatedly(Return(0));
-
-	EXPECT_CALL(mock, Process("ssd.exe R 3"))
-		.Times(1)
-		.WillRepeatedly(Return(0));
-
-
-	EXPECT_CALL(mock, Process("ssd.exe R 4"))
-		.Times(1)
-		.WillRepeatedly(Return(0));
-
-
-	EXPECT_EQ(false, script.runScript("2_"));
+TEST_F(TestScriptTestFixture, 2_CmdTestFail) {
+	PartialWriteSetup(1);
+	ReadSetUpFail();
+	CheckResult(false, "2_");
 }
