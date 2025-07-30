@@ -14,8 +14,9 @@ public:
     std::ofstream m_output;
 
     bool OpenInput();
-    std::vector<std::pair<int, std::string>> getEntriesFronInput(ParsedCommand pc);
-    void WriteOutput(std::vector<std::pair<int, std::string>> entries);
+    std::vector<std::pair<int, std::string>> getEntriesFromInput(ParsedCommand pc);
+    void WriteOutput(ParsedCommand pc);
+    bool WriteErrorOutput();
     void CloseInput();
 
     bool OpenOutput(std::string file);

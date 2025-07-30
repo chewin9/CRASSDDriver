@@ -5,11 +5,8 @@
 #include <vector>
 
 bool WriteCommand::Execute() {
-  int LBA = cmdInfo.lba;
-  std::string value = cmdInfo.value;
+	
+	file_io.WriteOutput(cmdInfo);
 
-  std::vector<std::pair<int, std::string>> entries = file_io.getEntriesFronInput(cmdInfo);
-  file_io.WriteOutput(entries);
-
-  return true;
+	return true;
 };

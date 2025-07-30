@@ -2,12 +2,22 @@
 #include <iostream>
 #include <vector>
 
+
+bool FileIO::WriteErrorOutput() {
+
+    if (!OpenOutput(SSD_OUTPUT_FILE)) return false;
+
+    m_output << "ERROR" << "\n";
+    CloseOutput();
+    return true;
+}
+
 bool FileIO::OpenInput() {
     m_input.open(SSD_NAND_FILE);
     if (!m_input.is_open()) return false;
 }
 
-std::vector<std::pair<int, std::string>> FileIO::getEntriesFronInput(ParsedCommand pc) {
+std::vector<std::pair<int, std::string>> FileIO::getEntriesFromInput(ParsedCommand pc) { 
     OpenInput();
 
     std::vector<std::pair<int, std::string>> entries;
@@ -47,21 +57,29 @@ void FileIO::CloseInput() {
     }
 }
 
-bool FileIO::OpenOutput(std::string file) {
 
-    m_output.open(file, std::ios::out | std::ios::trunc);
-    if (!m_output.is_open()) return false;
-}
+void FileIO::WriteOutput(ParsedCommand pc) {
 
-
-void FileIO::WriteOutput(std::vector<std::pair<int, std::string>> entries) {
+    if (pc.errorFlag) {
+        WriteErrorOutput();
+        return;
+    }
+       
+    std::vector<std::pair<int, std::string>> entries =  getEntriesFromInput(pc);
 
     OpenOutput(SSD_NAND_FILE);
-
     for (const auto& entry : entries) {
         m_output << entry.first << " " << entry.second << "\n";
     }
     CloseOutput();
+}
+
+
+bool FileIO::OpenOutput(std::string file) {
+
+    m_output.open(file, std::ios::out | std::ios::trunc);
+    if (!m_output.is_open()) return false;
+    return true;
 }
 
 void FileIO::CloseOutput() {
