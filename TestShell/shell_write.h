@@ -22,6 +22,8 @@ private:
 
     bool convertStoI(const std::string& str, int& val);
 
+    bool is_all_uppercase(const std::string& str);
+
     bool is_valid_unsigned(const std::string& str);
 
     IProcessExecutor* executor_;
