@@ -13,7 +13,7 @@ TEST(testscript, 1_FullWriteAndReadCompare) {
 	script.runScript("1_FullWriteAndReadCompare");
 }
 
-TEST(testscript, 2_PartialLBAWrite) {
+TEST(testscript, 2_PartialLBAWriteTestPass) {
 	NiceMock<MockProcessExecutor> mock;
 	TestScript script{ &mock };
 
@@ -47,4 +47,40 @@ TEST(testscript, 2_PartialLBAWrite) {
 
 
 	EXPECT_EQ(true, script.script2_PartialLBAWrite());
+}
+
+TEST(testscript, 2_PartialLBAWriteTestFail) {
+	NiceMock<MockProcessExecutor> mock;
+	TestScript script{ &mock };
+
+	// Loop 30
+	EXPECT_CALL(mock, Process("W 0 0xAAAAAAA0")).Times(1);
+	EXPECT_CALL(mock, Process("W 1 0xAAAAAAA1")).Times(1);
+	EXPECT_CALL(mock, Process("W 2 0xAAAAAAA2")).Times(1);
+	EXPECT_CALL(mock, Process("W 3 0xAAAAAAA3")).Times(1);
+	EXPECT_CALL(mock, Process("W 4 0xAAAAAAA4")).Times(1);
+
+	EXPECT_CALL(mock, Process("R 0"))
+		.Times(1)
+		.WillRepeatedly(Return(0));
+
+	EXPECT_CALL(mock, Process("R 1"))
+		.Times(1)
+		.WillRepeatedly(Return(0));
+
+	EXPECT_CALL(mock, Process("R 2"))
+		.Times(1)
+		.WillRepeatedly(Return(0));
+
+	EXPECT_CALL(mock, Process("R 3"))
+		.Times(1)
+		.WillRepeatedly(Return(0));
+
+
+	EXPECT_CALL(mock, Process("R 4"))
+		.Times(1)
+		.WillRepeatedly(Return(0));
+
+
+	EXPECT_EQ(false, script.script2_PartialLBAWrite());
 }
