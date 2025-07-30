@@ -11,6 +11,7 @@
 class ShellWriteTestFixture : public ::testing::Test {
 public:
 	testing::NiceMock<MockProcessExecutor> executor;
+	ShellFullWrite* full_write;
 	ShellWrite* shell_write;
 
 	std::ostringstream oss;
@@ -18,10 +19,11 @@ public:
 
 	const std::string INVALID_COMMAND = "INVALID_COMMAND\n";
 	const std::string WRITE_DONE = "[Write] Done\n";
+	const std::string WRITE_FULL_DONE = "[WriteFull] Done\n";
 
 	void SetUp() override {
 		shell_write = new ShellWrite(&executor);
-
+		full_write = new ShellFullWrite(&executor);
 		oldCoutStreamBuf = std::cout.rdbuf();
 		std::cout.rdbuf(oss.rdbuf());
 	}
@@ -74,12 +76,19 @@ TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data3) {
 	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }
 
-TEST(TestFullWrite, Success) {
-	testing::NiceMock<MockProcessExecutor> executor;
-	ShellFullWrite* full_write = new ShellFullWrite(&executor);
+TEST_F(ShellWriteTestFixture, fulle_write_success) {
 
 	EXPECT_CALL(executor, Process).Times(100).WillRepeatedly(testing::Return(0));
 
 	// expect all LBA write
 	full_write->IssueFullWrite("fullwrite 0xABCDFFFF");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, WRITE_FULL_DONE);
+}
+
+TEST_F(ShellWriteTestFixture, fulle_write_invalid_param) {
+
+	full_write->IssueFullWrite("fullwrite 0xQWERTYUI");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }

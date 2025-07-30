@@ -12,4 +12,5 @@ private:
 	IProcessExecutor* executor_;
 
 	std::vector<std::string> splitBySpace(const std::string& str);
+	bool is_valid_unsigned(const std::string& str);
 };

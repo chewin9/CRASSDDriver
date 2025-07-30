@@ -1,18 +1,26 @@
 #pragma once
 #include "iprocess_executor.h"
+#include "shell_full_write.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <sstream>
 
-#include "shell_full_write.h"
+const int START_LBA = 0;
+const int END_LBA = 100;
+
 void ShellFullWrite::IssueFullWrite(std::string cmd) 
 {
 	std::vector<std::string> cmds = splitBySpace(cmd);
 
 	std::string value = cmds[1];
+	if (false == is_valid_unsigned(value)){
+		std::cout << "INVALID_COMMAND" << std::endl;
+		return;
+	}
 
-	for (int nLBA = 0; nLBA < 100; nLBA++) {
+	for (int nLBA = START_LBA; nLBA < END_LBA; nLBA++) {
 		std::string cmdLine = "ssd.exe W " + std::to_string(nLBA) + " " + value;
 		executor_->Process(cmdLine);
 	}
@@ -27,4 +35,19 @@ std::vector<std::string> ShellFullWrite::splitBySpace(const std::string& str) {
 		tokens.push_back(word);
 	}
 	return tokens;
+}
+
+
+bool ShellFullWrite::is_valid_unsigned(const std::string& str) {
+	size_t idx = 0;
+	try {
+		std::stoul(str, &idx, 0); // base 0: auto-detect base (hex, dec, oct)
+		return idx == str.size(); // true if entire string was used
+	}
+	catch (const std::invalid_argument&) {
+		return false; // Not a number at all
+	}
+	catch (const std::out_of_range&) {
+		return false; // Number outside unsigned long range
+	}
 }
