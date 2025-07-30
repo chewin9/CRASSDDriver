@@ -43,11 +43,11 @@
     <ClCompile Include="readcommand_test.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
-    <ClCompile Include="command_parser.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="command_parser_test.cpp">
       <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="command_parser.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
