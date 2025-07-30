@@ -11,25 +11,10 @@ std::string ShellRead::fullRead(const std::string input) {
     std::tuple<std::string, std::string> parseCommand = parse_command(input);
 
     if (std::get<0>(parseCommand) == FULLREAD_COMMAND) {
-        std::string cmdLine;
-        std::ofstream file("temp_fullread.txt", std::ios::app);
-        for (auto i = MIN_INDEX; i < MAX_INDEX; i++) {
-            cmdLine = "SSDDriver.exe R " + std::to_string(i);
-            executor_->Process(cmdLine);
+        std::string ret;
+        ret = appendSSDData();
 
-            std::string readSSDData = getSSDData();
-            file << readSSDData;
-        }
-        file.close();
-
-        std::ifstream readFile("temp_fullread.txt");
-        std::stringstream ret;
-        ret << readFile.rdbuf();
-        readFile.close();
-        std::remove("temp_fullread.txt");
-
-        return ret.str();
-
+        return ret;
     }
     return ERROR_RETURN;
 }
@@ -101,4 +86,17 @@ bool ShellRead::isInvalidIndex(int index) {
         return true;
     }
     return false;
+}
+
+std::string ShellRead::appendSSDData(void) {
+    std::stringstream ret;
+    std::ofstream file(TEMP_FILE_NAME, std::ios::app);
+    for (int i = MIN_INDEX; i < MAX_INDEX; i++) {
+        std::string cmdLine = "SSDDriver.exe R " + std::to_string(i);
+        executor_->Process(cmdLine);
+
+        std::string readSSDData = getSSDData();
+        ret << readSSDData;
+    }
+    return ret.str();
 }
