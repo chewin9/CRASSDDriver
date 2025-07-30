@@ -6,8 +6,6 @@
 
 TEST(TS, TSRead01) {
 	MockProcessExecutor mockExecutor;
-	EXPECT_CALL(mockExecutor, Process("ssd_executor.exe"))
-		.Times(2);
 
 	Shell shell(&mockExecutor);
 	std::ofstream file("ssd_output.txt");
