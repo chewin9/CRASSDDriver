@@ -15,14 +15,22 @@ class ShellTestFixture : public Test{
 public:
 	void SetUp() override {
 		mockshell = new MockShell(&mock_exe);
+
+		oldCoutStreamBuf = std::cout.rdbuf();
+		std::cout.rdbuf(oss.rdbuf());
 	}
 
 	void TearDown() override {
+		std::cout.rdbuf(oldCoutStreamBuf);
 		delete mockshell;
 	}
 
 	MockProcessExecutor mock_exe;
 	MockShell* mockshell;
+
+	std::ostringstream oss;
+	std::streambuf* oldCoutStreamBuf;
+
 };
 
 TEST_F(ShellTestFixture, CallCommandWrite) {
@@ -50,4 +58,20 @@ TEST_F(ShellTestFixture, CallCommandRead) {
 	EXPECT_CALL(mock_exe, Process("SSDDriver.exe R 3")).Times(1);
 
 	mockshell->Run();
+}
+
+TEST_F(ShellTestFixture, Help) {
+
+	EXPECT_CALL(*mockshell, get_command).WillOnce([](string& input) { input = "help";  return "help"; })
+		.WillRepeatedly([](string& input) { return "exit"; });
+
+	mockshell->Run();
+	std::string originalStr = oss.str();
+
+	EXPECT_THAT(originalStr.find("강인혜"), Ne(std::string::npos));
+	EXPECT_THAT(originalStr.find("김예솔"), Ne(std::string::npos));
+	EXPECT_THAT(originalStr.find("박정근"), Ne(std::string::npos));
+	EXPECT_THAT(originalStr.find("이승철"), Ne(std::string::npos));
+	EXPECT_THAT(originalStr.find("이준석"), Ne(std::string::npos));
+	EXPECT_THAT(originalStr.find("진연기"), Ne(std::string::npos));
 }
