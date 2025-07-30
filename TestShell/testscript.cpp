@@ -40,17 +40,17 @@ bool TestScript::script2_PartialLBAWrite(void)
 		std::string R3 = "0xAAAAAAA3";
 		std::string R4 = "0xAAAAAAA4";
 
-		execute->Process("W 0 " + R0);
-		execute->Process("W 1 " + R1);
-		execute->Process("W 2 " + R2);
-		execute->Process("W 3 " + R3);
-		execute->Process("W 4 " + R4);
+		execute->Process("ssd.exe W 0 " + R0);
+		execute->Process("ssd.exe W 1 " + R1);
+		execute->Process("ssd.exe W 2 " + R2);
+		execute->Process("ssd.exe W 3 " + R3);
+		execute->Process("ssd.exe W 4 " + R4);
 
-		Read_0 = execute->Process("R 0") == 0xAAAAAAA0;
-		Read_1 = execute->Process("R 1") == 0xAAAAAAA1;
-		Read_2 = execute->Process("R 2") == 0xAAAAAAA2;
-		Read_3 = execute->Process("R 3") == 0xAAAAAAA3;
-		Read_4 = execute->Process("R 4") == 0xAAAAAAA4;
+		Read_0 = execute->Process("ssd.exe R 0") == 0xAAAAAAA0;
+		Read_1 = execute->Process("ssd.exe R 1") == 0xAAAAAAA1;
+		Read_2 = execute->Process("ssd.exe R 2") == 0xAAAAAAA2;
+		Read_3 = execute->Process("ssd.exe R 3") == 0xAAAAAAA3;
+		Read_4 = execute->Process("ssd.exe R 4") == 0xAAAAAAA4;
 
 		if ((Read_0 && Read_1 && Read_2 && Read_3 && Read_4) == false) return false;
 	}
