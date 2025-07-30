@@ -45,11 +45,19 @@ int Shell::Run(void) {
 
         }
         else {
-            if (false == script_runner->runScript(input)) {
+            if (false == script_runner->IsValidSciprtCommand(input)) {
                 // no matching command
                 std::cout << "INVALID COMMAND" << std::endl;
                 std::cout << "You typed : " << input << std::endl;
+                continue;
             }
+
+            if (true == script_runner->runScript(input)) {
+                std::cout << "script pass" << std::endl;
+                continue;
+            }
+
+            std::cout << "script fail" << std::endl;
         }
     }
     return 0;
