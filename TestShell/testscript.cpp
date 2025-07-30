@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 #include <ctime>
-#include <fstream>
+#include "File.h"
 
 const int INVALID_INDEX = 0;
 
@@ -94,26 +94,18 @@ void TestScript::WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsig
 bool TestScript::ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value) {
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeReadCommand(index));
-		if (std::stoi(ReadOutputFile().substr(2, 10), nullptr, 16) != value) {
-			
+		try {
+			if (std::stoi(File::ReadOutputFile().substr(2, 10), nullptr, 16) != value) {
+
+				return false;
+			}
+		}
+		catch (std::exception e) {
 			return false;
 		}
 	}
 
 	return true;
-}
-
-std::string TestScript::ReadOutputFile(const std::string& filename) {
-	std::string output;
-	std::ifstream input(filename);
-	if (!input.is_open()) {
-		std::cerr << "파일을 열 수 없습니다: " << filename << std::endl;
-		return output;
-	}
-
-	std::getline(input, output);
-	input.close();
-	return output;
 }
 
 bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
@@ -154,7 +146,12 @@ bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe)
 
 	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
 		exe->Process(makeReadCommand(readcount));
-		IsPass = IsPass && (stoi(ReadOutputFile().substr(2, 10)) == std::stoul(value_list[readcount], nullptr, 16));
+		try {
+			IsPass = IsPass && (stoi(File::ReadOutputFile().substr(2, 10)) == std::stoul(value_list[readcount], nullptr, 16));
+		}
+		catch (std::exception e) {
+			return false;
+		}
 	}
 
 	return IsPass;
