@@ -18,7 +18,7 @@ void FileIO::CloseInput() {
 
 
 std::vector<std::pair<int, std::string>> FileIO::getEntriesFromInput(
-    ParsedCommand pc) {
+    ParsedCommand& pc) {
   OpenInput();
   bool updated = false;
   std::vector<std::pair<int, std::string>> entries;
@@ -84,10 +84,10 @@ void FileIO::WriteValueToOutputFile(std::string val) {
   outFile.close();
 }
 
-void FileIO::ReadNandFile(ParsedCommand pc) {
+bool FileIO::ReadNandFile(ParsedCommand& pc) {
   if (pc.errorFlag) {
     WriteValueToOutputFile("ERROR");
-    return;
+    return false;
   }
 
   OpenInput();
@@ -109,6 +109,8 @@ void FileIO::ReadNandFile(ParsedCommand pc) {
 
   CloseInput();
   WriteValueToOutputFile(val);
+
+  return true;
 }
 
 FileIO::~FileIO() {}
