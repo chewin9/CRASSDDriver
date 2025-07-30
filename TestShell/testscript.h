@@ -45,8 +45,11 @@ class PartialLBAWrite : public TestScript {
 public:
 	PartialLBAWrite(std::string name) : TestScript(name) {}
 	bool Run(IProcessExecutor* exe) override;
+	std::vector<std::string> value_list = { "0x1", "0x2","0x3","0x4","0x5" };
+
 private:
 	const unsigned int MAX_LOOP_COUNT = 30;
+	const unsigned int MAX_TEST_AREA = 5;
 };
 
 class TestScriptRunner {

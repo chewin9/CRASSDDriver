@@ -106,35 +106,26 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
 
 bool PartialLBAWrite::Run(IProcessExecutor* exe)
 {
-	bool Read_0 = false;
-	bool Read_1 = false;
-	bool Read_2 = false;
-	bool Read_3 = false;
-	bool Read_4 = false;
+	bool IsPass = true;
 
-
-	for (int i = 0; i < MAX_LOOP_COUNT; i++)
+	for (int loopcount = 0; loopcount < MAX_LOOP_COUNT; loopcount++)
 	{
-		std::string R0 = "0xAAAAAAA0";
-		std::string R1 = "0xAAAAAAA1";
-		std::string R2 = "0xAAAAAAA2";
-		std::string R3 = "0xAAAAAAA3";
-		std::string R4 = "0xAAAAAAA4";
+		for (int writecount = 0; writecount < MAX_TEST_AREA; writecount++)
+		{
+			std::string command = "ssd.exe W " + std::to_string(writecount) + " " + value_list[writecount];
+			exe->Process(command);
+		}
 
-		exe->Process("ssd.exe W 0 " + R0);
-		exe->Process("ssd.exe W 1 " + R1);
-		exe->Process("ssd.exe W 2 " + R2);
-		exe->Process("ssd.exe W 3 " + R3);
-		exe->Process("ssd.exe W 4 " + R4);
+		for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
+			std::string command = "ssd.exe R " + std::to_string(readcount);
+			unsigned int expected = std::stoul(value_list[readcount], nullptr, 16);
+			IsPass = IsPass && (exe->Process(command) == expected);
+		}
 
-		Read_0 = exe->Process("ssd.exe R 0") == 0xAAAAAAA0;
-		Read_1 = exe->Process("ssd.exe R 1") == 0xAAAAAAA1;
-		Read_2 = exe->Process("ssd.exe R 2") == 0xAAAAAAA2;
-		Read_3 = exe->Process("ssd.exe R 3") == 0xAAAAAAA3;
-		Read_4 = exe->Process("ssd.exe R 4") == 0xAAAAAAA4;
-
-		if ((Read_0 && Read_1 && Read_2 && Read_3 && Read_4) == false) return false;
+		if (IsPass == false) {
+			return false;
+		}
 	}
 
-	return true;
+	return IsPass;
 }
