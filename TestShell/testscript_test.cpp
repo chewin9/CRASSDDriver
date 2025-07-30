@@ -18,33 +18,33 @@ TEST(testscript, 2_PartialLBAWrite) {
 	TestScript script{ &mock };
 
 	// Loop 30
-	EXPECT_CALL(mock, Process("write 0 0xAAAAAAA0")).Times(30);
-	EXPECT_CALL(mock, Process("write 1 0xAAAAAAA1")).Times(30);
-	EXPECT_CALL(mock, Process("write 2 0xAAAAAAA2")).Times(30);
-	EXPECT_CALL(mock, Process("write 3 0xAAAAAAA3")).Times(30);
-	EXPECT_CALL(mock, Process("write 4 0xAAAAAAA4")).Times(30);
+	EXPECT_CALL(mock, Process("W 0 0xAAAAAAA0")).Times(30);
+	EXPECT_CALL(mock, Process("W 1 0xAAAAAAA1")).Times(30);
+	EXPECT_CALL(mock, Process("W 2 0xAAAAAAA2")).Times(30);
+	EXPECT_CALL(mock, Process("W 3 0xAAAAAAA3")).Times(30);
+	EXPECT_CALL(mock, Process("W 4 0xAAAAAAA4")).Times(30);
 
-	EXPECT_CALL(mock, Process("read 0"))
+	EXPECT_CALL(mock, Process("R 0"))
 		.Times(30)
 		.WillRepeatedly(Return(0xAAAAAAA0));
 
-	EXPECT_CALL(mock, Process("read 1"))
+	EXPECT_CALL(mock, Process("R 1"))
 		.Times(30)
 		.WillRepeatedly(Return(0xAAAAAAA1));
 
-	EXPECT_CALL(mock, Process("read 2"))
+	EXPECT_CALL(mock, Process("R 2"))
 		.Times(30)
 		.WillRepeatedly(Return(0xAAAAAAA2));
 
-	EXPECT_CALL(mock, Process("read 3"))
+	EXPECT_CALL(mock, Process("R 3"))
 		.Times(30)
 		.WillRepeatedly(Return(0xAAAAAAA3));
 
 
-	EXPECT_CALL(mock, Process("read 4"))
+	EXPECT_CALL(mock, Process("R 4"))
 		.Times(30)
 		.WillRepeatedly(Return(0xAAAAAAA4));
 
 
-	script.script2_PartialLBAWrite();
+	EXPECT_EQ(true, script.script2_PartialLBAWrite());
 }

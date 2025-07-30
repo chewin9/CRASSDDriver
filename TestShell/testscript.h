@@ -5,6 +5,7 @@
 
 class TestScript {
 public:
+
 	TestScript(std::string name) : m_name(name) {
 
 	}
