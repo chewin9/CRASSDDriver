@@ -49,46 +49,52 @@ TEST_F(ShellWriteTestFixture, ssd_write_checkparam_Read) {
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_writeLBA) {
-
 	shell_write->IssueWrite("write 100000 0xAAAABBBB");
 	std::string originalStr = oss.str();
 	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data) {
-
 	shell_write->IssueWrite("write 22 ZXCVBNMAqp");
 	std::string originalStr = oss.str();
 	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data2) {
-
 	shell_write->IssueWrite("write 22 0xZXCVBNMA");
 	std::string originalStr = oss.str();
 	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data3) {
-
 	shell_write->IssueWrite("write aa 0xZXCVBNMA");
 	std::string originalStr = oss.str();
 	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }
 
-TEST_F(ShellWriteTestFixture, fulle_write_success) {
-
+TEST_F(ShellWriteTestFixture, full_write_success) {
+	// expect all LBA write
 	EXPECT_CALL(executor, Process).Times(100).WillRepeatedly(testing::Return(0));
 
-	// expect all LBA write
 	full_write->IssueFullWrite("fullwrite 0xABCDFFFF");
 	std::string originalStr = oss.str();
 	EXPECT_EQ(originalStr, WRITE_FULL_DONE);
 }
 
-TEST_F(ShellWriteTestFixture, fulle_write_invalid_param) {
-
+TEST_F(ShellWriteTestFixture, full_write_invalid_param_overHexValue) {
 	full_write->IssueFullWrite("fullwrite 0xQWERTYUI");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
+}
+
+TEST_F(ShellWriteTestFixture, full_write_invalid_param_notHexFormat) {
+	full_write->IssueFullWrite("fullwrite 12345678");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
+}
+
+TEST_F(ShellWriteTestFixture, full_write_invalid_param_multiParam) {
+	full_write->IssueFullWrite("fullwrite 99 0xABCDFFFF");
 	std::string originalStr = oss.str();
 	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }

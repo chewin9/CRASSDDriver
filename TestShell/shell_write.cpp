@@ -46,6 +46,10 @@ bool ShellWrite::checkParameterValid(const std::string& input)
         return false;
     }
 
+    if (data.find("0x") != 0) {
+        return false;
+    }
+
     if (false == is_valid_unsigned(data)) {
         return false;
     }

@@ -14,7 +14,22 @@ void ShellFullWrite::IssueFullWrite(std::string cmd)
 {
 	std::vector<std::string> cmds = splitBySpace(cmd);
 
+	if (cmds.size() != 2) {
+		std::cout << "INVALID_COMMAND" << std::endl;
+		return;
+	}
+
 	std::string value = cmds[1];
+	if (value.size() != 10) {
+		std::cout << "INVALID_COMMAND" << std::endl;
+		return;
+	}
+
+	if (value.find("0x") != 0) {
+		std::cout << "INVALID_COMMAND" << std::endl;
+		return;
+	}
+
 	if (false == is_valid_unsigned(value)){
 		std::cout << "INVALID_COMMAND" << std::endl;
 		return;
