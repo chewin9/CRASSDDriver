@@ -56,7 +56,6 @@ std::vector<std::string> ShellFullWrite::splitBySpace(const std::string& str) {
 	return tokens;
 }
 
-
 bool ShellFullWrite::is_valid_unsigned(const std::string& str) {
 	size_t idx = 0;
 	try {

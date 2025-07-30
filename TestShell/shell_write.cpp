@@ -37,7 +37,7 @@ bool ShellWrite::checkParameterValid(const std::string& input)
         return false;
     }
 
-    if (!((0 <= cmdLba) && (cmdLba < 100))) {
+    if (!((START_LBA <= cmdLba) && (cmdLba < END_LBA))) {
         return false;  // not valid command 
     }
 
