@@ -16,7 +16,6 @@ public:
     bool OpenInput();
     std::vector<std::pair<int, std::string>> getEntriesFromInput(ParsedCommand pc);
     void WriteOutput(ParsedCommand pc);
-    //bool WriteErrorOutput();
     void CloseInput();
     void ReadNandFile(ParsedCommand pc);
     bool OpenOutput(std::string file);
