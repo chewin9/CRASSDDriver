@@ -2,10 +2,10 @@
 #include "process_executor.h"
 class Shell {
 public:
-	explicit Shell(ProcessExecutor* executor);
+	Shell(IProcessExecutor* executor);
 	std::string read(int index);
 
 private:
 	std::string findOutput(const std::string &data, int index);
-	ProcessExecutor* executor_;
+	IProcessExecutor* executor_;
 };

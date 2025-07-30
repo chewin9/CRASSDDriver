@@ -3,5 +3,5 @@
 
 class ProcessExecutor : public IProcessExecutor {
 public:
-    void Process(const std::string& commandLine) override;
+    int Process(const std::string& commandLine) override;
 };

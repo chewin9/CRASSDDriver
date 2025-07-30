@@ -3,6 +3,7 @@
 
 class IProcessExecutor {
 public:
-    virtual ~IProcessExecutor() = default;
-    virtual void Process(const std::string& command) = 0;
+	virtual ~IProcessExecutor() = default;
+	virtual int Process(const std::string& commandLine) = 0;
 };
+

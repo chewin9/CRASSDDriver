@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 
-Shell::Shell(ProcessExecutor* executor) : executor_(executor) {}
+Shell::Shell(IProcessExecutor* executor) : executor_(executor) {}
 
 std::string Shell::read(int index) {
 	executor_->Process("ssd_executor.exe");

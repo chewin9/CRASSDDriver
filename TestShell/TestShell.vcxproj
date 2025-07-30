@@ -147,6 +147,9 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="shell_write.h" />
+    <ClCompile Include="testscript.cpp" />
+    <ClCompile Include="testscript_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -157,7 +160,8 @@
     <ClInclude Include="shell.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ssd_output.txt" />
+    <ClInclude Include="test.h" />
+    <ClInclude Include="testscript.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

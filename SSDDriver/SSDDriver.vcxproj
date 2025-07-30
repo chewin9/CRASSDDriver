@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>  %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,7 +132,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="fileIo_test.cpp" />
+    <ClCompile Include="file_io.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="readcommand.cpp" />
+    <ClCompile Include="readcommand_test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="readcommand.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="file_io.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

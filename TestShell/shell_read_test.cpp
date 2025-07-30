@@ -2,11 +2,7 @@
 #include "shell.h"
 #include "process_executor.h"
 #include <fstream>
-
-class MockProcessExecutor : public ProcessExecutor {
-public:
-	MOCK_METHOD(void, Process, (const std::string& command), (override));
-};
+#include "test.h"
 
 TEST(TS, TSRead01) {
 	MockProcessExecutor mockExecutor;
