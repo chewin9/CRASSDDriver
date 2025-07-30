@@ -8,7 +8,7 @@ bool WriteCommand::Execute() {
   int LBA = cmdInfo.lba;
   std::string value = cmdInfo.value;
 
-  std::vector<std::pair<int, std::string>> entries = file_io.getEntriesFronInput(cmdInfo);
+  std::vector<std::pair<int, std::string>> entries = file_io.getEntriesFromInput(cmdInfo);
   file_io.WriteOutput(entries);
 
   return true;

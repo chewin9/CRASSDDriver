@@ -21,7 +21,12 @@ bool FileIO::OpenInput() {
     if (!m_input.is_open()) return false;
 }
 
-std::vector<std::pair<int, std::string>> FileIO::getEntriesFronInput(ParsedCommand pc) {
+std::vector<std::pair<int, std::string>> FileIO::getEntriesFromInput(ParsedCommand pc) {
+    if (pc.errorFlag) {
+        WriteErrorOutput();
+        return {};
+    }
+    
     OpenInput();
 
     std::vector<std::pair<int, std::string>> entries;

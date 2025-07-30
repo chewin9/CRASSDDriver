@@ -16,7 +16,7 @@ public:
     const std::string SSD_OUTPUT_FILE = "ssd_output.txt";
 
     bool OpenInput();
-    std::vector<std::pair<int, std::string>> getEntriesFronInput(ParsedCommand pc);
+    std::vector<std::pair<int, std::string>> getEntriesFromInput(ParsedCommand pc);
     void WriteOutput(std::vector<std::pair<int, std::string>> entries);
     bool WriteErrorOutput();
     void CloseInput();
