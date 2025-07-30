@@ -44,7 +44,7 @@ int Shell::Run(void) {
             shell_read->fullRead(input);
         }
         else if (cmd == "help") {
-
+            shell_help->help(input);
         }
         else {
             if (false == script_runner->runScript(input)) {
