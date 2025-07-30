@@ -2,6 +2,8 @@
 #include <string>
 #include <exception>
 #include <iostream>
+#include <random>
+#include <ctime>
 const int INVALID_INDEX = 0;
 
 TestScriptRunner::TestScriptRunner(IProcessExecutor* exe) : execute(exe) {
@@ -21,6 +23,7 @@ void TestScriptRunner::addScripts() {
 	testScripts.push_back(new DummyScript("0_Dummy"));
 	testScripts.push_back(new FullWriteAndReadCompare("1_FullWriteAndReadCompare"));
 	testScripts.push_back(new PartialLBAWrite("2_PartialLBAWrite"));
+	testScripts.push_back(new WriteReadAging("3_WriteReadAging"));
 }
 
 int TestScriptRunner::GetScriptIndex(const std::string& scriptname) {
@@ -61,7 +64,7 @@ std::string TestScript::GetName() {
 std::string TestScript::makeWriteCommand(unsigned int addr, unsigned int value) {
 	std::string format;
 	char str[11];
-	sprintf_s(str, "0x%x", value);
+	sprintf_s(str, "0x%08X", value);
 	format = str;
 	std::string result = "W " + std::to_string(addr) + " " + format;
 	return result;
@@ -96,7 +99,7 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
 
 	for (start = 0; start < MAX_ADDR; start += length) {
 		for (int index = start;index < start + length; index++) {
-			WriteBlock(exe, start, 5, value);
+			WriteBlock(exe, start, length, value);
 			if (ReadCompare(exe, start, length, value) == false) return false;
 		}
 	}
@@ -134,6 +137,20 @@ bool PartialLBAWrite::Run(IProcessExecutor* exe)
 		Read_4 = exe->Process("ssd.exe R 4") == 0xAAAAAAA4;
 
 		if ((Read_0 && Read_1 && Read_2 && Read_3 && Read_4) == false) return false;
+	}
+
+	return true;
+}
+
+bool WriteReadAging::Run(IProcessExecutor* exe) {
+	//Script
+	std::srand(std::time({}));
+
+	for (int count = 0; count < 200; count++) {
+		unsigned int data = rand();
+		WriteBlock(exe, 0, 1, data);
+
+		if(ReadCompare(exe, 99, 1, data) == false) return false;
 	}
 
 	return true;

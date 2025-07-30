@@ -49,6 +49,12 @@ private:
 	const unsigned int MAX_LOOP_COUNT = 30;
 };
 
+class WriteReadAging : public TestScript {
+public:
+	WriteReadAging(std::string name) : TestScript(name) {}
+	bool Run(IProcessExecutor* exe) override;
+};
+
 class TestScriptRunner {
 public:
 	TestScriptRunner(IProcessExecutor* exe);
