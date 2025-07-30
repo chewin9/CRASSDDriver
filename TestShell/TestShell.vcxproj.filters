@@ -9,7 +9,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
     <ClCompile Include="process_executor.cpp" />
-    <ClCompile Include="shell.cpp" />
     <ClCompile Include="shell_read_test.cpp" />
     <ClCompile Include="shell_read.cpp" />
   </ItemGroup>
@@ -41,7 +40,6 @@
     <ClInclude Include="process_executor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="shell.h" />
     <ClInclude Include="shell_read.h" />
   </ItemGroup>
 </Project>

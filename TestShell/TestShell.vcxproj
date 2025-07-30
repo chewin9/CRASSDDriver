@@ -134,7 +134,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="process_executor.cpp" />
-    <ClCompile Include="shell.cpp" />
     <ClCompile Include="shell_read.cpp" />
     <ClCompile Include="shell_read_test.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> %(AdditionalOptions)</AdditionalOptions>
@@ -155,7 +154,6 @@
   <ItemGroup>
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="process_executor.h" />
-    <ClInclude Include="shell.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shell_read.h" />
