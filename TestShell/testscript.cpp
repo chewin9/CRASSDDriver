@@ -4,6 +4,8 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <fstream>
+
 const int INVALID_INDEX = 0;
 
 TestScriptRunner::TestScriptRunner(IProcessExecutor* exe) : execute(exe) {
@@ -83,12 +85,26 @@ void TestScript::WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsig
 
 bool TestScript::ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value) {
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
-		if (exe->Process(makeReadCommand(index)) != value) {
+		exe->Process(makeReadCommand(index));
+		if (stoi(ReadOutputFile().substr(2, 10)) != value) {
 			return false;
 		}
 	}
 
 	return true;
+}
+
+std::string TestScript::ReadOutputFile(const std::string& filename) {
+	std::string output;
+	std::ifstream input(filename);
+	if (!input.is_open()) {
+		std::cerr << "파일을 열 수 없습니다: " << filename << std::endl;
+		return output;
+	}
+
+	std::getline(input, output);
+	input.close();
+	return output;
 }
 
 bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
@@ -155,3 +171,4 @@ bool WriteReadAging::Run(IProcessExecutor* exe) {
 
 	return true;
 }
+
