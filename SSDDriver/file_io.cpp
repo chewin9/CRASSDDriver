@@ -2,6 +2,20 @@
 #include <iostream>
 #include <vector>
 
+
+bool FileIO::WriteErrorOutput() {
+
+    if (OpenOutput(SSD_OUTPUT_FILE)) {
+        m_output << "ERROR" << "\n";
+        CloseOutput();
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+
 bool FileIO::OpenInput() {
     m_input.open(SSD_NAND_FILE);
     if (!m_input.is_open()) return false;
@@ -47,13 +61,6 @@ void FileIO::CloseInput() {
     }
 }
 
-bool FileIO::OpenOutput(std::string file) {
-
-    m_output.open(file, std::ios::out | std::ios::trunc);
-    if (!m_output.is_open()) return false;
-}
-
-
 void FileIO::WriteOutput(std::vector<std::pair<int, std::string>> entries) {
 
     OpenOutput(SSD_NAND_FILE);
@@ -62,6 +69,13 @@ void FileIO::WriteOutput(std::vector<std::pair<int, std::string>> entries) {
         m_output << entry.first << " " << entry.second << "\n";
     }
     CloseOutput();
+}
+
+bool FileIO::OpenOutput(std::string file) {
+
+    m_output.open(file, std::ios::out | std::ios::trunc);
+    if (!m_output.is_open()) return false;
+    return true;
 }
 
 void FileIO::CloseOutput() {
