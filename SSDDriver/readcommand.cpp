@@ -2,6 +2,6 @@
 #include "command_parser.h"
 
 bool ReadCommand::Execute() {
-  fileio.ReadNandFile(cmdInfo);
-  return true;
+  bool result = fileio.ReadNandFile(cmdInfo);
+  return result;
 }

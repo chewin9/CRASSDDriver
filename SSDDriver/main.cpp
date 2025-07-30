@@ -2,8 +2,8 @@
 #include "command_factory.h"
 #include "command_parser.h"
 #include "gmock/gmock.h"
-#include "ssd_driver_config.h"
-#if UNITTEST_ENABLE
+
+#if _DEBUG
 int main(void) {
   ::testing::InitGoogleMock();
   return RUN_ALL_TESTS();
