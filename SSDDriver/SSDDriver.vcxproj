@@ -132,6 +132,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="command_parser.cpp" />
+    <ClCompile Include="command_parser_test.cpp" />
     <ClCompile Include="fileIo_test.cpp" />
     <ClCompile Include="file_io.cpp" />
     <ClCompile Include="main.cpp" />
@@ -139,7 +141,9 @@
     <ClCompile Include="readcommand_test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="command_parser.h" />
     <ClInclude Include="readcommand.h" />
+    <ClInclude Include="ssd_driver_config.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="file_io.h" />
