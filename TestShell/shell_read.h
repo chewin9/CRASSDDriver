@@ -10,8 +10,8 @@ public:
     
 private:
     IProcessExecutor* executor_;
-    std::string getSSDDataWithIndex(const std::string& data, int index);
-    std::string getSSDData(void);
+    std::string getSSDOutputDataWithIndex(const std::string& data, int index);
+    std::string getSsdOutputData(void);
     std::tuple<std::string, std::string> parse_command(const std::string& input);
     std::string appendSSDData(void);
     bool isInvalidIndex(int index);

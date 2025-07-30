@@ -89,15 +89,21 @@ TEST_F(ShellReadTestFixture, TSFullRead01) {	//
 		return 0;
 			})
 		.WillRepeatedly([](const std::string& cmd) {
-				// 파일 생성
-				std::ofstream file("ssd_output.txt");
-				file << "0 0x12345678\n";
-				file.close();
-				// int 반환 (mock이므로 임의 값 반환)
-				return 0;
+		// 파일 생성
+		std::ofstream file("ssd_output.txt");
+		file << "0 0x12345678\n";
+		file.close();
+		// int 반환 (mock이므로 임의 값 반환)
+		return 0;
 			});
 
-			EXPECT_THAT(readShell->fullRead("fullread"), ::testing::HasSubstr("2 0xABCDEEEE"));
+		EXPECT_THAT(readShell->fullRead("fullread"), 
+			::testing::AllOf(
+				::testing::HasSubstr("2 0xABCDEEEE"),
+				::testing::HasSubstr("0 0x12345678")
+			)
+		);
+		
 }
 
 TEST_F(ShellReadTestFixture, TSFullRead02) {	//
