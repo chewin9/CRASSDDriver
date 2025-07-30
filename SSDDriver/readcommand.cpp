@@ -1,5 +1,6 @@
 #include "readcommand.h"
+#include "command_parser.h"
 
-bool ReadCommand::Execute(int lba, std::string val) {
+bool ReadCommand::Execute() {
   return true;
 }

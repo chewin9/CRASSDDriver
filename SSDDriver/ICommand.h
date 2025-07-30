@@ -1,10 +1,10 @@
-#pragma once
-
 #include <string>
+#pragma once
+#include "command_parser.h"
 
 class ICommand {
 
 public:
 	virtual ~ICommand() = default;
-	virtual bool Execute(int lba, std::string value) = 0;
+	virtual bool Execute() = 0;
 };
