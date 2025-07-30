@@ -13,6 +13,8 @@ int main(int argc, char* argv[]) {
   CommandParser parser;
   ParsedCommand cmdInfo = parser.ParseCommand(argc, argv);
   ICommand* command = CommandFactory::create(cmdInfo);
+  if (command == nullptr) return;
   command->Execute();
+  delete command;
 }
 #endif
