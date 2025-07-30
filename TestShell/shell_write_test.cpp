@@ -33,8 +33,13 @@ public:
 
 TEST_F(ShellWriteTestFixture, ssd_write) {
 	EXPECT_CALL(executor, Process).Times(1).WillOnce(testing::Return(0));
-
 	shell_write->IssueWrite("write 3 0xAAAABBBB");
+}
+
+TEST_F(ShellWriteTestFixture, ssd_write_checkparam_Read) {
+	shell_write->IssueWrite("read 3 0xAAAABBBB");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_writeLBA) {
@@ -44,10 +49,23 @@ TEST_F(ShellWriteTestFixture, ssd_write_checkparam_writeLBA) {
 	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }
 
-
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data) {
 
 	shell_write->IssueWrite("write 22 ZXCVBNMAqp");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
+}
+
+TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data2) {
+
+	shell_write->IssueWrite("write 22 0xZXCVBNMA");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
+}
+
+TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data3) {
+
+	shell_write->IssueWrite("write aa 0xZXCVBNMA");
 	std::string originalStr = oss.str();
 	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }

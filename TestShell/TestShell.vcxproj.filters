@@ -8,8 +8,9 @@
     <ClCompile Include="testscript_test.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
+    <ClCompile Include="shell_write.cpp" />
   </ItemGroup>
-  <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
+<ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
@@ -59,6 +60,7 @@
     <ClInclude Include="process_executor.h" />
     <ClInclude Include="testscript.h" />
     <ClInclude Include="test.h" />
+  <ItemGroup>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

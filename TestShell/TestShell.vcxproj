@@ -147,7 +147,9 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="shell_write.h" />
+    <ClCompile Include="shell_write.cpp" />
     <ClCompile Include="testscript.cpp" />
     <ClCompile Include="testscript_test.cpp" />
   </ItemGroup>
