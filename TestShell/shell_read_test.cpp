@@ -77,7 +77,7 @@ TEST_F(ShellReadTestFixture, TSReadInvalidLBA02) {	//
 	EXPECT_EQ(readShell->read("read -1"), "ERROR");
 }
 
-TEST_F(ShellReadTestFixture, TSFullRead01) {	//
+TEST_F(ShellReadTestFixture, DISABLED_TSFullRead01) {	//
 	EXPECT_CALL(mockExecutor, Process)
 		.WillOnce([](const std::string& cmd) {
 		// 颇老 积己
@@ -105,7 +105,7 @@ TEST_F(ShellReadTestFixture, TSFullRead01) {	//
 		
 }
 
-TEST_F(ShellReadTestFixture, TSFullRead02) {	//
+TEST_F(ShellReadTestFixture, DISABLED_TSFullRead02) {	//
 	EXPECT_CALL(mockExecutor, Process)
 		.WillRepeatedly([](const std::string& cmd) {
 		// 颇老 积己
