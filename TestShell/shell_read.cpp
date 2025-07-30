@@ -24,6 +24,8 @@ std::string ShellRead::read(const std::string input) {
 	// Parse 하는 부분
 	std::tuple<std::string, std::string> parseCommand = parse_command(input);
 
+	if (!std::get<1>(parseCommand).empty()) return ERROR_RETURN;
+
 	//SSD 수행
 	std::string cmdLine = "SSDDriver.exe R " + std::get<1>(parseCommand);
 	executor_->Process(cmdLine);
