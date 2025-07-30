@@ -11,7 +11,7 @@ public:
     static constexpr int LBA_MIN = 0;
     static constexpr int LBA_MAX = 99;
 
-    bool Write(const int LBA, const std::string& value);
+    const std::string SSD_NAND_FILE = "ssd_nand.txt";
 
     void Close();
 
@@ -19,5 +19,4 @@ public:
 
 private:
     std::fstream   fs_;
-    std::string    SSD_NAND_FILE = "ssd_nand.txt";
 };
