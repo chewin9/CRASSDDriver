@@ -63,12 +63,12 @@ std::string TestScript::makeWriteCommand(unsigned int addr, unsigned int value) 
 	char str[11];
 	sprintf_s(str, "0x%x", value);
 	format = str;
-	std::string result = "W " + std::to_string(addr) + " " + format;
+	std::string result = GetSSDName() + " W " + std::to_string(addr) + " " + format;
 	return result;
 }
 
 std::string TestScript::makeReadCommand(unsigned int addr) {
-	std::string str = "R " + std::to_string(addr);
+	std::string str = GetSSDName() + " R " + std::to_string(addr);
 	return str;
 }
 
@@ -106,35 +106,35 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
 
 bool PartialLBAWrite::Run(IProcessExecutor* exe)
 {
-	bool Read_0 = false;
-	bool Read_1 = false;
-	bool Read_2 = false;
-	bool Read_3 = false;
-	bool Read_4 = false;
+	bool IsPass = true;
 
-
-	for (int i = 0; i < MAX_LOOP_COUNT; i++)
+	for (int loopcount = 0; loopcount < MAX_LOOP_COUNT; loopcount++)
 	{
-		std::string R0 = "0xAAAAAAA0";
-		std::string R1 = "0xAAAAAAA1";
-		std::string R2 = "0xAAAAAAA2";
-		std::string R3 = "0xAAAAAAA3";
-		std::string R4 = "0xAAAAAAA4";
+		PartialBlockWrite(exe);
 
-		exe->Process("ssd.exe W 0 " + R0);
-		exe->Process("ssd.exe W 1 " + R1);
-		exe->Process("ssd.exe W 2 " + R2);
-		exe->Process("ssd.exe W 3 " + R3);
-		exe->Process("ssd.exe W 4 " + R4);
+		IsPass = GetPartialReadAndCompareResult(exe);
 
-		Read_0 = exe->Process("ssd.exe R 0") == 0xAAAAAAA0;
-		Read_1 = exe->Process("ssd.exe R 1") == 0xAAAAAAA1;
-		Read_2 = exe->Process("ssd.exe R 2") == 0xAAAAAAA2;
-		Read_3 = exe->Process("ssd.exe R 3") == 0xAAAAAAA3;
-		Read_4 = exe->Process("ssd.exe R 4") == 0xAAAAAAA4;
-
-		if ((Read_0 && Read_1 && Read_2 && Read_3 && Read_4) == false) return false;
+		if (IsPass == false) break;
 	}
 
-	return true;
+	return IsPass;
+}
+
+bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe)
+{
+	bool IsPass = true;
+
+	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
+		IsPass = IsPass && (exe->Process(makeReadCommand(readcount)) == std::stoul(value_list[readcount], nullptr, 16));
+	}
+
+	return IsPass;
+}
+
+void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
+{
+	for (int writecount = 0; writecount < MAX_TEST_AREA; writecount++)
+	{
+		exe->Process(makeWriteCommand(writecount, std::stoul(value_list[writecount], nullptr, 16)));
+	}
 }
