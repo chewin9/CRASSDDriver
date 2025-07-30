@@ -10,44 +10,17 @@ const int MAX_ADDR = 99;
 
 class TestScript {
 public:
+
 	TestScript(std::string name) : m_name(name) {
 
 	}
 
 	virtual bool Run(IProcessExecutor* exe) = 0;
-	std::string GetName() {
-		return m_name;
-	}
-
-	std::string makeWriteCommand(IProcessExecutor* exe, unsigned int addr, unsigned int value) {
-		std::string format;
-		char str[11];
-		sprintf_s(str, "0x%x", value);
-		format = str;
-		std::string result = "W " + std::to_string(addr) + " " + format;
-		return result;
-	}
-
-	std::string makeReadCommand(IProcessExecutor* exe, unsigned int addr) {
-		std::string str = "R " + std::to_string(addr);
-		return str;
-	}
-
-	void WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value) {
-		for (unsigned int index = startaddr; index < startaddr + len; index++) {
-			exe->Process(makeWriteCommand(exe, index, value));
-		}
-	}
-
-	bool ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value) {
-		for (unsigned int index = startaddr; index < startaddr + len; index++) {
-			if (exe->Process(makeReadCommand(exe, index)) != value) {
-				return false;
-			}
-		}
-
-		return true;
-	}
+	std::string GetName();
+	std::string makeWriteCommand(IProcessExecutor* exe, unsigned int addr, unsigned int value);
+	std::string makeReadCommand(IProcessExecutor* exe, unsigned int addr);
+	void WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value);
+	bool ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value);
 
 protected:
 	std::string m_name = nullptr;
@@ -80,6 +53,14 @@ public:
 
 		return true;
 	}
+};
+
+class PartialLBAWrite : public TestScript {
+public:
+	PartialLBAWrite(std::string name) : TestScript(name) {}
+	bool Run(IProcessExecutor* exe) override;
+private:
+	const unsigned int MAX_LOOP_COUNT = 30;
 };
 
 class TestScriptRunner {

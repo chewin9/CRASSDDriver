@@ -8,6 +8,9 @@
     <ClCompile Include="testscript_test.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
+    <ClCompile Include="process_executor.cpp" />
+    <ClCompile Include="shell_read_test.cpp" />
+    <ClCompile Include="shell_read.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
@@ -22,15 +25,6 @@
     <ClCompile Include="shell_write_test.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="shell.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="shell_read_test.cpp">
-      <Filter>리소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="process_executor.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="process_executor.h" />
     <ClInclude Include="testscript.h" />
@@ -40,19 +34,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="shell.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="iprocess_executor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="process_executor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ssd_output.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
+    <ClInclude Include="shell_read.h" />
   </ItemGroup>
 </Project>
