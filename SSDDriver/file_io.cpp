@@ -83,7 +83,6 @@ void FileIO::WriteOutput(ParsedCommand pc) {
 void FileIO::WriteValueToOutputFile(std::string val) {
   std::ofstream outFile(SSD_OUTPUT_FILE);
   if (!outFile.is_open()) {
-    std::cerr << "오류: '" << SSD_OUTPUT_FILE << "' 파일을 열 수 없습니다.\n";
     return;
   }
   outFile << val << std::endl;
