@@ -11,8 +11,9 @@ int main(void) {
 #else
 int main(int argc, char* argv[]) {
   CommandParser parser;
+  FileIO fileio;
   ParsedCommand cmdInfo = parser.ParseCommand(argc, argv);
-  ICommand* command = CommandFactory::create(cmdInfo);
+  ICommand* command = CommandFactory::create(cmdInfo, fileio);
   if (command == nullptr) return 0;
   command->Execute();
   delete command;

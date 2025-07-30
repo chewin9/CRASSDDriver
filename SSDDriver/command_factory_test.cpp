@@ -8,8 +8,8 @@
 TEST(CommandFactoryTest, CreateReadCommand) { 
 	CommandFactory factory;
   ParsedCommand cmd = {"R", 10, "", false};
-  
-  ICommand* result = factory.create(cmd);
+  FileIO fileio;
+  ICommand* result = factory.create(cmd, fileio);
 
   EXPECT_NE(result, nullptr);
   EXPECT_TRUE(dynamic_cast<ReadCommand*>(result) != nullptr);
@@ -20,8 +20,8 @@ TEST(CommandFactoryTest, CreateReadCommand) {
 TEST(CommandFactoryTest, CreateWriteCommand) {
   CommandFactory factory;
   ParsedCommand cmd = {"W", 10, "0xAAAABBBB", false};
-
-  ICommand* result = factory.create(cmd);
+  FileIO fileio;
+  ICommand* result = factory.create(cmd, fileio);
 
   EXPECT_NE(result, nullptr);
   EXPECT_TRUE(dynamic_cast<WriteCommand*>(result) != nullptr);
@@ -32,8 +32,8 @@ TEST(CommandFactoryTest, CreateWriteCommand) {
 TEST(CommandFactoryTest, ReturnNullPtr) {
   CommandFactory factory;
   ParsedCommand cmd = {"S", 10, "0xAAAABBBB", false};
-
-  ICommand* result = factory.create(cmd);
+  FileIO fileio;
+  ICommand* result = factory.create(cmd, fileio);
 
   EXPECT_EQ(result, nullptr);
 

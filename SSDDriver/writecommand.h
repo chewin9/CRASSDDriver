@@ -5,9 +5,9 @@
 
 class WriteCommand : public ICommand {
   ParsedCommand& cmdInfo;
-  FileIO file_io;
+  FileIO& file_io;
 
  public:
-  WriteCommand(ParsedCommand& cmdInfo) : cmdInfo{cmdInfo} {}
+	 WriteCommand(ParsedCommand& cmdInfo, FileIO& file_io) : cmdInfo{ cmdInfo }, file_io{file_io} {}
   bool Execute() override;
 };

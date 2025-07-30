@@ -38,7 +38,7 @@ class SSDCommandTest : public ::testing::Test {
   }
 
   void ExecuteCommand(ParsedCommand cmd) {
-    ICommand* command = CommandFactory::create(cmd);
+    ICommand* command = CommandFactory::create(cmd, fileio);
     ASSERT_NE(command, nullptr);
     command->Execute();
     delete command;
@@ -53,6 +53,8 @@ class SSDCommandTest : public ::testing::Test {
     }
     return false;
   }
+public:
+    FileIO fileio;
 };
 
 TEST_F(SSDCommandTest, FileWriteAndCheck) {
@@ -117,7 +119,7 @@ TEST_F(SSDCommandTest, MultiWriteRead_ThirdValueShouldMatch) {
     CommandParser parser;
     ParsedCommand cmd = parser.ParseCommand(argc, argv.data());
 
-    ICommand* writeCmd = CommandFactory::create(cmd);
+    ICommand* writeCmd = CommandFactory::create(cmd, fileio);
     ASSERT_NE(writeCmd, nullptr);
     writeCmd->Execute();
     delete writeCmd;
@@ -131,7 +133,7 @@ TEST_F(SSDCommandTest, MultiWriteRead_ThirdValueShouldMatch) {
   CommandParser parser;
   ParsedCommand readCmd = parser.ParseCommand(readArgc, readArgv.data());
 
-  ICommand* readCommand = CommandFactory::create(readCmd);
+  ICommand* readCommand = CommandFactory::create(readCmd, fileio);
   ASSERT_NE(readCommand, nullptr);
   readCommand->Execute();
   delete readCommand;

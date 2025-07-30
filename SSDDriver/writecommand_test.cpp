@@ -16,29 +16,30 @@ class WriteCommandFixture : public Test {
   std::string normalValue = "0xFFFFFFFF";
   std::vector<std::string> abnormalValue = {"0xFFF", "0x00000GGG", "FFFFFFFF",
                                             ""};
+  FileIO fileio;
 };
 
 TEST_F(WriteCommandFixture, WriteNewFile) {
   for (int i = 0; i < MAX_VAL_SIZE; i++) {
     ParsedCommand cmdInfo = {"W", normalLba, normalValue, false};
-    WriteCommand write_command(cmdInfo);
+    WriteCommand write_command(cmdInfo, fileio);
     EXPECT_EQ(true, write_command.Execute());
   }
 }
 
 TEST_F(WriteCommandFixture, OverwirteNewLBA) {
   ParsedCommand cmdInfo = {"W", normalLba, normalValue, false};
-  WriteCommand write_command(cmdInfo);
+  WriteCommand write_command(cmdInfo, fileio);
   write_command.Execute();
 
   std::string new_value = "0xAAAABBBD";
   ParsedCommand cmdInfo_new_val = {"W", normalLba, new_value, false};
-  WriteCommand write_command_with_new_val(cmdInfo_new_val);
+  WriteCommand write_command_with_new_val(cmdInfo_new_val, fileio);
   write_command.Execute();
 
   int new_lba = 3;
   new_value = "0x1298CDEF";
   ParsedCommand cmdInfo_new_lba = {"W", new_lba, new_value, false};
-  WriteCommand write_command_with_new_lba(cmdInfo_new_lba);
+  WriteCommand write_command_with_new_lba(cmdInfo_new_lba, fileio);
   EXPECT_EQ(true, write_command.Execute());
 }
