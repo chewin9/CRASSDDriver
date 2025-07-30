@@ -5,7 +5,7 @@
 
 using namespace testing;
 
-class TestSciprtTestFixture : public Test
+class TestScriptTestFixture : public Test
 {
 public:
 	void PartialWriteSetup(int callcount)
@@ -46,32 +46,32 @@ private:
 	const std::string SSD_DRIVER_NAME = "ssd.exe";
 };
 
-TEST_F(TestSciprtTestFixture, 1_FullWriteAndReadCompare) {
+TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompare) {
 
 	CheckResult(true, "1_FullWriteAndReadCompare");
 }
 
-TEST_F(TestSciprtTestFixture, 2_PartialLBAWriteCmdTestPass)
+TEST_F(TestScriptTestFixture, 2_PartialLBAWriteCmdTestPass)
 {
 	PartialWriteSetup(30);
 	PartialReadSetUp();
 	CheckResult(true, "2_PartialLBAWrite");
 }
 
-TEST_F(TestSciprtTestFixture, 2_PartialLBAWriteCmdTestFail)
+TEST_F(TestScriptTestFixture, 2_PartialLBAWriteCmdTestFail)
 {
 	PartialWriteSetup(1);
 	ReadSetUpFail();
 	CheckResult(false, "2_PartialLBAWrite");
 }
 
-TEST_F(TestSciprtTestFixture, 2_CmdTestPass) {
+TEST_F(TestScriptTestFixture, 2_CmdTestPass) {
 	PartialWriteSetup(30);
 	PartialReadSetUp();
 	CheckResult(true, "2_");
 }
 
-TEST_F(TestSciprtTestFixture, 2_CmdTestFail) {
+TEST_F(TestScriptTestFixture, 2_CmdTestFail) {
 	PartialWriteSetup(1);
 	ReadSetUpFail();
 	CheckResult(false, "2_");
