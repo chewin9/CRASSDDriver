@@ -6,7 +6,7 @@
 #include <tuple>
 #include "shell.h"
 
-std::tuple<std::string, std::string> parse_command(const std::string& input) {
+std::tuple<std::string, std::string> Shell::parse_command(const std::string& input) {
     std::istringstream iss(input);
     std::string cmd;
     std::string num_str;
@@ -14,16 +14,18 @@ std::tuple<std::string, std::string> parse_command(const std::string& input) {
     return { cmd, num_str };
 }
 
+string Shell::get_command(string& input) {
+    std::cout << "> "; // Prompt
+    std::getline(std::cin, input);
+
+    std::tuple<std::string, std::string> parseCommand = parse_command(input);
+    return std::get<0>(parseCommand);
+}
+
 int Shell::Run(void) {
     std::string input;
     while (true) {
-        std::cout << "> "; // Prompt
-        std::getline(std::cin, input);
-
-        std::tuple<std::string, std::string> parseCommand = parse_command(input);
-
-        //SSD ผ๖วเ
-        string cmd = std::get<0>(parseCommand);
+        string cmd = get_command(input);
 
         if (cmd == "exit") {
             std::cout << "Exiting program.\n";
