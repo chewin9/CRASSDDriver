@@ -40,9 +40,14 @@ TEST_F(ShellWriteTestFixture, ssd_write) {
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_writeLBA) {
 
 	shell_write->IssueWrite("write 100000 0xAAAABBBB");
-
 	std::string originalStr = oss.str();
-
 	EXPECT_EQ(originalStr, INVALID_COMMAND);
 }
 
+
+TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data) {
+
+	shell_write->IssueWrite("write 22 ZXCVBNMAqp");
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, INVALID_COMMAND);
+}

@@ -57,10 +57,18 @@ public:
             return;  // not valid command 
         }
 
-        if (input.find("write ") == 0) {
-            std::string cmdLine = "ssd.exe W " + input.substr(6);
-            executor_->Process(cmdLine);
+        string data = cmdLineVector[2];
+        if (data.length() != 10) {
+            printError();
         }
+
+        if (false == is_valid_unsigned(data)) {
+            printError();
+            return;
+        }
+
+        std::string cmdLine = "ssd.exe W " + input.substr(6);
+        executor_->Process(cmdLine);
     }
 
 private:
