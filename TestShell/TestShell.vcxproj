@@ -134,6 +134,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="process_executor.cpp" />
+    <ClCompile Include="shell.cpp" />
     <ClCompile Include="shell_read.cpp" />
     <ClCompile Include="shell_full_write.cpp" />
     <ClCompile Include="shell_read_test.cpp">
@@ -158,6 +159,7 @@
     <ClInclude Include="process_executor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="shell.h" />
     <ClInclude Include="shell_read.h" />
     <ClInclude Include="shell_full_write.h" />
     <ClInclude Include="test.h" />
