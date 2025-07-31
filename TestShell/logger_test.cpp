@@ -9,43 +9,37 @@ MATCHER(IsExistingFile, "checks if file exists") {
     return (err == 0) && (f != nullptr);
 }
 
-TEST(LogTest, NormalLogOutput) {
+class LogTest : public Test {
+public:
+	void SetUp() override {
+		oldCoutStreamBuf = std::cout.rdbuf();
+		std::cout.rdbuf(oss.rdbuf());
+	}
+	
+	void TearDown() override {
+		std::cout.rdbuf(oldCoutStreamBuf);
+		//std::cout <<"result: "<< oss.str() << std::endl;
+	}
 	Logger logger;
 	std::ostringstream oss;
 	std::streambuf* oldCoutStreamBuf;
-	oldCoutStreamBuf = std::cout.rdbuf();
-	std::cout.rdbuf(oss.rdbuf());
-
 	std::string filename = "latest.log";
+};
+
+TEST_F(LogTest, NormalLogOutput) {
 
 	logger.print("Shell.release()", "hello!");
 
-	// 1. console print
-	EXPECT_THAT(oss.str(), Not(StrEq(""))); // no print 
-	// 2. file output generation with .log expansion
+	EXPECT_THAT(oss.str(), Not(StrEq(""))); 
 	EXPECT_THAT(filename, IsExistingFile());
-	std::cout.rdbuf(oldCoutStreamBuf);
 }
 
-TEST(LogTest, NoLogOutputOnConsole) {
-	Logger logger;
-
-	std::ostringstream oss;
-	std::streambuf* oldCoutStreamBuf;
-
-	oldCoutStreamBuf = std::cout.rdbuf();
-	std::cout.rdbuf(oss.rdbuf());
-
-	std::string filename = "latest.log";
+TEST_F(LogTest, NoLogOutputOnConsole) {
 
 	logger.disable_console_print();
-
 	logger.print("Shell.release()", "hello!");
-	// 1. console print should not happen
-	EXPECT_THAT(oss.str(), StrEq("")); // no print 
-	// 2. file output generation with .log expansion
-	EXPECT_THAT(filename, IsExistingFile());
 
-	std::cout.rdbuf(oldCoutStreamBuf);
+	EXPECT_THAT(oss.str(), StrEq("")); 
+	EXPECT_THAT(filename, IsExistingFile());
 }
 
