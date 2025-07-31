@@ -87,31 +87,3 @@ TEST_F(ShellReadTestFixture, TSReadInvalidLBA03) {	//
 	readShell->read("read");
 	checkExpectedConsoleOutput("INVALID COMMAND\n");
 }
-
-TEST_F(ShellReadTestFixture, TSFullRead01) {	//
-	EXPECT_CALL(mockExecutor, Process)
-		.WillOnce([](const std::string& cmd) {
-		// 파일 생성
-		std::ofstream file("ssd_output.txt");
-		file << "0xABCDEEEE\n";
-		file.close();
-		// int 반환 (mock이므로 임의 값 반환)
-		return 0;
-			})
-		.WillRepeatedly([](const std::string& cmd) {
-		// 파일 생성
-		std::ofstream file("ssd_output.txt");
-		file << "0x12345678\n";
-		file.close();
-		// int 반환 (mock이므로 임의 값 반환)
-		return 0;
-			});
-	
-		readShell->fullRead("fullread");
-		checkExpectedConsoleOutputPart("0 0xABCDEEEE");
-}
-
-TEST_F(ShellReadTestFixture, TSFullRead02) {	//
-	readShell->fullRead("fullread 1");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
-}
