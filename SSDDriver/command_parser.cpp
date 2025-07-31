@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-void CommandParser::CheckException(int argc, char* argv[]) {
+void CommandParser::CheckException(int argc, char* argv[], const ParsedCommand& cmd) {
   if (argc < 3) {
     throw std::invalid_argument("Not Enough Arguments!");
   }
@@ -14,7 +14,7 @@ void CommandParser::CheckException(int argc, char* argv[]) {
   }
 }
 
-bool CommandParser::IsLbaErrorExist(int argc, char* argv[]) {
+bool CommandParser::IsLbaErrorExist(const ParsedCommand& cmd) {
   if (cmd.lba < MIN_VAL || cmd.lba > MAX_VAL) {
     return true;
   }
@@ -22,7 +22,7 @@ bool CommandParser::IsLbaErrorExist(int argc, char* argv[]) {
   return false;
 }
 
-bool CommandParser::IsValueErrorExist(int argc, char* argv[]) {
+bool CommandParser::IsValueErrorExist(const ParsedCommand& cmd) {
   if (cmd.opCode == "R") return false;
   if (cmd.value == "" || cmd.value.size() != SIZE_OF_VALUE ||
       (cmd.value.size() > SIZE_OF_HEX_NOTATION &&
@@ -39,12 +39,26 @@ bool CommandParser::IsValueErrorExist(int argc, char* argv[]) {
   return false;
 }
 
+bool CommandParser::IsEraseSizeErrorExist(const ParsedCommand& cmd) {
+    if (cmd.opCode == "E") {
+        if (cmd.erase_size < MIN_VAL || cmd.erase_size >= SIZE_OF_VALUE)
+            return true;
+
+        if (cmd.lba + cmd.erase_size > 100) return true;
+    }
+
+
+    return false;
+}
+
 ParsedCommand CommandParser::ParseCommand(int argc, char* argv[]) {
-  CheckException(argc, argv);
+  ParsedCommand cmd;
+  CheckException(argc, argv, cmd);
   cmd.opCode = argv[1];
   cmd.lba = std::stoi(argv[2]);
   if (cmd.opCode == "W") cmd.value = argv[3];
-  if (IsLbaErrorExist(argc, argv) || IsValueErrorExist(argc, argv)) {
+  else if (cmd.opCode == "E") cmd.erase_size = std::stoi(argv[3]);
+  if (IsLbaErrorExist(cmd) || IsValueErrorExist(cmd) || IsEraseSizeErrorExist(cmd)) {
     cmd.errorFlag = true;
   }
   return cmd;

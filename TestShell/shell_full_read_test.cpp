@@ -57,11 +57,11 @@ TEST_F(ShellFullReadTestFixture, TSFullRead01) {	//
 				return 0;
 			});
 
-			shellFullRead->fullread("fullread");
+			shellFullRead->Run("fullread");
 			checkExpectedConsoleOutputPart("0 0xABCDEEEE");
 }
 
 TEST_F(ShellFullReadTestFixture, TSFullRead02) {	//
-	shellFullRead->fullread("fullread 1");
+	shellFullRead->Run("fullread 1");
 	checkExpectedConsoleOutput("INVALID COMMAND\n");
 }

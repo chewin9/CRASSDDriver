@@ -3,8 +3,7 @@
 #include "command_parser.h"
 
 class ICommand {
-
-public:
-	virtual ~ICommand() = default;
-	virtual bool Execute() = 0;
+ public:
+  virtual ~ICommand() = default;
+  virtual bool Execute(const ParsedCommand& cmdInfo) = 0;
 };

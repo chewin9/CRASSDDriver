@@ -40,10 +40,12 @@ int Shell::Run(void) {
             cmd->Run(input);
         }
         else if (cmd == "read") {
-            shell_read->read(input);
+            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellRead>(executor);
+            cmd->Run(input);
         }
         else if (cmd == "fullread") {
-            shell_fullread->fullread(input);
+            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellFullRead>(executor);
+            cmd->Run(input);
         }
         else if (cmd == "help") {
             std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellHelp>(executor);

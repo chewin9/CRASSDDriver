@@ -7,22 +7,18 @@
 #include "testscript.h"
 #include "shell_help.h"
 #include "process_executor.h"
+#include "File.h"
 
 class Shell {
 public:
     Shell() {
         executor = new ProcessExecutor();
-        shell_read = new ShellRead(executor);
-        shell_fullread = new ShellFullRead(executor);
-        script_runner = new TestScriptRunner(executor);
-        shell_help = new ShellHelp(executor);
+        script_runner = new TestScriptRunner(executor, &testscriptfile);
     };
 
     Shell(IProcessExecutor * exe) {
         executor = exe;
-        shell_read = new ShellRead(exe);
-        shell_fullread = new ShellFullRead(exe);
-        script_runner = new TestScriptRunner(exe);
+        script_runner = new TestScriptRunner(exe, nullptr);
     }
 
     int Run(void);
@@ -30,9 +26,7 @@ public:
 
 private:
     IProcessExecutor* executor;
-    ShellFullRead* shell_fullread;
-    ShellRead* shell_read;
-    ShellHelp* shell_help;
+    File testscriptfile;
 
     TestScriptRunner* script_runner;
 
