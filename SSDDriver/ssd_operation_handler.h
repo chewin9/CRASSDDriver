@@ -3,7 +3,7 @@
 #include "file_io.h"
 class SsdOperationHandler {
  private:
-  std::vector<std::pair<int, std::string>> nandData;
+  std::unordered_map<int, std::string> nandData;
   FileIO& fileHandler;
   ParsedCommand& cmdInfo;
 
