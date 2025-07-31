@@ -1,9 +1,27 @@
 #include "ssd_operation_handler.h"
 
-void SsdOperationHandler::write() {
-	// 1. map or vec = fileHandler.LoadData(map or vec); // Load Data to Vector from ssd_nand.txt
-	// 2. add update logic here
-	// 3. fileHandler.SaveData(map or vec); // updated vector is saved in ssd_nand.txt
+void SsdOperationHandler::write()
+{
+	if (cmdInfo.errorFlag) {
+		fileHandler.WriteValueToOutputFile("ERROR");
+		return;
+	}
+
+	nandData = fileHandler.LoadDataFromInput();
+	UpdateData();
+	fileHandler.SaveData(nandData);
 }
 
 bool SsdOperationHandler::read() { return false; }
+
+bool SsdOperationHandler::UpdateData()
+{
+	auto it = nandData.find(cmdInfo.lba);
+	if (it != nandData.end()) {
+		it->second = cmdInfo.value;
+		return true;
+	}
+
+	nandData.emplace(cmdInfo.lba, cmdInfo.value);
+	return false;
+}

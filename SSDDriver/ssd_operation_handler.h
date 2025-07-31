@@ -1,9 +1,10 @@
 #pragma once
 #include <vector>
 #include "file_io.h"
+
 class SsdOperationHandler {
  private:
-  std::vector<std::pair<int, std::string>> nandData;
+  std::unordered_map<int, std::string> nandData;
   FileIO& fileHandler;
   ParsedCommand& cmdInfo;
 
@@ -11,7 +12,10 @@ class SsdOperationHandler {
   SsdOperationHandler(FileIO& handler, ParsedCommand& cmdInfo)
       : fileHandler{handler}, cmdInfo{cmdInfo} {}
 
-  void write();
 
+ bool UpdateData();
+
+  void write();
   bool read();
+  //bool erase();
 };
