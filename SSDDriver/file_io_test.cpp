@@ -156,17 +156,28 @@ TEST_F(FileIOFixture, GenBufferFolder) {
 }
 
 
-TEST_F(FileIOFixture, GenEmptyFileAndCheckNameValidity) {
+TEST_F(FileIOFixture, GenEmptyFileAndCheckSizeAndName) {
 
     file_io.GenFolderAndEmtyFiles();
 
     auto filenames = file_io.LoadCommandBuffer();
     EXPECT_EQ(filenames.size(), 5u);
 
-
     for (int i = 1; i <= 5; ++i) {
         const std::string name = std::to_string(i) + "_empty";
         EXPECT_NE(std::find(filenames.begin(), filenames.end(), name), filenames.end()
         );
+
+        EXPECT_EQ(filenames[i-1], name);
     }
+}
+
+
+TEST_F(FileIOFixture, CheckChangedFileName) {
+
+    file_io.GenFolderAndEmtyFiles();
+    std::vector<std::string> in_command = { "1_ABC", "2_DEF", "3_HIJ" };
+
+    file_io.ChangeFileName(in_command);
+
 }
