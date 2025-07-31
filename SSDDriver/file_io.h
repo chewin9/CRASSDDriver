@@ -15,6 +15,9 @@ public:
     std::ofstream m_output;
     void WriteValueToOutputFile(std::string str);
     bool OpenInput();
+    std::unordered_map<int, std::string> LoadDataFromInput();
+    bool UpdateData(std::unordered_map<int, std::string>& entries,
+        const ParsedCommand& pc);
     std::unordered_map<int, std::string> getEntriesFromInput(ParsedCommand& pc);
     void WriteOutput(ParsedCommand pc);
     void CloseInput();

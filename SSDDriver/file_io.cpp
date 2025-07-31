@@ -17,31 +17,44 @@ void FileIO::CloseInput() {
     }
 }
 
-std::unordered_map<int, std::string> FileIO::getEntriesFromInput(ParsedCommand& pc) {
-    OpenInput();
-    bool updated = false;
+std::unordered_map<int, std::string> FileIO::LoadDataFromInput() {
     std::unordered_map<int, std::string> entries;
-
     std::string line;
+
     while (std::getline(m_input, line)) {
         std::istringstream iss(line);
-        int existing_LBA;
-        std::string existing_value;
+        int existingLBA;
+        std::string existingValue;
 
-        if (iss >> existing_LBA >> existing_value) {
-            entries[existing_LBA] = (existing_LBA == pc.lba) ? pc.value : existing_value;
-
-            if (existing_LBA == pc.lba) {
-                updated = true;
-            }
+        if (iss >> existingLBA >> existingValue) {
+            entries[existingLBA] = std::move(existingValue);
         }
     }
+    return entries;
+}
 
-    if (!updated) {
-        entries[pc.lba] = pc.value;
+bool FileIO::UpdateData(std::unordered_map<int, std::string>& entries,
+    const ParsedCommand& pc)
+{
+    auto it = entries.find(pc.lba);
+    if (it != entries.end()) {
+        it->second = pc.value;
+        return true;
+    }
+    return false;
+}
+
+
+
+std::unordered_map<int, std::string> FileIO::getEntriesFromInput(ParsedCommand& pc) {
+    OpenInput();
+    auto entries = LoadDataFromInput();
+    CloseInput();
+
+    if (!UpdateData(entries, pc)) {
+        entries.emplace(pc.lba, pc.value);
     }
 
-    CloseInput();
     return entries;
 }
 
@@ -63,12 +76,13 @@ void FileIO::WriteOutput(ParsedCommand pc) {
   }
 
   std::unordered_map<int, std::string> entries = getEntriesFromInput(pc);
+  // std::unordered_map<int, std::string> entries = LoadData();
+  // updateData(entries, pc)
+  
   OpenOutput(SSD_NAND_FILE);
-
   for (const auto& entry : entries) {
     m_output << entry.first << " " << entry.second << "\n";
   }
-
   CloseOutput();
 }
 
