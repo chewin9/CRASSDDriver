@@ -87,11 +87,7 @@ std::string TestScript::makeReadCommand(unsigned int addr) {
 }
 
 std::string TestScript::makeEraseCommand(unsigned int addr, unsigned int size) {
-	std::string format;
-	char str[11];
-	sprintf_s(str, "0x%08X", size);
-	format = str;
-	std::string result = GetSSDName() + " E " + std::to_string(addr) + " " + format;
+	std::string result = GetSSDName() + " E " + std::to_string(addr) + " " + std::to_string(size);
 	return result;
 }
 
