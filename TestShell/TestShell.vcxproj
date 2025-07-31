@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> %(AdditionalOptions)</AdditionalOptions>
@@ -160,13 +161,16 @@
     </ClCompile>
     <ClCompile Include="shell_write.h" />
     <ClCompile Include="testscript.cpp" />
+    <ClCompile Include="testscriptfactory.cpp" />
     <ClCompile Include="testscript_test.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="File.h" />
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="process_executor.h" />
+    <ClInclude Include="testscriptfactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shell.h" />

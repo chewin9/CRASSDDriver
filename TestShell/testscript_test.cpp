@@ -34,7 +34,7 @@ public:
 			.WillRepeatedly(Return(0xFFFFFFFF));
 	}
 
-	void CheckResult(int expected, std::string cmdline)
+	void CheckResult(bool expected, std::string cmdline)
 	{
 		EXPECT_EQ(expected, script.runScript(cmdline));
 	}
