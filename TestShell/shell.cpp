@@ -57,8 +57,13 @@ int Shell::Run(std::string arg) {
             std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellHelp>(executor);
             cmd->Run(input);
         }
-        else if (cmd == "") {
-
+        else if (cmd == "erase") {
+            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellErase>(executor);
+            cmd->Run(input);
+        }
+        else if (cmd == "erase_range") {
+            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellEraseRange>(executor);
+            cmd->Run(input);
         }
         else {
             if (nullptr == script_runner->getScript(input)) {
