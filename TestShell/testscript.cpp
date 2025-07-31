@@ -9,7 +9,7 @@
 
 const int INVALID_INDEX = 0;
 
-TestScriptRunner::TestScriptRunner(IProcessExecutor* exe) : execute(exe) {
+TestScriptRunner::TestScriptRunner(IProcessExecutor* exe, IFile* _file) : execute(exe), file(_file) {
 	addScripts();
 }
 
@@ -19,7 +19,7 @@ bool TestScriptRunner::runScript(const std::string& commandLine) {
 		return false;
 	}
 
-	return testScripts.at(commandIdx)->Run(execute);
+	return testScripts.at(commandIdx)->Run(execute, file);
 }
 
 bool TestScriptRunner::IsValidSciprtCommand(const std::string& commandLine) {
@@ -97,17 +97,17 @@ void TestScript::WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsig
 	}
 }
 
-void TestScript::EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len) {
+void TestScript::EraseBlock(IProcessExecutor* exe, IFile * file, unsigned int startaddr, unsigned int len) {
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeEraseCommand(index, len));
 	}
 }
 
-bool TestScript::ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value) {
+bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int startaddr, unsigned int len, unsigned value) {
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeReadCommand(index));
 		try {
-			if (std::stoi(File::ReadOutputFile().substr(2, 10), nullptr, 16) != value) {
+			if (std::stoi(file->ReadOutputFile("ssd_output.txt").substr(2, 10), nullptr, 16) != value) {
 
 				return false;
 			}
@@ -115,6 +115,80 @@ bool TestScript::ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsi
 		catch (std::exception e) {
 			return false;
 		}
+	}
+
+	return true;
+}
+
+bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
+	//Script
+	int value = 5;
+	int start = 0;
+	const int length = 5;
+
+	for (start = 0; start < MAX_ADDR; start += length) {
+		for (int index = start;index < start + length; index++) {
+			WriteBlock(exe, start, length, value);
+			if (ReadCompare(exe, file, start, length, value) == false) return false;
+		}
+	}
+
+	return true;
+}
+
+bool PartialLBAWrite::Run(IProcessExecutor* exe, IFile* file)
+{
+	bool IsPass = true;
+
+	for (int loopcount = 0; loopcount < MAX_LOOP_COUNT; loopcount++)
+	{
+		PartialBlockWrite(exe);
+
+		IsPass = GetPartialReadAndCompareResult(exe, file);
+
+		if (IsPass == false) break;
+	}
+
+	return IsPass;
+}
+
+bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFile* file)
+{
+	bool IsPass = true;
+
+	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
+		exe->Process(makeReadCommand(readcount));
+		try {
+			IsPass = IsPass && (stoi(file->ReadOutputFile("ssd_output.txt").substr(2, 10)) == std::stoul(value_list[readcount], nullptr, 16));
+		}
+		catch (std::exception e) {
+			return false;
+		}
+	}
+
+	return IsPass;
+}
+
+void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
+{
+	for (int writecount = 0; writecount < MAX_TEST_AREA; writecount++)
+	{
+		exe->Process(makeWriteCommand(writecount, std::stoul(value_list[writecount], nullptr, 16)));
+	}
+}
+
+bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
+	//Script
+	std::srand(std::time({}));
+	unsigned int data = rand();
+
+	for (int count = 0; count < 200; count++) {
+		
+		WriteBlock(exe, 0, 1, data);
+		if (ReadCompare(exe, file, 0, 1, data) == false) return false;
+
+		WriteBlock(exe, 99, 1, data);
+		if (ReadCompare(exe, file, 99, 1, data) == false) return false;
 	}
 
 	return true;
