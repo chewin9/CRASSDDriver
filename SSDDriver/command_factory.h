@@ -5,5 +5,5 @@
 #include "readcommand.h"
 class CommandFactory {
  public:
-  static ICommand* create(ParsedCommand& cmd, FileIO& fileio);
+  static ICommand* create(const ParsedCommand& cmd, SsdOperationHandler& opHandler);
 };

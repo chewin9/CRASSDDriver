@@ -1,7 +1,7 @@
 #include "readcommand.h"
 #include "command_parser.h"
 
-bool ReadCommand::Execute() {
-  bool result = fileio.ReadNandFile(cmdInfo);
+bool ReadCommand::Execute(const ParsedCommand& cmdInfo) {
+  bool result = opHandler.Read(cmdInfo);
   return result;
 }

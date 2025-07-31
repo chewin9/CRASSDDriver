@@ -22,24 +22,26 @@ class WriteCommandFixture : public Test {
 TEST_F(WriteCommandFixture, WriteNewFile) {
   for (int i = 0; i < MAX_VAL_SIZE; i++) {
     ParsedCommand cmdInfo = {"W", normalLba, normalValue, false};
-    WriteCommand write_command(cmdInfo, fileio);
-    EXPECT_EQ(true, write_command.Execute());
+    SsdOperationHandler opHandler(fileio);
+    WriteCommand write_command(opHandler);
+    EXPECT_EQ(true, write_command.Execute(cmdInfo));
   }
 }
 
 TEST_F(WriteCommandFixture, OverwirteNewLBA) {
   ParsedCommand cmdInfo = {"W", normalLba, normalValue, false};
-  WriteCommand write_command(cmdInfo, fileio);
-  write_command.Execute();
+  SsdOperationHandler opHandler(fileio);
+  WriteCommand write_command(opHandler);
+  write_command.Execute(cmdInfo);
 
   std::string new_value = "0xAAAABBBD";
   ParsedCommand cmdInfo_new_val = {"W", normalLba, new_value, false};
-  WriteCommand write_command_with_new_val(cmdInfo_new_val, fileio);
-  write_command.Execute();
+  WriteCommand write_command_with_new_val(opHandler);
+  write_command.Execute(cmdInfo_new_val);
 
   int new_lba = 3;
   new_value = "0x1298CDEF";
   ParsedCommand cmdInfo_new_lba = {"W", new_lba, new_value, false};
-  WriteCommand write_command_with_new_lba(cmdInfo_new_lba, fileio);
-  EXPECT_EQ(true, write_command.Execute());
+  WriteCommand write_command_with_new_lba(opHandler);
+  EXPECT_EQ(true, write_command.Execute(cmdInfo_new_lba));
 }

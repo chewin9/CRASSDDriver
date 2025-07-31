@@ -3,7 +3,7 @@
 #include "command_parser.h"
 #include "gmock/gmock.h"
 
-#if _DEBUG
+#if (_DEBUG)
 int main(void) {
   ::testing::InitGoogleMock();
   return RUN_ALL_TESTS();
@@ -12,10 +12,12 @@ int main(void) {
 int main(int argc, char* argv[]) {
   CommandParser parser;
   FileIO fileio;
+
   ParsedCommand cmdInfo = parser.ParseCommand(argc, argv);
-  ICommand* command = CommandFactory::create(cmdInfo, fileio);
+  SsdOperationHandler opHandler(fileio);
+  ICommand* command = CommandFactory::create(cmdInfo, opHandler);
   if (command == nullptr) return 0;
-  command->Execute();
+  command->Execute(cmdInfo);
   delete command;
 }
 #endif
