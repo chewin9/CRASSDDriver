@@ -9,9 +9,10 @@ class ShellFullRead : public Read , public IShellCommand {
 public:
 	ShellFullRead(IProcessExecutor* executor);
 	bool Run(const std::string& input) override;
+	virtual void performReadToSSD(std::string index) override;
 
 private:
 	IProcessExecutor* executor_;
-	bool checkParameterValid(const std::string& input);
-	std::string overWriteRead(int index, const std::string& Value);
+	bool checkParameterValid(std::vector<std::string> commandVec);
+	std::string appendSsdData(int index, const std::string& Value);
 };

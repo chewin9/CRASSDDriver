@@ -3,7 +3,7 @@
 #include "ishell_command.h"
 #include <tuple>
 #include <string>
-
+#include <vector>  
 class Read {
 public:
     const int MIN_INDEX = 0;
@@ -12,20 +12,22 @@ public:
 
     void printInvalidCommand(void);
     std::string getSsdOutputData(void);
-    
-    std::tuple<std::string, std::string> parse_command(const std::string& input);
+    std::vector<std::string> splitBySpace(const std::string& cmd);
+
+    virtual void performReadToSSD(std::string index) = 0;
+
 };
 
 class ShellRead : public Read, public IShellCommand{
 public:
     ShellRead(IProcessExecutor* executor);
     bool Run(const std::string& input) override;
-
+    virtual void performReadToSSD(std::string index) override;
 private:
     IProcessExecutor* executor_;
     
     void printResult(int index, std::string value);
-    bool checkParameterValid(const std::string& input);
+    bool checkParameterValid(std::vector<std::string> commandVec);
 
     const std::string ERROR_RETURN = "ERROR";
 };
