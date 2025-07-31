@@ -29,6 +29,8 @@ public:
 protected:
 	std::string m_name = nullptr;
 	const std::string SSD_NAME = "SSDDriver.exe";
+	void PrintScriptEnter();
+	void PrintScriptExit(bool result);
 };
 
 class TestScriptRunner {

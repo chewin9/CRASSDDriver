@@ -36,6 +36,7 @@ void TestScriptRunner::addScripts() {
 	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("1_FullWriteAndReadCompare"));
 	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("2_PartialLBAWrite"));
 	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("3_WriteReadAging"));
+	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("4_EraseAndWriteAging"));
 }
 
 int TestScriptRunner::GetScriptIndex(const std::string& scriptname) {
@@ -71,6 +72,8 @@ int TestScriptRunner::parseCommandLine(const std::string& commandLine) {
 
 bool TestScriptRunner::ScriptRunnerMode(std::string filename) {
 	std::vector<std::string> scripts;
+
+	scripts = File::ReadScriptFile(filename);
 
 	for (auto cur_script : scripts) {
 		if (runScript(cur_script) == false) {
@@ -112,6 +115,15 @@ void TestScript::EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsig
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeEraseCommand(index, len));
 	}
+}
+
+void TestScript::PrintScriptEnter() {
+	std::cout << m_name << " ___ Run... ";
+}
+
+void TestScript::PrintScriptExit(bool result) {
+	std::string res = (result == true) ? "Pass" : "Fail";
+	std::cout << res << "\n";
 }
 
 bool TestScript::ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value) {

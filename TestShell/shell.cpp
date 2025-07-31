@@ -25,7 +25,7 @@ string Shell::get_command(string& input) {
 int Shell::Run(std::string arg) {
     std::string input;
 
-    if (!arg.empty() && script_runner->IsValidSciprtCommand(arg)) {
+    if (!arg.empty()) {
         script_runner->ScriptRunnerMode(arg);
         return 0;
     }

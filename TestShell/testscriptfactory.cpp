@@ -12,12 +12,19 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
 	int start = 0;
 	const int length = 5;
 
+	PrintScriptEnter();
+
 	for (start = 0; start < MAX_ADDR; start += length) {
 		for (int index = start;index < start + length; index++) {
 			WriteBlock(exe, start, length, value);
-			if (ReadCompare(exe, start, length, value) == false) return false;
+			if (ReadCompare(exe, start, length, value) == false) {
+				PrintScriptExit(false);
+				return false;
+			}
 		}
 	}
+
+	PrintScriptExit(true);
 
 	return true;
 }
@@ -25,6 +32,8 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
 bool PartialLBAWrite::Run(IProcessExecutor* exe)
 {
 	bool IsPass = true;
+
+	PrintScriptEnter();
 
 	for (int loopcount = 0; loopcount < MAX_LOOP_COUNT; loopcount++)
 	{
@@ -34,6 +43,8 @@ bool PartialLBAWrite::Run(IProcessExecutor* exe)
 
 		if (IsPass == false) break;
 	}
+
+	PrintScriptExit(IsPass);
 
 	return IsPass;
 }
@@ -68,15 +79,24 @@ bool WriteReadAging::Run(IProcessExecutor* exe) {
 	std::srand(std::time({}));
 	unsigned int data = rand();
 
+	PrintScriptEnter();
+
 	for (int count = 0; count < 200; count++) {
 
 		WriteBlock(exe, 0, 1, data);
-		if (ReadCompare(exe, 0, 1, data) == false) return false;
+		if (ReadCompare(exe, 0, 1, data) == false) {
+			PrintScriptExit(false);
+			return false;
+		}
 
 		WriteBlock(exe, 99, 1, data);
-		if (ReadCompare(exe, 99, 1, data) == false) return false;
+		if (ReadCompare(exe, 99, 1, data) == false) {
+			PrintScriptExit(false);
+			return false;
+		}
 	}
 
+	PrintScriptExit(true);
 	return true;
 }
 
@@ -88,10 +108,14 @@ bool EraseAndWriteAging::Run(IProcessExecutor* exe) {
 			WriteBlock(exe, i, 1, 5);
 			WriteBlock(exe, i, 1, 9);
 			EraseBlock(exe, i, 3);
-			ReadCompare(exe, i, 3, 0);
+			if (ReadCompare(exe, i, 3, 0) == false) {
+				PrintScriptExit(false);
+				return false;
+			}
 		}
 	}
 
+	PrintScriptExit(true);
 	return true;
 }
 
