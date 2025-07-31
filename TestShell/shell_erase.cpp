@@ -40,7 +40,17 @@ bool ShellErase::checkParameterValid(std::vector<std::string> commandVec) {
 	if (commandVec.size() != 3) {
 		return false;
 	}
-	int inputLba = std::stoi(commandVec.at(1));
+
+	int inputLba;
+	try {
+		inputLba = std::stoi(commandVec.at(1));
+	}
+	catch (const std::invalid_argument&) {
+		return false; // 숫자가 아님
+	}
+	catch (const std::out_of_range&) {
+		return false; // 범위를 벗어남
+	}
 	if (inputLba < MIN_INDEX || inputLba >= MAX_INDEX) {
 		return false;
 	}
@@ -86,7 +96,7 @@ void Erase::calculateRangeAndPerformSSD(int start, int size) {
 
 void ShellErase::performEraseToSSD(int index, int size) {
 	std::string cmdLine;
-	cmdLine = "SSDDriver.exe R " + std::to_string(index) + " " + std::to_string(size);
+	cmdLine = "SSDDriver.exe E " + std::to_string(index) + " " + std::to_string(size);
 	executor_->Process(cmdLine);
 
 #if(CONSOLE_TEST)

@@ -77,4 +77,8 @@ TEST_F(ShellEraseTestFixture, TSInvalidErase02) {
 	shellErase->Run("erase -1 199");
 	checkExpectedConsoleOutput("INVALID COMMAND\n");
 }
+TEST_F(ShellEraseTestFixture, TSInvalidErase03) {
+	shellErase->Run("erase AA 123");
+	checkExpectedConsoleOutput("INVALID COMMAND\n");
+}
 #endif
