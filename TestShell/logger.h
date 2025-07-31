@@ -4,8 +4,9 @@
 #define USING_WINCPP14 (1)
 class Logger {
 public:
-	Logger() : bUseConsolePrint{ true } {}
+	Logger() : bUseConsolePrint{ true }, lastTimePrinted{ "" } {}
 	void print(const std::string& function_str, const std::string& message);
+	void save_last_time_printed(std::string& timeprint);
 	void disable_console_print(void);
 
 	virtual bool is_file_over_10k(const std::string& file);
@@ -23,4 +24,5 @@ private:
 
 	const std::string filename = "latest.log";
 	bool bUseConsolePrint;
+	std::string lastTimePrinted;
 };

@@ -18,13 +18,13 @@ bool has_log_extension(const std::string& name) {
 std::string replace_extension_with_zip(const std::string& name) {
     return name.substr(0, name.size() - 4) + ".zip";
 }
-
 #endif 
 
 void Logger::print(const std::string& classFunc, const std::string& message)
 {    
     std::string timeprint = getCurrentTimeString();
-  
+    save_last_time_printed(timeprint);
+
     std::ostringstream oss;
     oss << "[" << timeprint << "] "
         << std::left << std::setw(30) << classFunc // maximum 30 space
@@ -32,6 +32,11 @@ void Logger::print(const std::string& classFunc, const std::string& message)
 
     print_to_console(oss.str());
     write_to_file(oss.str());
+}
+
+void Logger::save_last_time_printed(std::string& timeprint)
+{
+    lastTimePrinted = timeprint;
 }
 
 bool Logger::is_file_over_10k(const std::string& file) {
@@ -45,7 +50,7 @@ bool Logger::is_file_over_10k(const std::string& file) {
 
 std::string Logger::get_saved_log_file_name(void)
 {
-    std::string log_file_name = "until_" + getCurrentTimeString() + ".log";
+    std::string log_file_name = "until_" + lastTimePrinted + ".log";
     std::replace(log_file_name.begin(), log_file_name.end(), ':', '_');
     return log_file_name;
 }
