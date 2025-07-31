@@ -1,7 +1,12 @@
 #pragma once
 #include <string>
 
-class File {
+class IFile {
 public:
-	static std::string ReadOutputFile(const std::string& filename = "ssd_output.txt");
+	virtual std::string ReadOutputFile(const std::string& filename) = 0;
+};
+
+class File : public IFile{
+public:
+	std::string ReadOutputFile(const std::string& filename);
 };
