@@ -4,6 +4,7 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <vector>
 #include "File.h"
 #include "testscriptfactory.h"
 
@@ -69,6 +70,19 @@ int TestScriptRunner::parseCommandLine(const std::string& commandLine) {
 	return INVALID_INDEX;
 }
 
+bool TestScriptRunner::ScriptRunnerMode(std::string filename, IFile *file) {
+	std::vector<std::string> scripts;
+
+
+	scripts = file->ReadScriptFile(filename);
+
+	for (auto cur_script : scripts) {
+		if (runScript(cur_script) == false) {
+			return false;
+		}
+	}
+}
+
 std::string TestScript::GetName() {
 	return m_name;
 }
@@ -103,6 +117,16 @@ void TestScript::EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsig
 		exe->Process(makeEraseCommand(index, len));
 	}
 }
+
+void TestScript::PrintScriptEnter() {
+	std::cout << m_name << " ___ Run... ";
+}
+
+void TestScript::PrintScriptExit(bool result) {
+	std::string res = (result == true) ? "Pass" : "Fail";
+	std::cout << res << "\n";
+}
+
 bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int startaddr, unsigned int len, unsigned value) {
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeReadCommand(index));

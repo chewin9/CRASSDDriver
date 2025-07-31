@@ -9,4 +9,5 @@ public:
 class MockFile : public IFile {
 public:
 	MOCK_METHOD(std::string, ReadOutputFile, (const std::string& filename), (override));
+	MOCK_METHOD(std::vector<std::string>, ReadScriptFile, (const std::string& filename), (override));
 };
