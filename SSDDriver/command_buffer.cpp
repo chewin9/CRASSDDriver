@@ -1,89 +1,291 @@
 #include "command_buffer.h"
-#include <string>
-#include <vector>
+#include <iostream>
 #include <list>
 #include <sstream>
+#include <string>
+#include <vector>
+using namespace std;
+void OptimizeBuffer(std::list<ParsedCommand> &bufferList, const ParsedCommand &cmd)
+{
+    ParsedCommand cmdInfo = cmd;
+    if (cmdInfo.opCode == "W" && cmdInfo.value == "0x00000000")
+    {
+        cmdInfo.opCode = "E";
+        cmdInfo.erase_size = 1;
+        cmdInfo.value = "";
+    }
 
-void CommandBuffer::AddBuffer(const ParsedCommand& cmdInfo) {
-  std::vector<std::string> bufferArr;
-	// std::vector<std::string> v = fileIo.GetBuffer(); -> ¾ê°¡ vector<string> v ÇüÅÂ·Î ÁØ´Ù.
-  if (bufferArr.size() == 5) {
-	// flush(bufferList);
-  }
-  std::list<ParsedCommand>bufferList = ParsingStringtoBuf(bufferArr);
-  OptimizeBuffer(bufferList);
-  bufferArr = ConvertParsedCommandToStringList(bufferList);
-  // ¿äÃ» -> fileio¿¡°Ô ¹öÆÛ¸¦ ´Ù½Ã ÀúÀåÇØÁà. fileio.SaveBuffer()
+    std::list<ParsedCommand> writeCommandList;
+    std::list<ParsedCommand> eraseCommandList;
+    for (auto i : bufferList)
+    {
+        if (i.opCode == "W")
+            writeCommandList.push_back(i);
+        else if (i.opCode == "E")
+            eraseCommandList.push_back(i);
+    }
+
+    if (cmdInfo.opCode == "W")
+    {
+        for (auto it = writeCommandList.begin(); it != writeCommandList.end();)
+        {
+            if (it->lba == cmdInfo.lba)
+            {
+                it->value = cmdInfo.value;
+
+                std::cout << "<<WRITE COMMAND>>" << std::endl;
+                for (auto i : writeCommandList)
+                {
+                    std::cout << "op: " << i.opCode << std::endl;
+                    cout << "lba: " << i.lba << endl;
+                    cout << "value: " << i.value << endl;
+                    cout << "erase size: " << i.erase_size << endl;
+                    cout << endl << endl << endl;
+                }
+                cout << "<<ERASE COMMAND>>" << endl;
+                for (auto i : eraseCommandList)
+                {
+                    cout << "op: " << i.opCode << endl;
+                    cout << "lba: " << i.lba << endl;
+                    cout << "value: " << i.value << endl;
+                    cout << "erase size: " << i.erase_size << endl;
+                    cout << endl << endl << endl;
+                }
+                cout << "===========================================" << endl;
+                eraseCommandList.splice(eraseCommandList.end(), writeCommandList);
+                bufferList = eraseCommandList;
+                return;
+            }
+            ++it;
+        }
+
+        writeCommandList.push_back(cmdInfo);
+
+
+        cout << "<<WRITE COMMAND>>" << endl;
+        for (auto i : writeCommandList)
+        {
+            cout << "op: " << i.opCode << endl;
+            cout << "lba: " << i.lba << endl;
+            cout << "value: " << i.value << endl;
+            cout << "erase size: " << i.erase_size << endl;
+            cout << endl << endl << endl;
+        }
+        cout << "<<ERASE COMMAND>>" << endl;
+        for (auto i : eraseCommandList)
+        {
+            cout << "op: " << i.opCode << endl;
+            cout << "lba: " << i.lba << endl;
+            cout << "value: " << i.value << endl;
+            cout << "erase size: " << i.erase_size << endl;
+            cout << endl << endl << endl;
+        }
+        cout << "===========================================" << endl;
+        eraseCommandList.splice(eraseCommandList.end(), writeCommandList);
+        bufferList = eraseCommandList;
+        return;
+    }
+
+    int mergedStart = cmdInfo.lba;
+    int mergedEnd = cmdInfo.lba + cmdInfo.erase_size - 1;
+    bool merged = false;
+
+    //1. ìˆœíšŒë¥¼ í•˜ë©° Writeê°€ ë³´ì¸ë‹¤ë©´ ì§€ìš¸ìˆ˜ ìˆë‹ˆì—†ë‹ˆ
+    for (auto it = writeCommandList.begin(); it != writeCommandList.end();)
+    {
+        int writeLba = it->lba;
+        if (writeLba >= mergedStart && writeLba <= mergedEnd)
+        {
+            it = writeCommandList.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+
+    for (auto it = eraseCommandList.begin(); it != eraseCommandList.end();)
+    {
+        // ê²¹ì¹˜ê±°ë‚˜ ì¸ì ‘í•œ ê²½ìš°
+        if (it->lba == mergedEnd - 1 || it->lba + it->erase_size == mergedStart ||
+            (it->lba <= mergedStart && it->lba + it->erase_size - 1 >= mergedStart) ||
+            (it->lba <= mergedEnd && it->lba + it->erase_size - 1 >= mergedEnd))
+        {
+            mergedStart = std::min(mergedStart, it->lba);
+            mergedEnd = std::max(mergedEnd, it->lba + it->erase_size - 1);
+            it = eraseCommandList.erase(it);
+            merged = true;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    const int MAX_RANGE = 10;
+
+    if (merged)
+    {
+        // ë³‘í•©ëœ ë²”ìœ„ë¥¼ ë‚˜ëˆ ì„œ ì‚½ì…
+        int curStart = mergedStart;
+        while (curStart <= mergedEnd)
+        {
+            int curEnd = std::min(curStart + MAX_RANGE - 1, mergedEnd);
+            eraseCommandList.push_back({"E", curStart, "", false, curEnd - curStart + 1});
+            curStart = curEnd + 1;
+        }
+    }
+    else
+    {
+        // ë³‘í•© ëŒ€ìƒ ì—†ìŒ â†’ ê·¸ëƒ¥ ì‚½ì…
+        eraseCommandList.push_back(cmdInfo);
+    }
+
+
+    cout << "<<WRITE COMMAND>>" << endl;
+    for (auto i : writeCommandList)
+    {
+        cout << "op: " << i.opCode << endl;
+        cout << "lba: " << i.lba << endl;
+        cout << "value: " << i.value << endl;
+        cout << "erase size: " << i.erase_size << endl;
+        cout << endl << endl << endl;
+    }
+    cout << "<<ERASE COMMAND>>" << endl;
+    for (auto i : eraseCommandList)
+    {
+        cout << "op: " << i.opCode << endl;
+        cout << "lba: " << i.lba << endl;
+        cout << "value: " << i.value << endl;
+        cout << "erase size: " << i.erase_size << endl;
+        cout << endl << endl << endl;
+    }
+    cout << "===========================================" << endl;
+
+    eraseCommandList.splice(eraseCommandList.end(), writeCommandList);
+    bufferList = eraseCommandList;
 }
-std::string CommandBuffer::ReadBuffer(const ParsedCommand& cmdInfo) {
-  std::vector<std::string> bufferArr;
-  // std::vector<std::string> v = fileIo.GetBuffer(); -> ¾ê°¡ vector<string> v
-  // ÇüÅÂ·Î ÁØ´Ù.
-  std::list<ParsedCommand> BufferCmdList = ParsingStringtoBuf(bufferArr);
-  // for¹® µ¹¸é¼­ 
-   
+
+
+void CommandBuffer::AddBuffer(const ParsedCommand &cmdInfo)
+{
+    std::vector<std::string> bufferArr;
+    // std::vector<std::string> v = fileIo.GetBuffer(); -> ï¿½ê°¡ vector<string> v ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Ø´ï¿½.
+    if (bufferArr.size() == 5)
+    {
+        // flush(bufferList);
+    }
+    std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
+    OptimizeBuffer(bufferList, cmdInfo);
+    bufferArr = ConvertParsedCommandToStringList(bufferList);
+    // ï¿½ï¿½Ã» -> fileioï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û¸ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. fileio.SaveBuffer()
 }
 
-std::list<ParsedCommand> ParsingStringtoBuf(
-    std::vector<std::string>& bufferList) {
-  std::list<ParsedCommand> parsedList;
 
-  for (const auto& bufferStr : bufferList) {
-    ParsedCommand cmd;
-    std::istringstream ss(bufferStr);
-    std::string token;
-    std::vector<std::string> tokens;
+std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo)
+{
+    std::vector<std::string> bufferArr;
+    // std::vector<std::string> v = fileIo.GetBuffer(); -> ï¿½ê°¡ vector<string> v
+    // ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Ø´ï¿½.
+    std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
+    // forï¿½ï¿½ ï¿½ï¿½ï¿½é¼­
 
-    // "_" ´ÜÀ§·Î ºĞÇÒ
-    while (std::getline(ss, token, '_')) {
-      tokens.push_back(token);
+    int readLba = cmdInfo.lba;
+    for (auto rit = bufferList.rbegin(); rit != bufferList.rend(); ++rit)
+    {
+        if (rit->opCode == "W")
+        {
+            if (readLba == rit->lba)
+            {
+                return rit->value;
+            }
+
+            if (readLba >= rit->lba && readLba <= rit->lba + rit->erase_size - 1)
+            {
+                return "0x00000000";
+            }
+        }
     }
 
-    // ÃÖ¼Ò 4°³ ÅäÅ« ÇÊ¿ä: [¼ø¹ø]_[W/E]_[LBA]_[value or size]
-    if (tokens.size() != 4) {
-      cmd.errorFlag = true;
-      parsedList.push_back(cmd);
-      continue;
-    }
-
-    cmd.opCode = tokens[1];
-    cmd.lba = std::stoi(tokens[2]);
-
-    if (cmd.opCode == "W") {
-      cmd.value = tokens[3];
-    } else if (cmd.opCode == "E") {
-      cmd.erase_size = std::stoi(tokens[3]);
-    } else {
-      cmd.errorFlag = true;
-    }
-
-    parsedList.push_back(cmd);
-  }
-
-  return parsedList;
+    // goto fileio and ask them for finding value
 }
 
-std::vector<std::string> ConvertParsedCommandToStringList(
-    const std::list<ParsedCommand>& cmdList) {
-  std::vector<std::string> result;
-  int index = 1;
 
-  for (const auto& cmd : cmdList) {
-    std::ostringstream oss;
-    oss << index << "_" << cmd.opCode << "_" << cmd.lba << "_";
+std::list<ParsedCommand> ParsingStringtoBuf(std::vector<std::string> &bufferList)
+{
+    std::list<ParsedCommand> parsedList;
 
-    if (cmd.opCode == "W") {
-      oss << cmd.value;
-    } else if (cmd.opCode == "E") {
-      oss << cmd.erase_size;
-    } else {
-      // Unknown opCode, skip or mark error
-      oss << "INVALID";
+    for (const auto &bufferStr : bufferList)
+    {
+        ParsedCommand cmd;
+        std::istringstream ss(bufferStr);
+        std::string token;
+        std::vector<std::string> tokens;
+
+        // "_" ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        while (std::getline(ss, token, '_'))
+        {
+            tokens.push_back(token);
+        }
+
+        // ï¿½Ö¼ï¿½ 4ï¿½ï¿½ ï¿½ï¿½Å« ï¿½Ê¿ï¿½: [ï¿½ï¿½ï¿½ï¿½]_[W/E]_[LBA]_[value or size]
+        if (tokens.size() != 4)
+        {
+            cmd.errorFlag = true;
+            parsedList.push_back(cmd);
+            continue;
+        }
+
+        cmd.opCode = tokens[1];
+        cmd.lba = std::stoi(tokens[2]);
+
+        if (cmd.opCode == "W")
+        {
+            cmd.value = tokens[3];
+        }
+        else if (cmd.opCode == "E")
+        {
+            cmd.erase_size = std::stoi(tokens[3]);
+        }
+        else
+        {
+            cmd.errorFlag = true;
+        }
+
+        parsedList.push_back(cmd);
     }
 
-    result.push_back(oss.str());
-    ++index;
-  }
+    return parsedList;
+}
 
-  return result;
+std::vector<std::string> ConvertParsedCommandToStringList(const std::list<ParsedCommand> &cmdList)
+{
+    std::vector<std::string> result;
+    int index = 1;
+
+    for (const auto &cmd : cmdList)
+    {
+        std::ostringstream oss;
+        oss << index << "_" << cmd.opCode << "_" << cmd.lba << "_";
+
+        if (cmd.opCode == "W")
+        {
+            oss << cmd.value;
+        }
+        else if (cmd.opCode == "E")
+        {
+            oss << cmd.erase_size;
+        }
+        else
+        {
+            // Unknown opCode, skip or mark error
+            oss << "INVALID";
+        }
+
+        result.push_back(oss.str());
+        ++index;
+    }
+
+    return result;
 }
