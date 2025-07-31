@@ -12,7 +12,6 @@ public:
     Shell() {
         executor = new ProcessExecutor();
         shell_read = new ShellRead(executor);
-        shell_fullwrite = new ShellFullWrite(executor);
         script_runner = new TestScriptRunner(executor);
         shell_help = new ShellHelp(executor);
     };
@@ -20,7 +19,6 @@ public:
     Shell(IProcessExecutor * exe) {
         executor = exe;
         shell_read = new ShellRead(exe);
-        shell_fullwrite = new ShellFullWrite(exe);
         script_runner = new TestScriptRunner(exe);
     }
 
@@ -29,7 +27,6 @@ public:
 
 private:
     IProcessExecutor* executor;
-    ShellFullWrite* shell_fullwrite;
     ShellRead* shell_read;
     ShellHelp* shell_help;
 

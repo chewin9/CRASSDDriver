@@ -1,11 +1,14 @@
 #pragma once
 #include <string>
 #include "process_executor.h"
+#include "ishell_command.h"
 #include <tuple>
-class ShellHelp {
+
+class ShellHelp : public IShellCommand {
 public:
     ShellHelp(IProcessExecutor* executor);
-    void help(const std::string input);
+    //virtual bool Run(const std::string & cmd) = 0;
+    bool Run(const std::string &input) override;
     
 private:
     IProcessExecutor* executor_;
