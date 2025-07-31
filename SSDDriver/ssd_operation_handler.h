@@ -1,21 +1,18 @@
 #pragma once
-#include <vector>
 #include "file_io.h"
-
+#include "command_parser.h"
+#include <string>
 class SsdOperationHandler {
  private:
   std::unordered_map<int, std::string> nandData;
   FileIO& fileHandler;
-  ParsedCommand& cmdInfo;
+  void UpdateData(const ParsedCommand& cmdInfo);
+  std::string ReadData(const ParsedCommand& cmdInfo);
 
  public:
-  SsdOperationHandler(FileIO& handler, ParsedCommand& cmdInfo)
-      : fileHandler{handler}, cmdInfo{cmdInfo} {}
+  SsdOperationHandler(FileIO& handler) : fileHandler{handler}{}
 
-
- bool UpdateData();
-
-  void write();
-  bool read();
-  //bool erase();
+  void Write(const ParsedCommand& cmdInfo);
+  bool Read(const ParsedCommand& cmdInfo);
+  // bool erase();
 };
