@@ -1,13 +1,25 @@
 #include "gmock/gmock.h"
 #include "logger.h"
+#include <exception>
+
 using namespace testing;
 
 MATCHER(IsExistingFile, "checks if file exists") {
-	FILE* f = nullptr;
-	errno_t err = fopen_s(&f, std::string(arg).c_str(), "r");
-	if (f) fclose(f); 
-    return (err == 0) && (f != nullptr);
+	try {
+		FILE* f = nullptr;
+		errno_t err = fopen_s(&f, std::string(arg).c_str(), "r");
+		if (f) fclose(f);
+		return (err == 0) && (f != nullptr);
+	}
+	catch (const std::exception& e){
+		return false;
+	}
 }
+
+class MockLogger : public Logger {
+public:
+	MOCK_METHOD(bool, is_file_over_10k, (const std::string& file), (override));
+};
 
 class LogTest : public Test {
 public:
@@ -43,3 +55,14 @@ TEST_F(LogTest, NoLogOutputOnConsole) {
 	EXPECT_THAT(filename, IsExistingFile());
 }
 
+TEST_F(LogTest, MoveFileWhenOver10K) {
+	MockLogger logger;
+	EXPECT_CALL(logger, is_file_over_10k).WillRepeatedly(Return(true));
+
+	logger.print("Shell.release()", "hello!");
+
+	std::string savedFile = logger.get_saved_log_file_name();
+
+	EXPECT_THAT(filename, Not(IsExistingFile()));
+	EXPECT_THAT(savedFile, IsExistingFile());
+}
