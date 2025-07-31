@@ -154,3 +154,19 @@ TEST_F(FileIOFixture, GenBufferFolder) {
     ASSERT_TRUE(inFile2.is_open());
 
 }
+
+
+TEST_F(FileIOFixture, GenEmptyFileAndCheckNameValidity) {
+
+    file_io.GenFolderAndEmtyFiles();
+
+    auto filenames = file_io.LoadCommandBuffer();
+    EXPECT_EQ(filenames.size(), 5u);
+
+
+    for (int i = 1; i <= 5; ++i) {
+        const std::string name = std::to_string(i) + "_empty";
+        EXPECT_NE(std::find(filenames.begin(), filenames.end(), name), filenames.end()
+        );
+    }
+}
