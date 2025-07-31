@@ -12,16 +12,11 @@ class Shell {
 public:
     Shell() {
         executor = new ProcessExecutor();
-        shell_read = new ShellRead(executor);
-        shell_fullread = new ShellFullRead(executor);
         script_runner = new TestScriptRunner(executor);
-        shell_help = new ShellHelp(executor);
     };
 
     Shell(IProcessExecutor * exe) {
         executor = exe;
-        shell_read = new ShellRead(exe);
-        shell_fullread = new ShellFullRead(exe);
         script_runner = new TestScriptRunner(exe);
     }
 
@@ -30,9 +25,6 @@ public:
 
 private:
     IProcessExecutor* executor;
-    ShellFullRead* shell_fullread;
-    ShellRead* shell_read;
-    ShellHelp* shell_help;
 
     TestScriptRunner* script_runner;
 

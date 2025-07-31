@@ -48,7 +48,7 @@ TEST_F(ShellReadTestFixture, TSRead01) {
 		return 0;
 			});
 
-	readShell->read("read 0");
+	readShell->Run("read 0");
 	checkExpectedConsoleOutput("[Read] LBA 00 0x12345678\n");
 	
 }
@@ -64,7 +64,7 @@ TEST_F(ShellReadTestFixture, TSReadInvalidLBA01) {	//
 		return 0;
 			});
 
-	readShell->read("read 101");
+	readShell->Run("read 101");
 	checkExpectedConsoleOutput("ERROR\n");
 }
 
@@ -79,11 +79,11 @@ TEST_F(ShellReadTestFixture, TSReadInvalidLBA02) {	//
 		return 0;
 			});
 
-	readShell->read("read -1");
+	readShell->Run("read -1");
 	checkExpectedConsoleOutput("ERROR\n");
 }
 
 TEST_F(ShellReadTestFixture, TSReadInvalidLBA03) {	//
-	readShell->read("read");
+	readShell->Run("read");
 	checkExpectedConsoleOutput("INVALID COMMAND\n");
 }

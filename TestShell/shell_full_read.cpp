@@ -1,7 +1,6 @@
 #pragma once
 #include "iprocess_executor.h"
 #include "shell_full_read.h"
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -11,59 +10,37 @@
 
 ShellFullRead::ShellFullRead(IProcessExecutor* executor) : executor_(executor) {}
 
-void ShellFullRead::fullread(const std::string input) {
-	std::tuple<std::string, std::string> parseCommand = parse_command(input);
-	if (!std::get<1>(parseCommand).empty()) {
+bool ShellFullRead::Run(const std::string& input) {
+	
+	if (checkParameterValid(input) == false) {
 		printInvalidCommand();
-		return;
+		return false;
 	}
-	std::string ret;
-	ret = appendSSDData();
-
-	std::cout << ret << "\n";
-}
-
-std::tuple<std::string, std::string> ShellFullRead::parse_command(const std::string& input) {
-	std::istringstream iss(input);
-	std::string cmd;
-	std::string num_str;
-	iss >> cmd >> num_str;
-	return { cmd, num_str };
-}
-
-void ShellFullRead::printInvalidCommand() {
-	std::cout << INVALID_COMMAND << "\n";
-}
-
-std::string ShellFullRead::appendSSDData(void) {
+	
 	std::stringstream ret;
 	for (int i = MIN_INDEX; i < MAX_INDEX; i++) {
-		runSSDDriver(std::to_string(i));
+		std::string cmdLine = "SSDDriver.exe R " + std::to_string(i);
+		executor_->Process(cmdLine);
 
-		std::string readSSDData = getSsdOutputData();
-		ret << std::setw(2) << std::setfill('0') << i << " ";
-		ret << readSSDData;
-		ret << "\n";
+		std::string SsdData = getSsdOutputData();
+
+		ret << overWriteRead(i, SsdData);
 	}
 
-	return ret.str();
+	std::cout << ret.str() << "\n";
+	return true;
 }
 
-void ShellFullRead::runSSDDriver(std::string index) {
-	std::string cmdLine = "SSDDriver.exe R " + index;
-	executor_->Process(cmdLine);
-}
-
-std::string ShellFullRead::getSsdOutputData(void) {
-
-	std::ifstream file("ssd_output.txt");
-	if (!file.is_open()) {
-		std::cout << "open fail\n";
-		return "";
+bool ShellFullRead::checkParameterValid(const std::string& input) {
+	std::tuple<std::string, std::string> cmdTuple = parse_command(input);
+	if (!std::get<1>(cmdTuple).empty()) {
+		return false;
 	}
-	std::string ret;
-	std::getline(file, ret);
-	file.close();
+	return true;
+}
 
-	return ret;
+std::string ShellFullRead::overWriteRead(int index, const std::string& Value) {
+	std::stringstream tempString;
+	tempString << std::setw(2) << std::setfill('0') << index << " " << Value << "\n";
+	return tempString.str();
 }
