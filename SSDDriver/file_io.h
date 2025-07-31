@@ -18,10 +18,10 @@ public:
     std::unordered_map<int, std::string> LoadDataFromInput();
     bool UpdateData(std::unordered_map<int, std::string>& entries,
         const ParsedCommand& pc);
-    std::unordered_map<int, std::string> getEntriesFromInput(ParsedCommand& pc);
     void WriteOutput(ParsedCommand pc);
     void CloseInput();
     bool ReadNandFile(ParsedCommand& pc);
+    void SaveData(std::unordered_map<int, std::string> entries);
     bool OpenOutput(std::string file);
     void CloseOutput();
 

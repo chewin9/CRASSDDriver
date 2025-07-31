@@ -18,6 +18,8 @@ void FileIO::CloseInput() {
 }
 
 std::unordered_map<int, std::string> FileIO::LoadDataFromInput() {
+
+    OpenInput();
     std::unordered_map<int, std::string> entries;
     std::string line;
 
@@ -30,6 +32,8 @@ std::unordered_map<int, std::string> FileIO::LoadDataFromInput() {
             entries[existingLBA] = std::move(existingValue);
         }
     }
+    
+    CloseInput();
     return entries;
 }
 
@@ -41,21 +45,33 @@ bool FileIO::UpdateData(std::unordered_map<int, std::string>& entries,
         it->second = pc.value;
         return true;
     }
+
+
+    entries.emplace(pc.lba, pc.value);
     return false;
 }
 
 
+void FileIO::SaveData(std::unordered_map<int, std::string> entries) {
+    OpenOutput(SSD_NAND_FILE);
+    for (const auto& entry : entries) {
+        m_output << entry.first << " " << entry.second << "\n";
+    }
+    CloseOutput();
+}
 
-std::unordered_map<int, std::string> FileIO::getEntriesFromInput(ParsedCommand& pc) {
-    OpenInput();
-    auto entries = LoadDataFromInput();
-    CloseInput();
 
-    if (!UpdateData(entries, pc)) {
-        entries.emplace(pc.lba, pc.value);
+void FileIO::WriteOutput(ParsedCommand pc) {
+    if (pc.errorFlag) {
+        WriteValueToOutputFile("ERROR");
+        return;
     }
 
-    return entries;
+    auto entries = LoadDataFromInput();
+    UpdateData(entries, pc);
+
+    SaveData(entries);
+
 }
 
 bool FileIO::OpenOutput(std::string file) {
@@ -67,23 +83,6 @@ void FileIO::CloseOutput() {
   if (m_output.is_open()) {
     m_output.close();
   }
-}
-
-void FileIO::WriteOutput(ParsedCommand pc) {
-  if (pc.errorFlag) {
-    WriteValueToOutputFile("ERROR");
-    return;
-  }
-
-  std::unordered_map<int, std::string> entries = getEntriesFromInput(pc);
-  // std::unordered_map<int, std::string> entries = LoadData();
-  // updateData(entries, pc)
-  
-  OpenOutput(SSD_NAND_FILE);
-  for (const auto& entry : entries) {
-    m_output << entry.first << " " << entry.second << "\n";
-  }
-  CloseOutput();
 }
 
 void FileIO::WriteValueToOutputFile(std::string val) {
