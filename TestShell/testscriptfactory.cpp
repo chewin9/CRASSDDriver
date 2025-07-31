@@ -4,6 +4,7 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <memory>
 #include "File.h"
 
 bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
@@ -121,12 +122,24 @@ bool EraseAndWriteAging::Run(IProcessExecutor* exe, IFile* file) {
 	return true;
 }
 
-TestScript* TestScriptFactory::createTestScript(std::string scriptname) {
-	if (scriptname == "0_Dummy") return new DummyScript(scriptname);
-	if (scriptname == "1_FullWriteAndReadCompare") return new FullWriteAndReadCompare(scriptname);
-	if (scriptname == "2_PartialLBAWrite") return new PartialLBAWrite(scriptname);
-	if (scriptname == "3_WriteReadAging") return new WriteReadAging(scriptname);
-	if (scriptname == "4_EraseAndWriteAging") return new EraseAndWriteAging(scriptname);
+bool TestScriptFactory::isMatch(std::string input, std::string scriptname) {
+	int pos;
+	if((pos = input.find('_')) == std::string::npos) return false;
 
+	if (pos == input.size() - 1)
+	{
+		return (input.substr(0, pos) == scriptname.substr(0, pos));
+	}
+	else {
+		return (input == scriptname);
+	}
+}
+
+std::shared_ptr<TestScript> TestScriptFactory::createTestScript(const std::string& scriptname) {
+	if (isMatch(scriptname, "0_Dummy") == true)  return std::make_shared<DummyScript>(scriptname);
+	if (isMatch(scriptname, "1_FullWriteAndReadCompare") == true) return std::make_shared<FullWriteAndReadCompare>(scriptname);
+	if (isMatch(scriptname, "2_PartialLBAWrite") == true) return std::make_shared<PartialLBAWrite>(scriptname);
+	if (isMatch(scriptname, "3_WriteReadAging") == true) return std::make_shared<WriteReadAging>(scriptname);
+	if (isMatch(scriptname, "4_EraseAndWriteAging") == true) return std::make_shared<EraseAndWriteAging>(scriptname);
 	return nullptr;
 }

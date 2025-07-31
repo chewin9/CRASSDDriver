@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstring>
 #include <stdio.h>
+#include <memory>
 #include "iprocess_executor.h"
 #include "File.h"
 
@@ -37,16 +38,13 @@ class TestScriptRunner {
 public:
 	TestScriptRunner(IProcessExecutor* exe, IFile* _file);
 	bool runScript(const std::string& commandLine);
-	bool IsValidSciprtCommand(const std::string& commandLine);
+	std::shared_ptr<TestScript> getScript(const std::string& commandLine);
 	bool ScriptRunnerMode(std::string filename, IFile* _file);
 
 private:
 	//Method
 	IProcessExecutor* execute = nullptr;
 	IFile* file = nullptr;
-	int parseCommandLine(const std::string& commandLine);
-	int GetScriptIndex(const std::string& scriptname);
-	void addScripts();
 
 	//Variable
 	std::vector<TestScript*> testScripts;
