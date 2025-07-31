@@ -7,6 +7,6 @@ int main(int argc, char* argv[]) {
 	return RUN_ALL_TESTS();
 #else 
 	Shell shell;
-	return shell.Run(argc[1]);
+	return shell.Run((argc == 1) ? "" : argv[1]);
 #endif 
 }
