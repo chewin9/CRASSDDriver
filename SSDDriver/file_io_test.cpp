@@ -3,16 +3,24 @@
 #include <cstdio>
 #include <fstream>
 #include <string>
+#include <filesystem>
 
 #include "command_parser.h"
 #include "gmock/gmock.h"
 #include "ssd_operation_handler.h"
+
 using namespace ::testing;
+namespace fs = std::filesystem;
 
 class FileIOFixture : public Test {
  public:
   FileIO file_io;
   ParsedCommand pc;
+
+  void SetUp() override {
+      std::error_code ec;
+      fs::remove_all("buffer", ec);
+  }
 };
 
 TEST_F(FileIOFixture, WriteErrorOutput) {
@@ -133,4 +141,16 @@ TEST_F(FileIOFixture, ReadNandFile_WithErrorFlag) {
   inFile.close();
 
   EXPECT_EQ(line, "ERROR");
+}
+
+TEST_F(FileIOFixture, GenBufferFolder) {
+    file_io.GenFolderAndEmtyFiles();
+    std::ifstream inFile("buffer/1_empty");
+    ASSERT_TRUE(inFile.is_open());
+
+    file_io.EraseFolder();
+    file_io.GenFolderAndEmtyFiles();
+    std::ifstream inFile2("buffer/2_empty");
+    ASSERT_TRUE(inFile2.is_open());
+
 }

@@ -6,46 +6,57 @@
 #include <ctime>
 #include "File.h"
 
-bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
+bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 	//Script
 	int value = 5;
 	int start = 0;
 	const int length = 5;
 
+	PrintScriptEnter();
+
 	for (start = 0; start < MAX_ADDR; start += length) {
 		for (int index = start;index < start + length; index++) {
 			WriteBlock(exe, start, length, value);
-			if (ReadCompare(exe, start, length, value) == false) return false;
+			if (ReadCompare(exe, file, start, length, value) == false) {
+				PrintScriptExit(false);
+				return false;
+			}
 		}
 	}
+
+	PrintScriptExit(true);
 
 	return true;
 }
 
-bool PartialLBAWrite::Run(IProcessExecutor* exe)
+bool PartialLBAWrite::Run(IProcessExecutor* exe, IFile* file)
 {
 	bool IsPass = true;
+
+	PrintScriptEnter();
 
 	for (int loopcount = 0; loopcount < MAX_LOOP_COUNT; loopcount++)
 	{
 		PartialBlockWrite(exe);
 
-		IsPass = GetPartialReadAndCompareResult(exe);
+		IsPass = GetPartialReadAndCompareResult(exe, file);
 
 		if (IsPass == false) break;
 	}
 
+	PrintScriptExit(IsPass);
+
 	return IsPass;
 }
 
-bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe)
+bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFile* file)
 {
 	bool IsPass = true;
 
 	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
 		exe->Process(makeReadCommand(readcount));
 		try {
-			IsPass = IsPass && (stoi(File::ReadOutputFile().substr(2, 10)) == std::stoul(value_list[readcount], nullptr, 16));
+			IsPass = IsPass && (stoi(file->ReadOutputFile("ssd_output.txt").substr(2, 10)) == std::stoul(value_list[readcount], nullptr, 16));
 		}
 		catch (std::exception e) {
 			return false;
@@ -63,24 +74,34 @@ void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
 	}
 }
 
-bool WriteReadAging::Run(IProcessExecutor* exe) {
+bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
 	//Script
 	std::srand(std::time({}));
 	unsigned int data = rand();
 
+	PrintScriptEnter();
+
 	for (int count = 0; count < 200; count++) {
 
 		WriteBlock(exe, 0, 1, data);
-		if (ReadCompare(exe, 0, 1, data) == false) return false;
+
+		if (ReadCompare(exe, file, 0, 1, data) == false) {
+			PrintScriptExit(false);
+			return false;
+		}
 
 		WriteBlock(exe, 99, 1, data);
-		if (ReadCompare(exe, 99, 1, data) == false) return false;
+		if (ReadCompare(exe, file, 99, 1, data) == false) {
+			PrintScriptExit(false);
+			return false;
+		}
 	}
 
+	PrintScriptExit(true);
 	return true;
 }
 
-bool EraseAndWriteAging::Run(IProcessExecutor* exe) {
+bool EraseAndWriteAging::Run(IProcessExecutor* exe, IFile* file) {
 	EraseBlock(exe, 0, 3);
 
 	for (int j = 0;j < 30; j++) {
@@ -88,10 +109,15 @@ bool EraseAndWriteAging::Run(IProcessExecutor* exe) {
 			WriteBlock(exe, i, 1, 5);
 			WriteBlock(exe, i, 1, 9);
 			EraseBlock(exe, i, 3);
-			ReadCompare(exe, i, 3, 0);
+
+			if (ReadCompare(exe, file, i, 3, 0) == false) {
+				PrintScriptExit(false);
+				return false;
+			}
 		}
 	}
 
+	PrintScriptExit(true);
 	return true;
 }
 
@@ -100,6 +126,7 @@ TestScript* TestScriptFactory::createTestScript(std::string scriptname) {
 	if (scriptname == "1_FullWriteAndReadCompare") return new FullWriteAndReadCompare(scriptname);
 	if (scriptname == "2_PartialLBAWrite") return new PartialLBAWrite(scriptname);
 	if (scriptname == "3_WriteReadAging") return new WriteReadAging(scriptname);
+	if (scriptname == "4_EraseAndWriteAging") return new EraseAndWriteAging(scriptname);
 
 	return nullptr;
 }
