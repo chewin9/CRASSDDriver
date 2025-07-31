@@ -1,0 +1,51 @@
+#include "shell_erase_range.h"
+#include <vector>
+#include <sstream>
+#include <string>
+#include <iostream>
+
+ShellEraseRange::ShellEraseRange(IProcessExecutor* executor) : executor_(executor) {}
+
+bool ShellEraseRange::Run(const std::string& input) {
+	std::vector<std::string> commandVector = splitBySpace(input);
+
+	if (checkParameterValid(commandVector) == false) {
+		printInvalidCommand();
+		return false;
+	}
+	int startLba = getStartLba(std::stoi(commandVector.at(1)), std::stoi(commandVector.at(2)));
+	int curSize = getEraseSize(std::stoi(commandVector.at(1)), std::stoi(commandVector.at(2)));
+
+	calculateRangeAndPerformSSD(startLba, curSize);
+	return true;
+}
+
+bool ShellEraseRange::checkParameterValid(std::vector<std::string> commandVec) {
+	if (commandVec.size() != 3) return false;
+	int startLba, endLba;
+	startLba = std::stoi(commandVec.at(1));
+	endLba = std::stoi(commandVec.at(2));
+
+	if (startLba < MIN_INDEX || startLba >= MAX_INDEX ||
+		endLba < MIN_INDEX || endLba >= MAX_INDEX) {
+		return false;
+	}
+	return true;
+}
+
+int ShellEraseRange::getStartLba(int num1, int num2) {
+	return std::min(num1, num2);
+}
+
+int ShellEraseRange::getEraseSize(int num1, int num2) {
+	return std::abs(num1 - num2) + 1;
+}
+
+void ShellEraseRange::performEraseToSSD(int index, int size) {
+	std::string cmdLine;
+	cmdLine = "SSDDriver.exe R " + std::to_string(index) + " " + std::to_string(size);
+	executor_->Process(cmdLine);
+#if(CONSOLE_TEST)
+	std::cout << "(" << index << ", " << size << ")\n";
+#endif
+}
