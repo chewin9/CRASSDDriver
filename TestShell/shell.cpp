@@ -32,10 +32,12 @@ int Shell::Run(void) {
             break;
         }
         else if (cmd == "write") {
-            shell_write->IssueWrite(input);
+            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellWrite>(executor);
+            cmd->Run(input);
         }
         else if (cmd == "fullwrite") {
-            shell_fullwrite->IssueFullWrite(input);
+            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellFullWrite>(executor);
+            cmd->Run(input);
         }
         else if (cmd == "read") {
             shell_read->read(input);
@@ -45,6 +47,9 @@ int Shell::Run(void) {
         }
         else if (cmd == "help") {
             shell_help->help(input);
+        }
+        else if (cmd == "") {
+
         }
         else {
             if (false == script_runner->IsValidSciprtCommand(input)) {

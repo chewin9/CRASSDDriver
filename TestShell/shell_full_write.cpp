@@ -7,11 +7,11 @@
 #include <vector>
 #include <sstream>
 
-void ShellFullWrite::IssueFullWrite(const std::string& cmd) {
+bool ShellFullWrite::Run(const std::string& cmd) {
 
 	if (false == checkParameterValid(cmd)) {
 		std::cout << "INVALID COMMAND" << std::endl;
-		return;
+		return false;
 	}
 
 	std::vector<std::string> cmds = splitBySpace(cmd);
@@ -22,6 +22,7 @@ void ShellFullWrite::IssueFullWrite(const std::string& cmd) {
 		executor_->Process(cmdLine);
 	}
 	std::cout << "[WriteFull] Done" << std::endl;
+	return true;
 }
 
 bool ShellFullWrite::checkParameterValid(const std::string& cmd)
@@ -48,38 +49,4 @@ bool ShellFullWrite::checkParameterValid(const std::string& cmd)
 		return false;
 	}
 	return true;
-}
-
-std::vector<std::string> ShellFullWrite::splitBySpace(const std::string& str) {
-	std::istringstream iss(str);
-	std::vector<std::string> tokens;
-	std::string word;
-	while (iss >> word) {
-		tokens.push_back(word);
-	}
-	return tokens;
-}
-
-bool ShellFullWrite::is_all_uppercase(const std::string& str) {
-
-	for (char ch : str) {
-		if ('A' <= ch && ch <= 'F') continue;
-		if ('0' <= ch && ch <= '9') continue;
-		return false;
-	}
-	return true;
-}
-
-bool ShellFullWrite::is_valid_unsigned(const std::string& str) {
-	size_t idx = 0;
-	try {
-		std::stoul(str, &idx, 0); // base 0: auto-detect base (hex, dec, oct)
-		return idx == str.size(); // true if entire string was used
-	}
-	catch (const std::invalid_argument&) {
-		return false; // Not a number at all
-	}
-	catch (const std::out_of_range&) {
-		return false; // Number outside unsigned long range
-	}
 }
