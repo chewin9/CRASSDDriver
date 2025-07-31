@@ -43,7 +43,7 @@ int Shell::Run(void) {
             shell_read->read(input);
         }
         else if (cmd == "fullread") {
-            shell_read->fullRead(input);
+            shell_fullread->fullread(input);
         }
         else if (cmd == "help") {
             std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellHelp>(executor);

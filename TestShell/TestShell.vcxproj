@@ -137,6 +137,8 @@
     </ClCompile>
     <ClCompile Include="process_executor.cpp" />
     <ClCompile Include="shell.cpp" />
+    <ClCompile Include="shell_full_read.cpp" />
+    <ClCompile Include="shell_full_read_test.cpp" />
     <ClCompile Include="shell_help.cpp" />
     <ClCompile Include="shell_help_test.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> %(AdditionalOptions)</AdditionalOptions>
@@ -162,6 +164,7 @@
     </ClCompile>
     <ClCompile Include="shell_write.h" />
     <ClCompile Include="testscript.cpp" />
+    <ClCompile Include="testscriptfactory.cpp" />
     <ClCompile Include="testscript_test.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -170,6 +173,8 @@
     <ClInclude Include="File.h" />
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="process_executor.h" />
+    <ClInclude Include="shell_full_read.h" />
+    <ClInclude Include="testscriptfactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shell.h" />

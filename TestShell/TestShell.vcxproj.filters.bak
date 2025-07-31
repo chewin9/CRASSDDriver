@@ -18,10 +18,13 @@
     <ClCompile Include="shell_help_test.cpp" />
     <ClCompile Include="shell_test.cpp" />
     <ClCompile Include="File.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="ishell_command.h" />
+=======
     <ClCompile Include="testscriptfactory.cpp" />
     <ClCompile Include="shell_full_read.cpp" />
     <ClCompile Include="shell_full_read_test.cpp" />
+>>>>>>> master
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">

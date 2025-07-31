@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <unordered_map>
 #include "command_parser.h"
 
 class FileIO {
@@ -14,10 +15,13 @@ public:
     std::ofstream m_output;
     void WriteValueToOutputFile(std::string str);
     bool OpenInput();
-    std::vector<std::pair<int, std::string>> getEntriesFromInput(ParsedCommand& pc);
+    std::unordered_map<int, std::string> LoadDataFromInput();
+    bool UpdateData(std::unordered_map<int, std::string>& entries,
+        const ParsedCommand& pc);
     void WriteOutput(ParsedCommand pc);
     void CloseInput();
     bool ReadNandFile(ParsedCommand& pc);
+    void SaveData(std::unordered_map<int, std::string> entries);
     bool OpenOutput(std::string file);
     void CloseOutput();
 
