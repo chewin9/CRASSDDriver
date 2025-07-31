@@ -39,13 +39,22 @@ bool CommandParser::IsValueErrorExist(const ParsedCommand& cmd) {
   return false;
 }
 
+bool CommandParser::IsEraseSizeErrorExist(const ParsedCommand& cmd) {
+    if (cmd.opCode == "E") {
+        if (cmd.erase_size < MIN_VAL || cmd.erase_size >= SIZE_OF_VALUE)
+            return true;
+    }
+
+    return false;
+}
+
 ParsedCommand CommandParser::ParseCommand(int argc, char* argv[]) {
   ParsedCommand cmd;
   CheckException(argc, argv, cmd);
   cmd.opCode = argv[1];
   cmd.lba = std::stoi(argv[2]);
   if (cmd.opCode == "W") cmd.value = argv[3];
-  if (IsLbaErrorExist(cmd) || IsValueErrorExist(cmd)) {
+  if (IsLbaErrorExist(cmd) || IsValueErrorExist(cmd) || IsEraseSizeErrorExist(cmd)) {
     cmd.errorFlag = true;
   }
   return cmd;
