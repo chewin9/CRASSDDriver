@@ -105,3 +105,8 @@ TEST_F(TestScriptTestFixture, DISABLED_3_WriteReadAgingShort) {
 TEST_F(TestScriptTestFixture, 3_WriteReadAgingNotMatch) {
 	CheckResult(false, "3_3");
 }
+
+TEST_F(TestScriptTestFixture, 4_EraseAndWriteAging) {
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(0));
+	CheckResult(true, "4_EraseAndWriteAging");
+}

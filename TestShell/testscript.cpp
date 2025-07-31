@@ -86,9 +86,24 @@ std::string TestScript::makeReadCommand(unsigned int addr) {
 	return str;
 }
 
+std::string TestScript::makeEraseCommand(unsigned int addr, unsigned int size) {
+	std::string format;
+	char str[11];
+	sprintf_s(str, "0x%08X", size);
+	format = str;
+	std::string result = GetSSDName() + " E " + std::to_string(addr) + " " + format;
+	return result;
+}
+
 void TestScript::WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value) {
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeWriteCommand(index, value));
+	}
+}
+
+void TestScript::EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len) {
+	for (unsigned int index = startaddr; index < startaddr + len; index++) {
+		exe->Process(makeEraseCommand(index, len));
 	}
 }
 

@@ -19,8 +19,10 @@ public:
 	std::string GetName();
 	std::string makeWriteCommand(unsigned int addr, unsigned int value);
 	std::string makeReadCommand(unsigned int addr);
+	std::string makeEraseCommand(unsigned int addr, unsigned int size);
 	void WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value);
 	bool ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value);
+	void EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len);
 	std::string GetSSDName() { return SSD_NAME; }
 	std::string ReadOutputFile(const std::string& filename = "ssd_output.txt");
 
