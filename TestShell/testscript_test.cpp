@@ -121,11 +121,11 @@ TEST_F(TestScriptTestFixture, 2_CmdTestFail) {
 	CheckResult(false, "2_");
 }
 
-TEST_F(TestScriptTestFixture, DISABLED_3_WriteReadAgingNormal) {
+TEST_F(TestScriptTestFixture, 3_WriteReadAgingNormal) {
 	CheckResult(true, "3_WriteReadAgingNormal");
 }
 
-TEST_F(TestScriptTestFixture, DISABLED_3_WriteReadAgingShort) {
+TEST_F(TestScriptTestFixture, 3_WriteReadAgingShort) {
 	CheckResult(true, "3_");
 }
 
