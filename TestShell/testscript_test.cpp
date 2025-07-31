@@ -46,17 +46,24 @@ public:
 			.Times(1)
 			.WillRepeatedly(Return(0xFFFFFFFF));
 		EXPECT_CALL(mockfile, ReadOutputFile(_))
-			.WillRepeatedly(Return("0xFFFFFFFF"));
+			.WillRepeatedly(Return(INVALID_VALUE_STRING));
 	}
 
 	void CheckResult(bool expected, std::string cmdline)
 	{
 		EXPECT_EQ(expected, script.runScript(cmdline));
 	}
+
+	void SetUpReadOutputReapeat(std::string value)
+	{
+		EXPECT_CALL(mockfile, ReadOutputFile(_)).WillRepeatedly(Return(value));
+	}
 	int count = 0;
 protected:
 	NiceMock<MockProcessExecutor> mock;
 	NiceMock<MockFile> mockfile;
+	const std::string INVALID_VALUE_STRING = "0xFFFFFFFF";
+	const std::string ERASE_VALUE_STRING = "0x00000000";
 
 private:
 	TestScriptRunner script{ &mock,&mockfile };
@@ -67,13 +74,13 @@ private:
 
 TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompare) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
-	EXPECT_CALL(mockfile, ReadOutputFile(_)).WillRepeatedly(Return("0x00000005"));
+	SetUpReadOutputReapeat("0x00000005");
 	CheckResult(true, "1_FullWriteAndReadCompare");
 }
 
 TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompareShortType) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
-	EXPECT_CALL(mockfile, ReadOutputFile(_)).WillRepeatedly(Return("0x00000005"));
+	SetUpReadOutputReapeat("0x00000005");
 	CheckResult(true, "1_");
 }
 
@@ -84,7 +91,7 @@ TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompareInvalidScript) {
 
 TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompareScriptRunFail) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(4));
-	EXPECT_CALL(mockfile, ReadOutputFile(_)).WillRepeatedly(Return("0x00000004"));
+	SetUpReadOutputReapeat(INVALID_VALUE_STRING);
 	CheckResult(false, "1_");
 }
 
@@ -126,8 +133,26 @@ TEST_F(TestScriptTestFixture, 3_WriteReadAgingNotMatch) {
 	CheckResult(false, "3_3");
 }
 
-TEST_F(TestScriptTestFixture, 4_EraseAndWriteAging) {
+TEST_F(TestScriptTestFixture, 4_EraseAndWriteAgingPass) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(0));
-	EXPECT_CALL(mockfile, ReadOutputFile(_)).WillRepeatedly(Return("0x00000000"));
+	SetUpReadOutputReapeat(ERASE_VALUE_STRING);
 	CheckResult(true, "4_EraseAndWriteAging");
+}
+
+TEST_F(TestScriptTestFixture, 4_EraseAndWriteAgingFail) {
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(0xA));
+	SetUpReadOutputReapeat(INVALID_VALUE_STRING);
+	CheckResult(false, "4_EraseAndWriteAging");
+}
+
+TEST_F(TestScriptTestFixture, 4_CmdTestPass) {
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(0));
+	SetUpReadOutputReapeat(ERASE_VALUE_STRING);
+	CheckResult(true, "4_");
+}
+
+TEST_F(TestScriptTestFixture, 4_CmdTestFail) {
+	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(0));
+	SetUpReadOutputReapeat(INVALID_VALUE_STRING);
+	CheckResult(false, "4_");
 }
