@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 
+namespace fs = std::filesystem;
+
 std::unordered_map<int, std::string> FileIO::LoadDataFromInput() {
   std::ifstream input(SSD_NAND_FILE);
   if (!input.is_open()) {
@@ -41,3 +43,26 @@ void FileIO::WriteValueToOutputFile(std::string val) {
   outFile << val << std::endl;
 }
 
+void FileIO::GenFolderAndEmtyFiles() {
+
+    if (fs::exists(SSD_COMMAND_BUFFER_FOLDER)) return;
+    
+    fs::create_directory(SSD_COMMAND_BUFFER_FOLDER);
+    fs::path dir{ SSD_COMMAND_BUFFER_FOLDER };
+
+    for (int i = 1; i <= 5; ++i) {
+        fs::path filePath = dir / (std::to_string(i) + "_empty");
+        std::ofstream ofs(filePath);
+    }
+
+}
+
+void FileIO::EraseFolder() {
+    fs::path dir{ SSD_COMMAND_BUFFER_FOLDER };
+    std::error_code ec;
+
+    if (fs::exists(dir, ec) && fs::is_directory(dir, ec)) {
+        fs::remove_all(dir, ec);
+    }
+
+}
