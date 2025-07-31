@@ -80,9 +80,26 @@ bool WriteReadAging::Run(IProcessExecutor* exe) {
 	return true;
 }
 
+bool EraseAndWriteAging::Run(IProcessExecutor* exe) {
+	EraseBlock(exe, 0, 3);
+
+	for (int j = 0;j < 30; j++) {
+		for (int i = 2; i < 98; i+=2) {
+			WriteBlock(exe, i, 1, 5);
+			WriteBlock(exe, i, 1, 9);
+			EraseBlock(exe, i, 3);
+			ReadCompare(exe, i, 3, 0);
+		}
+	}
+
+	return true;
+}
+
 TestScript* TestScriptFactory::createTestScript(std::string scriptname) {
 	if (scriptname == "0_Dummy") return new DummyScript(scriptname);
 	if (scriptname == "1_FullWriteAndReadCompare") return new FullWriteAndReadCompare(scriptname);
 	if (scriptname == "2_PartialLBAWrite") return new PartialLBAWrite(scriptname);
 	if (scriptname == "3_WriteReadAging") return new WriteReadAging(scriptname);
+
+	return nullptr;
 }

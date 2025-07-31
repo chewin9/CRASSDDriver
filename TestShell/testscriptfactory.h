@@ -36,6 +36,12 @@ public:
 	bool Run(IProcessExecutor* exe) override;
 };
 
+class EraseAndWriteAging : public TestScript {
+public:
+	EraseAndWriteAging(std::string name) : TestScript(name) {}
+	bool Run(IProcessExecutor* exe) override;
+};
+
 class TestScriptFactory {
 public:
 	static TestScriptFactory& getInstance() {
