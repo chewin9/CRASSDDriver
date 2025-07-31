@@ -34,41 +34,11 @@ void Logger::print(const std::string& classFunc, const std::string& message)
     write_to_file(oss.str());
 }
 
-void Logger::save_last_time_printed(std::string& timeprint)
+void Logger::print_to_console(const std::string& str)
 {
-    lastTimePrinted = timeprint;
-}
-
-bool Logger::is_file_over_10k(const std::string& file) {
-    // file size 
-    std::ifstream in(file, std::ios::binary | std::ios::ate);
-    std::streamsize size = in.tellg();
-    in.seekg(0);
-    if (size > 10 * 1024) return true;
-    else return false;
-}
-
-std::string Logger::get_saved_log_file_name(void)
-{
-    std::string log_file_name = "until_" + lastTimePrinted + ".log";
-    std::replace(log_file_name.begin(), log_file_name.end(), ':', '_');
-    return log_file_name;
-}
-
-void Logger::move_file_to_log(const std::string& file)
-{
-    std::string log_file_name = get_saved_log_file_name();
-
-    std::ifstream in(file, std::ios::binary | std::ios::ate);
-    in.clear();
-    in.seekg(0);
-
-    std::ofstream out(log_file_name, std::ios::binary);
-    if (!out) {
-        std::cerr << "Cannot open or create destination file: " << log_file_name << std::endl;
-        // handle error, e.g., return false or exit
+    if (true == bUseConsolePrint) {
+        std::cout << str << std::endl;
     }
-    out << in.rdbuf(); // Copy all contents
 }
 
 void Logger::write_to_file(const std::string& str) {
@@ -89,19 +59,13 @@ void Logger::write_to_file(const std::string& str) {
     }
 }
 
-bool Logger::is_saved_log_file_exists(void)
-{
-#if (USING_WINCPP14)
-    // any .log file other than filename exist
-    WIN32_FIND_DATAA fd;
-    HANDLE hFind = FindFirstFileA("*.log", &fd);
-    if (hFind == INVALID_HANDLE_VALUE) {
-        return false;
-    }
-    else {
-        return true;
-    }
-#endif 
+bool Logger::is_file_over_10k(const std::string& file) {
+    // file size 
+    std::ifstream in(file, std::ios::binary | std::ios::ate);
+    std::streamsize size = in.tellg();
+    in.seekg(0);
+    if (size > 10 * 1024) return true;
+    else return false;
 }
 
 void Logger::move_saved_log_file(void)
@@ -125,16 +89,52 @@ void Logger::move_saved_log_file(void)
     }
 }
 
+void Logger::move_file_to_log(const std::string& file)
+{
+    std::string log_file_name = get_saved_log_file_name();
+
+    std::ifstream in(file, std::ios::binary | std::ios::ate);
+    in.clear();
+    in.seekg(0);
+
+    std::ofstream out(log_file_name, std::ios::binary);
+    if (!out) {
+        std::cerr << "Cannot open or create destination file: " << log_file_name << std::endl;
+        // handle error, e.g., return false or exit
+    }
+    out << in.rdbuf(); // Copy all contents
+}
+
+void Logger::save_last_time_printed(std::string& timeprint)
+{
+    lastTimePrinted = timeprint;
+}
+
+std::string Logger::get_saved_log_file_name(void)
+{
+    std::string log_file_name = "until_" + lastTimePrinted + ".log";
+    std::replace(log_file_name.begin(), log_file_name.end(), ':', '_');
+    return log_file_name;
+}
+
+bool Logger::is_saved_log_file_exists(void)
+{
+#if (USING_WINCPP14)
+    // any .log file other than filename exist
+    WIN32_FIND_DATAA fd;
+    HANDLE hFind = FindFirstFileA("*.log", &fd);
+    if (hFind == INVALID_HANDLE_VALUE) {
+        return false;
+    }
+    else {
+        return true;
+    }
+#endif 
+}
+
 void Logger::disable_console_print(void)
 {
     bUseConsolePrint = false;
-}
-
-void Logger::print_to_console(const std::string& str)
-{
-    if (true == bUseConsolePrint) {
-        std::cout << str << std::endl;
-    }
 }
 
 std::string Logger::getCurrentTimeString(void)
