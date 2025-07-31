@@ -11,18 +11,16 @@
 class Shell {
 public:
     Shell() {
-        shell_read = new ShellRead(&executor);
-        shell_write = new ShellWrite(&executor);
-        shell_fullwrite = new ShellFullWrite(&executor);
-        shell_fullread = new ShellFullRead(&executor);
-        script_runner = new TestScriptRunner(&executor);
-        shell_help = new ShellHelp(&executor);
+        executor = new ProcessExecutor();
+        shell_read = new ShellRead(executor);
+        shell_fullread = new ShellFullRead(executor);
+        script_runner = new TestScriptRunner(executor);
+        shell_help = new ShellHelp(executor);
     };
 
     Shell(IProcessExecutor * exe) {
+        executor = exe;
         shell_read = new ShellRead(exe);
-        shell_write = new ShellWrite(exe);
-        shell_fullwrite = new ShellFullWrite(exe);
         shell_fullread = new ShellFullRead(exe);
         script_runner = new TestScriptRunner(exe);
     }
@@ -31,9 +29,7 @@ public:
     virtual string get_command(string& input);
 
 private:
-    ProcessExecutor executor;
-    ShellWrite* shell_write;
-    ShellFullWrite* shell_fullwrite;
+    IProcessExecutor* executor;
     ShellFullRead* shell_fullread;
     ShellRead* shell_read;
     ShellHelp* shell_help;

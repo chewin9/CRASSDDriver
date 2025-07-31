@@ -11,7 +11,7 @@ TEST(ShellHelpTest, CrewIntroducePrintsCorrectOutput) {
     std::ostringstream oss;
     std::streambuf* old_cout = std::cout.rdbuf(oss.rdbuf());
 
-    help.help("");
+    help.Run("");
 
     std::cout.rdbuf(old_cout); // restore
 
@@ -33,7 +33,7 @@ TEST(ShellHelpTest, shellhelpwrite) {
     std::ostringstream oss;
     std::streambuf* old_cout = std::cout.rdbuf(oss.rdbuf());
 
-    help.help("help write");
+    help.Run("help write");
 
     std::cout.rdbuf(old_cout); // restore
 
@@ -55,7 +55,7 @@ TEST(ShellHelpTest, shellhelpread) {
     std::ostringstream oss;
     std::streambuf* old_cout = std::cout.rdbuf(oss.rdbuf());
 
-    help.help("help read");
+    help.Run("help read");
 
     std::cout.rdbuf(old_cout); // restore
 
@@ -76,7 +76,7 @@ TEST(ShellHelpTest, shellhelpexit) {
     std::ostringstream oss;
     std::streambuf* old_cout = std::cout.rdbuf(oss.rdbuf());
 
-    help.help("help exit");
+    help.Run("help exit");
 
     std::cout.rdbuf(old_cout); // restore
 
@@ -96,7 +96,7 @@ TEST(ShellHelpTest, shellhelpfullwrite) {
     std::ostringstream oss;
     std::streambuf* old_cout = std::cout.rdbuf(oss.rdbuf());
 
-    help.help("help fullwrite");
+    help.Run("help fullwrite");
 
     std::cout.rdbuf(old_cout); // restore
 
@@ -116,7 +116,7 @@ TEST(ShellHelpTest, shellhelpfullread) {
     std::ostringstream oss;
     std::streambuf* old_cout = std::cout.rdbuf(oss.rdbuf());
 
-    help.help("help fullread");
+    help.Run("help fullread");
 
     std::cout.rdbuf(old_cout); // restore
 
