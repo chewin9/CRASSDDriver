@@ -4,6 +4,7 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <vector>
 #include "File.h"
 #include "testscriptfactory.h"
 
@@ -66,6 +67,16 @@ int TestScriptRunner::parseCommandLine(const std::string& commandLine) {
 		}
 	}
 	return INVALID_INDEX;
+}
+
+bool TestScriptRunner::ScriptRunnerMode(std::string filename) {
+	std::vector<std::string> scripts;
+
+	for (auto cur_script : scripts) {
+		if (runScript(cur_script) == false) {
+			return false;
+		}
+	}
 }
 
 std::string TestScript::GetName() {

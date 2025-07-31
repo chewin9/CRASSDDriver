@@ -24,7 +24,7 @@ public:
         script_runner = new TestScriptRunner(exe);
     }
 
-    int Run(void);
+    int Run(std::string arg = "");
     virtual string get_command(string& input);
 
 private:

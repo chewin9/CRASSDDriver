@@ -36,6 +36,7 @@ public:
 	TestScriptRunner(IProcessExecutor* exe);
 	bool runScript(const std::string& commandLine);
 	bool IsValidSciprtCommand(const std::string& commandLine);
+	bool ScriptRunnerMode(std::string filename);
 
 private:
 	//Method

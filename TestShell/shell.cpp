@@ -22,8 +22,14 @@ string Shell::get_command(string& input) {
     return std::get<0>(parseCommand);
 }
 
-int Shell::Run(void) {
+int Shell::Run(std::string arg) {
     std::string input;
+
+    if (!arg.empty() && script_runner->IsValidSciprtCommand(arg)) {
+        script_runner->ScriptRunnerMode(arg);
+        return 0;
+    }
+
     while (true) {
         string cmd = get_command(input);
 
