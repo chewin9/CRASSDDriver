@@ -48,5 +48,9 @@ public:
 		static TestScriptFactory instance;
 		return instance;
 	}
-	static TestScript* createTestScript(std::string scriptname);
+
+	std::shared_ptr<TestScript> createTestScript(const std::string& scriptname);
+
+private:
+	bool isMatch(std::string input, std::string scriptname);
 };

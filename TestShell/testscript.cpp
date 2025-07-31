@@ -7,67 +7,24 @@
 #include <vector>
 #include "File.h"
 #include "testscriptfactory.h"
+#include "memory"
 
 const int INVALID_INDEX = 0;
 
 TestScriptRunner::TestScriptRunner(IProcessExecutor* exe, IFile* _file) : execute(exe), file(_file) {
-	addScripts();
+
+}
+
+std::shared_ptr<TestScript> TestScriptRunner::getScript(const std::string& commandLine) {
+	return TestScriptFactory::getInstance().createTestScript(commandLine);
 }
 
 bool TestScriptRunner::runScript(const std::string& commandLine) {
-	int commandIdx = 0;
-	if ((commandIdx = parseCommandLine(commandLine)) == INVALID_INDEX) {
-		return false;
-	}
+	std::shared_ptr<TestScript> script = TestScriptFactory::getInstance().createTestScript(commandLine);
 
-	return testScripts.at(commandIdx)->Run(execute, file);
-}
+	if (script == nullptr) return false;
 
-bool TestScriptRunner::IsValidSciprtCommand(const std::string& commandLine) {
-	if (parseCommandLine(commandLine) == INVALID_INDEX) {
-		return false;
-	}
-
-	return true;
-}
-
-void TestScriptRunner::addScripts() {
-	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("0_Dummy"));
-	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("1_FullWriteAndReadCompare"));
-	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("2_PartialLBAWrite"));
-	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("3_WriteReadAging"));
-	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("4_EraseAndWriteAging"));
-}
-
-int TestScriptRunner::GetScriptIndex(const std::string& scriptname) {
-	int scriptidx = 0;
-
-	int seperator_position = scriptname.find('_');
-
-	if ((seperator_position + 1) < scriptname.size()) return INVALID_INDEX;
-
-	try {
-		scriptidx = std::stoi(scriptname.substr(0, seperator_position));
-	}
-	catch (std::exception e) {
-		return INVALID_INDEX;
-	}
-
-	return scriptidx;
-}
-
-int TestScriptRunner::parseCommandLine(const std::string& commandLine) {
-	int scriptidx = INVALID_INDEX;
-	if ((scriptidx = GetScriptIndex(commandLine)) != INVALID_INDEX && scriptidx > 0 && scriptidx < testScripts.size()) {
-		return scriptidx;
-	}
-
-	for (int index = 0; index < testScripts.size(); index++) {
-		if (commandLine == testScripts[index]->GetName()) {
-			return index;
-		}
-	}
-	return INVALID_INDEX;
+	return script->Run(execute, file);
 }
 
 bool TestScriptRunner::ScriptRunnerMode(std::string filename, IFile *file) {

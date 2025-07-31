@@ -61,7 +61,7 @@ int Shell::Run(std::string arg) {
 
         }
         else {
-            if (false == script_runner->IsValidSciprtCommand(input)) {
+            if (nullptr == script_runner->getScript(input)) {
                 // no matching command
                 std::cout << "INVALID COMMAND" << std::endl;
                 std::cout << "You typed : " << input << std::endl;
