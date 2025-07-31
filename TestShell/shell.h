@@ -3,6 +3,7 @@
 #include "shell_read.h"
 #include "shell_write.h"
 #include "shell_full_write.h"
+#include "shell_full_read.h"
 #include "testscript.h"
 #include "shell_help.h"
 #include "process_executor.h"
@@ -13,6 +14,7 @@ public:
         shell_read = new ShellRead(&executor);
         shell_write = new ShellWrite(&executor);
         shell_fullwrite = new ShellFullWrite(&executor);
+        shell_fullread = new ShellFullRead(&executor);
         script_runner = new TestScriptRunner(&executor);
         shell_help = new ShellHelp(&executor);
     };
@@ -21,6 +23,7 @@ public:
         shell_read = new ShellRead(exe);
         shell_write = new ShellWrite(exe);
         shell_fullwrite = new ShellFullWrite(exe);
+        shell_fullread = new ShellFullRead(exe);
         script_runner = new TestScriptRunner(exe);
     }
 
@@ -31,6 +34,7 @@ private:
     ProcessExecutor executor;
     ShellWrite* shell_write;
     ShellFullWrite* shell_fullwrite;
+    ShellFullRead* shell_fullread;
     ShellRead* shell_read;
     ShellHelp* shell_help;
 
