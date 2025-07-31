@@ -136,10 +136,10 @@ bool TestScriptFactory::isMatch(std::string input, std::string scriptname) {
 }
 
 std::shared_ptr<TestScript> TestScriptFactory::createTestScript(const std::string& scriptname) {
-	if (isMatch(scriptname, std::string("0_Dummy")) == true)  return std::make_shared<DummyScript>(scriptname);
-	if (isMatch(scriptname, std::string("1_FullWriteAndReadCompare")) == true) return std::make_shared<FullWriteAndReadCompare>(scriptname);
-	if (isMatch(scriptname, std::string("2_PartialLBAWrite")) == true) return std::make_shared<PartialLBAWrite>(scriptname);
-	if (isMatch(scriptname, std::string("3_WriteReadAging")) == true) return std::make_shared<WriteReadAging>(scriptname);
-	if (isMatch(scriptname, std::string("4_EraseAndWriteAging")) == true) return std::make_shared<EraseAndWriteAging>(scriptname);
+	if (isMatch(scriptname, "0_Dummy") == true)  return std::make_shared<DummyScript>(scriptname);
+	if (isMatch(scriptname, "1_FullWriteAndReadCompare") == true) return std::make_shared<FullWriteAndReadCompare>(scriptname);
+	if (isMatch(scriptname, "2_PartialLBAWrite") == true) return std::make_shared<PartialLBAWrite>(scriptname);
+	if (isMatch(scriptname, "3_WriteReadAging") == true) return std::make_shared<WriteReadAging>(scriptname);
+	if (isMatch(scriptname, "4_EraseAndWriteAging") == true) return std::make_shared<EraseAndWriteAging>(scriptname);
 	return nullptr;
 }
