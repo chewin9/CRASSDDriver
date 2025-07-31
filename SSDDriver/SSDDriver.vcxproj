@@ -136,6 +136,8 @@
     <ClCompile Include="command_factory_test.cpp" />
     <ClCompile Include="command_parser.cpp" />
     <ClCompile Include="command_parser_test.cpp" />
+    <ClCompile Include="erasecommand.cpp" />
+    <ClCompile Include="erasecommand_test.cpp" />
     <ClCompile Include="file_io_test.cpp" />
     <ClCompile Include="full_path_test.cpp" />
     <ClCompile Include="ssd_operation_handler.cpp" />
@@ -149,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="command_factory.h" />
     <ClInclude Include="command_parser.h" />
+    <ClInclude Include="erasecommand.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="readcommand.h" />
     <ClInclude Include="ssd_operation_handler.h" />

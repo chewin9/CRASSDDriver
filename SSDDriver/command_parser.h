@@ -5,6 +5,7 @@ struct ParsedCommand {
   int lba = -1;
   std::string value = "";
   bool errorFlag = false;
+  int erase_size = -1;
 };
 
 class CommandParser {
@@ -12,6 +13,7 @@ class CommandParser {
   void CheckException(int argc, char* argv[], const ParsedCommand& cmd);
   bool IsLbaErrorExist(const ParsedCommand& cmd);
   bool IsValueErrorExist(const ParsedCommand& cmd);
+  bool IsEraseSizeErrorExist(const ParsedCommand& cmd);
 
  public:
   static constexpr int MIN_VAL = 0;
