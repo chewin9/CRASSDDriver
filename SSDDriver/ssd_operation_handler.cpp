@@ -63,7 +63,8 @@ bool SsdOperationHandler::EraseData(const ParsedCommand& cmdInfo) {
         if (it != nandData.end()) {
             nandData.erase(it);
         }
-        
+
+        return true;
     }
     return false;
 }
