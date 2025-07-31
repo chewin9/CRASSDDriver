@@ -18,7 +18,10 @@
     <ClCompile Include="shell_help_test.cpp" />
     <ClCompile Include="shell_test.cpp" />
     <ClCompile Include="File.cpp" />
+    <ClCompile Include="ishell_command.h" />
     <ClCompile Include="testscriptfactory.cpp" />
+    <ClCompile Include="shell_full_read.cpp" />
+    <ClCompile Include="shell_full_read_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
@@ -54,5 +57,6 @@
     <ClInclude Include="shell_help.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="testscriptfactory.h" />
+    <ClInclude Include="shell_full_read.h" />
   </ItemGroup>
 </Project>

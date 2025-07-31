@@ -6,7 +6,7 @@
 
 ShellHelp::ShellHelp(IProcessExecutor* executor) : executor_(executor) {}
 
-void ShellHelp::help(const std::string input) {
+bool ShellHelp::Run(const std::string &input) {
 	std::tuple<std::string, std::string> parseCommand = parse_command(input);
 
 	if (std::get<1>(parseCommand).empty()) {
@@ -30,6 +30,7 @@ void ShellHelp::help(const std::string input) {
 	else {
 		helpCommand();
 	}
+	return true;
 }
 
 void ShellHelp::crewIntroduce() {

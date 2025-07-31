@@ -42,32 +42,32 @@ public:
 
 TEST_F(ShellWriteTestFixture, ssd_write) {
 	EXPECT_CALL(executor, Process).Times(1).WillOnce(testing::Return(0));
-	shell_write->IssueWrite("write 3 0xAAAABBBB");
+	shell_write->Run("write 3 0xAAAABBBB");
 	checkExpectedConsoleOutput(WRITE_DONE);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_Read) {
-	shell_write->IssueWrite("read 3 0xAAAABBBB");
+	shell_write->Run("read 3 0xAAAABBBB");
 	checkExpectedConsoleOutput(INVALID_COMMAND);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_writeLBA) {
-	shell_write->IssueWrite("write 100000 0xAAAABBBB");
+	shell_write->Run("write 100000 0xAAAABBBB");
 	checkExpectedConsoleOutput(INVALID_COMMAND);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data) {
-	shell_write->IssueWrite("write 22 ZXCVBNMAqp");
+	shell_write->Run("write 22 ZXCVBNMAqp");
 	checkExpectedConsoleOutput(INVALID_COMMAND);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data2) {
-	shell_write->IssueWrite("write 22 0xZXCVBNMA");
+	shell_write->Run("write 22 0xZXCVBNMA");
 	checkExpectedConsoleOutput(INVALID_COMMAND);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data3) {
-	shell_write->IssueWrite("write aa 0xZXCVBNMA");
+	shell_write->Run("write aa 0xZXCVBNMA");
 	checkExpectedConsoleOutput(INVALID_COMMAND);
 }
 
@@ -75,21 +75,21 @@ TEST_F(ShellWriteTestFixture, full_write_success) {
 	// expect all LBA write
 	EXPECT_CALL(executor, Process).Times(100).WillRepeatedly(testing::Return(0));
 
-	full_write->IssueFullWrite("fullwrite 0xABCDFFFF");
+	full_write->Run("fullwrite 0xABCDFFFF");
 	checkExpectedConsoleOutput(WRITE_FULL_DONE);
 }
 
 TEST_F(ShellWriteTestFixture, full_write_invalid_param_overHexValue) {
-	full_write->IssueFullWrite("fullwrite 0xQWERTYUI");
+	full_write->Run("fullwrite 0xQWERTYUI");
 	checkExpectedConsoleOutput(INVALID_COMMAND);
 }
 
 TEST_F(ShellWriteTestFixture, full_write_invalid_param_notHexFormat) {
-	full_write->IssueFullWrite("fullwrite 12345678");
+	full_write->Run("fullwrite 12345678");
 	checkExpectedConsoleOutput(INVALID_COMMAND);
 }
 
 TEST_F(ShellWriteTestFixture, full_write_invalid_param_multiParam) {
-	full_write->IssueFullWrite("fullwrite 99 0xABCDFFFF");
+	full_write->Run("fullwrite 99 0xABCDFFFF");
 	checkExpectedConsoleOutput(INVALID_COMMAND);
 }

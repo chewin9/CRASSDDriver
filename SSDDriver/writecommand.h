@@ -1,13 +1,13 @@
 #pragma once
 
 #include "ICommand.h"
-#include "file_io.h"
+#include "ssd_operation_handler.h"
 
 class WriteCommand : public ICommand {
-  ParsedCommand& cmdInfo;
-  FileIO file_io;
+  SsdOperationHandler& opHandler;
 
  public:
-  WriteCommand(ParsedCommand& cmdInfo) : cmdInfo{cmdInfo} {}
-  bool Execute() override;
+  WriteCommand(SsdOperationHandler& opHandler)
+      : opHandler{opHandler} {}
+  bool Execute(const ParsedCommand& cmdInfo) override;
 };

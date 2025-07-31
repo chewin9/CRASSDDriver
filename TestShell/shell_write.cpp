@@ -6,21 +6,19 @@
 #include <sstream>
 #include <iostream>
 
-void ShellWrite::IssueWrite(const std::string& input) {
+bool ShellWrite::Run(const std::string& input) {
 
     if (false == checkParameterValid(input)) {
         printError();
-        return;
+        return false;
     }
 
     std::string cmdLine = "SSDDriver.exe W " + input.substr(6);
     executor_->Process(cmdLine);
     std::cout << "[Write] Done" << std::endl;
+    return true;
 }
 
-void ShellWrite::printError() {
-    std::cout << "INVALID COMMAND" << std::endl;
-}
 
 bool ShellWrite::checkParameterValid(const std::string& input)
 {
@@ -65,7 +63,11 @@ bool ShellWrite::checkParameterValid(const std::string& input)
     return true;
 }
 
-std::vector<std::string> ShellWrite::splitBySpace(const std::string& str) {
+void Write::printError() {
+    std::cout << "INVALID COMMAND" << std::endl;
+}
+
+std::vector<std::string> Write::splitBySpace(const std::string& str) {
     std::istringstream iss(str);
     std::vector<std::string> tokens;
     std::string word;
@@ -75,7 +77,7 @@ std::vector<std::string> ShellWrite::splitBySpace(const std::string& str) {
     return tokens;
 }
 
-bool ShellWrite::convertStoI(const std::string& str, int& val) {
+bool Write::convertStoI(const std::string& str, int& val) {
     size_t idx = 0;
     try {
         val = std::stoi(str, &idx);
@@ -88,7 +90,7 @@ bool ShellWrite::convertStoI(const std::string& str, int& val) {
         return false;
     }
 }
-bool ShellWrite::is_all_uppercase(const std::string& str) {
+bool Write::is_all_uppercase(const std::string& str) {
 
     for (char ch : str) {
         if ('A' <= ch && ch <= 'F') continue;
@@ -98,7 +100,7 @@ bool ShellWrite::is_all_uppercase(const std::string& str) {
     return true;
 }
 
-bool ShellWrite::is_valid_unsigned(const std::string& str) {
+bool Write::is_valid_unsigned(const std::string& str) {
     size_t idx = 0;
     try {
         std::stoul(str, &idx, 0); // base 0: auto-detect base (hex, dec, oct)
