@@ -16,11 +16,11 @@ TestScriptRunner::TestScriptRunner(IProcessExecutor* exe, IFile* _file) : execut
 }
 
 std::shared_ptr<TestScript> TestScriptRunner::getScript(const std::string& commandLine) {
-	return TestScriptFactory::getInstance().createTestScript(commandLine);
+	return TestScriptFactory::getInstance().createTestScript(commandLine, logger);
 }
 
 bool TestScriptRunner::runScript(const std::string& commandLine) {
-	std::shared_ptr<TestScript> script = TestScriptFactory::getInstance().createTestScript(commandLine);
+	std::shared_ptr<TestScript> script = TestScriptFactory::getInstance().createTestScript(commandLine, logger);
 
 	if (script == nullptr) return false;
 
