@@ -13,7 +13,7 @@ public:
     Shell() {
         executor = new ProcessExecutor();
         shell_read = new ShellRead(executor);
-        shell_fullread = new ShellFullRead(&executor);
+        shell_fullread = new ShellFullRead(executor);
         script_runner = new TestScriptRunner(executor);
         shell_help = new ShellHelp(executor);
     };
