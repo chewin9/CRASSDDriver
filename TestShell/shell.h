@@ -13,7 +13,6 @@ public:
     Shell() {
         executor = new ProcessExecutor();
         script_runner = new TestScriptRunner(executor);
-        shell_help = new ShellHelp(executor);
     };
 
     Shell(IProcessExecutor * exe) {
@@ -26,7 +25,6 @@ public:
 
 private:
     IProcessExecutor* executor;
-    ShellHelp* shell_help;
 
     TestScriptRunner* script_runner;
 
