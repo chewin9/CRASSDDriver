@@ -24,6 +24,7 @@
     <ClCompile Include="shell_full_read_test.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="logger_test.cpp" />
+    <ClCompile Include="shell_flush.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">

@@ -140,6 +140,7 @@
     </ClCompile>
     <ClCompile Include="process_executor.cpp" />
     <ClCompile Include="shell.cpp" />
+    <ClCompile Include="shell_flush.cpp" />
     <ClCompile Include="shell_full_read.cpp" />
     <ClCompile Include="shell_full_read_test.cpp" />
     <ClCompile Include="shell_help.cpp" />
