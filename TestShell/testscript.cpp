@@ -91,3 +91,31 @@ std::string TestScript::makeEraseCommand(unsigned int addr, unsigned int size) {
 	std::string result = GetSSDName() + " E " + std::to_string(addr) + " " + std::to_string(size);
 	return result;
 }
+
+void TestScript::WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value) {
+	for (unsigned int index = startaddr; index < startaddr + len; index++) {
+		exe->Process(makeWriteCommand(index, value));
+	}
+}
+
+void TestScript::EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len) {
+	for (unsigned int index = startaddr; index < startaddr + len; index++) {
+		exe->Process(makeEraseCommand(index, len));
+	}
+}
+bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int startaddr, unsigned int len, unsigned value) {
+	for (unsigned int index = startaddr; index < startaddr + len; index++) {
+		exe->Process(makeReadCommand(index));
+		try {
+			if (std::stoi(file->ReadOutputFile("ssd_output.txt").substr(2, 10), nullptr, 16) != value) {
+
+				return false;
+			}
+		}
+		catch (std::exception e) {
+			return false;
+		}
+	}
+
+	return true;
+}
