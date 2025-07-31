@@ -66,3 +66,23 @@ void FileIO::EraseFolder() {
     }
 
 }
+
+std::vector<std::string> FileIO::LoadCommandBuffer() {
+
+    fs::path dir{ SSD_COMMAND_BUFFER_FOLDER };
+
+    std::vector<std::string> filenames;
+    std::error_code ec;
+    
+    if (!fs::exists(dir, ec) || !fs::is_directory(dir, ec)) {
+        return {};
+    }
+
+    for (const auto& command : fs::directory_iterator(dir, ec)) {
+        if (ec) break;
+        
+        filenames.push_back(command.path().filename().string());
+    }
+    return filenames;
+
+}
