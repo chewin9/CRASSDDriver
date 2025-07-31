@@ -22,6 +22,8 @@
     <ClCompile Include="testscriptfactory.cpp" />
     <ClCompile Include="shell_full_read.cpp" />
     <ClCompile Include="shell_full_read_test.cpp" />
+    <ClCompile Include="logger.cpp" />
+    <ClCompile Include="logger_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
@@ -58,5 +60,6 @@
     <ClInclude Include="File.h" />
     <ClInclude Include="testscriptfactory.h" />
     <ClInclude Include="shell_full_read.h" />
+    <ClInclude Include="logger.h" />
   </ItemGroup>
 </Project>

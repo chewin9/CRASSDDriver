@@ -129,6 +129,8 @@
   <ItemGroup>
     <ClCompile Include="File.cpp" />
     <ClCompile Include="ishell_command.h" />
+    <ClCompile Include="logger.cpp" />
+    <ClCompile Include="logger_test.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> %(AdditionalOptions)</AdditionalOptions>
@@ -172,6 +174,7 @@
   <ItemGroup>
     <ClInclude Include="File.h" />
     <ClInclude Include="iprocess_executor.h" />
+    <ClInclude Include="logger.h" />
     <ClInclude Include="process_executor.h" />
     <ClInclude Include="shell_full_read.h" />
     <ClInclude Include="testscriptfactory.h" />
