@@ -5,6 +5,7 @@
 #include <cstring>
 #include <stdio.h>
 #include "iprocess_executor.h"
+#include "File.h"
 
 const int MAX_ADDR = 99;
 
@@ -15,16 +16,15 @@ public:
 
 	}
 
-	virtual bool Run(IProcessExecutor* exe) = 0;
+	virtual bool Run(IProcessExecutor* exe, IFile* file) = 0;
 	std::string GetName();
 	std::string makeWriteCommand(unsigned int addr, unsigned int value);
 	std::string makeReadCommand(unsigned int addr);
 	std::string makeEraseCommand(unsigned int addr, unsigned int size);
 	void WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value);
-	bool ReadCompare(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned value);
 	void EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len);
+	bool ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int startaddr, unsigned int len, unsigned value);
 	std::string GetSSDName() { return SSD_NAME; }
-	std::string ReadOutputFile(const std::string& filename = "ssd_output.txt");
 
 protected:
 	std::string m_name = nullptr;
@@ -35,14 +35,15 @@ protected:
 
 class TestScriptRunner {
 public:
-	TestScriptRunner(IProcessExecutor* exe);
+	TestScriptRunner(IProcessExecutor* exe, IFile* _file);
 	bool runScript(const std::string& commandLine);
 	bool IsValidSciprtCommand(const std::string& commandLine);
-	bool ScriptRunnerMode(std::string filename);
+	bool ScriptRunnerMode(std::string filename, IFile* _file);
 
 private:
 	//Method
 	IProcessExecutor* execute = nullptr;
+	IFile* file = nullptr;
 	int parseCommandLine(const std::string& commandLine);
 	int GetScriptIndex(const std::string& scriptname);
 	void addScripts();

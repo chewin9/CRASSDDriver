@@ -26,7 +26,7 @@ int Shell::Run(std::string arg) {
     std::string input;
 
     if (!arg.empty()) {
-        script_runner->ScriptRunnerMode(arg);
+        script_runner->ScriptRunnerMode(arg, &testscriptfile);
         return 0;
     }
 

@@ -7,17 +7,18 @@
 #include "testscript.h"
 #include "shell_help.h"
 #include "process_executor.h"
+#include "File.h"
 
 class Shell {
 public:
     Shell() {
         executor = new ProcessExecutor();
-        script_runner = new TestScriptRunner(executor);
+        script_runner = new TestScriptRunner(executor, &testscriptfile);
     };
 
     Shell(IProcessExecutor * exe) {
         executor = exe;
-        script_runner = new TestScriptRunner(exe);
+        script_runner = new TestScriptRunner(exe, nullptr);
     }
 
     int Run(std::string arg = "");
@@ -25,6 +26,7 @@ public:
 
 private:
     IProcessExecutor* executor;
+    File testscriptfile;
 
     TestScriptRunner* script_runner;
 

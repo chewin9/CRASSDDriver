@@ -6,7 +6,7 @@
 #include <ctime>
 #include "File.h"
 
-bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
+bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 	//Script
 	int value = 5;
 	int start = 0;
@@ -17,7 +17,7 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
 	for (start = 0; start < MAX_ADDR; start += length) {
 		for (int index = start;index < start + length; index++) {
 			WriteBlock(exe, start, length, value);
-			if (ReadCompare(exe, start, length, value) == false) {
+			if (ReadCompare(exe, file, start, length, value) == false) {
 				PrintScriptExit(false);
 				return false;
 			}
@@ -29,7 +29,7 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe) {
 	return true;
 }
 
-bool PartialLBAWrite::Run(IProcessExecutor* exe)
+bool PartialLBAWrite::Run(IProcessExecutor* exe, IFile* file)
 {
 	bool IsPass = true;
 
@@ -39,7 +39,7 @@ bool PartialLBAWrite::Run(IProcessExecutor* exe)
 	{
 		PartialBlockWrite(exe);
 
-		IsPass = GetPartialReadAndCompareResult(exe);
+		IsPass = GetPartialReadAndCompareResult(exe, file);
 
 		if (IsPass == false) break;
 	}
@@ -49,14 +49,14 @@ bool PartialLBAWrite::Run(IProcessExecutor* exe)
 	return IsPass;
 }
 
-bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe)
+bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFile* file)
 {
 	bool IsPass = true;
 
 	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
 		exe->Process(makeReadCommand(readcount));
 		try {
-			IsPass = IsPass && (stoi(File::ReadOutputFile().substr(2, 10)) == std::stoul(value_list[readcount], nullptr, 16));
+			IsPass = IsPass && (stoi(file->ReadOutputFile("ssd_output.txt").substr(2, 10)) == std::stoul(value_list[readcount], nullptr, 16));
 		}
 		catch (std::exception e) {
 			return false;
@@ -74,7 +74,7 @@ void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
 	}
 }
 
-bool WriteReadAging::Run(IProcessExecutor* exe) {
+bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
 	//Script
 	std::srand(std::time({}));
 	unsigned int data = rand();
@@ -84,13 +84,14 @@ bool WriteReadAging::Run(IProcessExecutor* exe) {
 	for (int count = 0; count < 200; count++) {
 
 		WriteBlock(exe, 0, 1, data);
-		if (ReadCompare(exe, 0, 1, data) == false) {
+
+		if (ReadCompare(exe, file, 0, 1, data) == false) {
 			PrintScriptExit(false);
 			return false;
 		}
 
 		WriteBlock(exe, 99, 1, data);
-		if (ReadCompare(exe, 99, 1, data) == false) {
+		if (ReadCompare(exe, file, 99, 1, data) == false) {
 			PrintScriptExit(false);
 			return false;
 		}
@@ -100,7 +101,7 @@ bool WriteReadAging::Run(IProcessExecutor* exe) {
 	return true;
 }
 
-bool EraseAndWriteAging::Run(IProcessExecutor* exe) {
+bool EraseAndWriteAging::Run(IProcessExecutor* exe, IFile* file) {
 	EraseBlock(exe, 0, 3);
 
 	for (int j = 0;j < 30; j++) {
@@ -108,7 +109,8 @@ bool EraseAndWriteAging::Run(IProcessExecutor* exe) {
 			WriteBlock(exe, i, 1, 5);
 			WriteBlock(exe, i, 1, 9);
 			EraseBlock(exe, i, 3);
-			if (ReadCompare(exe, i, 3, 0) == false) {
+
+			if (ReadCompare(exe, file, i, 3, 0) == false) {
 				PrintScriptExit(false);
 				return false;
 			}
