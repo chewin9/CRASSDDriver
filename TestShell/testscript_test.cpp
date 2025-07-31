@@ -128,5 +128,6 @@ TEST_F(TestScriptTestFixture, 3_WriteReadAgingNotMatch) {
 
 TEST_F(TestScriptTestFixture, 4_EraseAndWriteAging) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(0));
+	EXPECT_CALL(mockfile, ReadOutputFile(_)).WillRepeatedly(Return("0x00000000"));
 	CheckResult(true, "4_EraseAndWriteAging");
 }

@@ -100,6 +100,7 @@ TestScript* TestScriptFactory::createTestScript(std::string scriptname) {
 	if (scriptname == "1_FullWriteAndReadCompare") return new FullWriteAndReadCompare(scriptname);
 	if (scriptname == "2_PartialLBAWrite") return new PartialLBAWrite(scriptname);
 	if (scriptname == "3_WriteReadAging") return new WriteReadAging(scriptname);
+	if (scriptname == "4_EraseAndWriteAging") return new EraseAndWriteAging(scriptname);
 
 	return nullptr;
 }

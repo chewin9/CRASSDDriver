@@ -35,6 +35,7 @@ void TestScriptRunner::addScripts() {
 	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("1_FullWriteAndReadCompare"));
 	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("2_PartialLBAWrite"));
 	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("3_WriteReadAging"));
+	testScripts.push_back(TestScriptFactory::getInstance().createTestScript("4_EraseAndWriteAging"));
 }
 
 int TestScriptRunner::GetScriptIndex(const std::string& scriptname) {
