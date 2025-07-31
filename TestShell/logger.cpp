@@ -6,7 +6,21 @@
 #include <fstream>
 #include <algorithm>
 #include "logger.h"
-    
+
+#if (USING_WINCPP14)
+#include <windows.h>
+
+bool has_log_extension(const std::string& name) {
+    size_t n = name.size();
+    return n >= 4 && name.substr(n - 4) == ".log";
+}
+
+std::string replace_extension_with_zip(const std::string& name) {
+    return name.substr(0, name.size() - 4) + ".zip";
+}
+
+#endif 
+
 void Logger::print(const std::string& classFunc, const std::string& message)
 {    
     std::string timeprint = getCurrentTimeString();
@@ -62,13 +76,47 @@ void Logger::write_to_file(const std::string& str) {
 
     if (true == is_file_over_10k(filename))
     {
-        // check if other .log file exist, change file name to .zip
+        move_saved_log_file();
 
-        // move file to YYMMDD_HHMMSS.log 
         move_file_to_log(filename);
 
-        // remove the latest.log 
         remove(filename.c_str());
+    }
+}
+
+bool Logger::is_saved_log_file_exists(void)
+{
+#if (USING_WINCPP14)
+    // any .log file other than filename exist
+    WIN32_FIND_DATAA fd;
+    HANDLE hFind = FindFirstFileA("*.log", &fd);
+    if (hFind == INVALID_HANDLE_VALUE) {
+        return false;
+    }
+    else {
+        return true;
+    }
+#endif 
+}
+
+void Logger::move_saved_log_file(void)
+{
+    // check if other .log file exist,
+    if (true == is_saved_log_file_exists())
+    {
+#if (USING_WINCPP14)
+        WIN32_FIND_DATAA fd;
+        HANDLE hFind = FindFirstFileA("*.log", &fd);
+        do {
+            std::string old_name = fd.cFileName;
+            if (old_name == filename) continue;
+            if (has_log_extension(old_name)) {
+                std::string new_name = replace_extension_with_zip(old_name);
+                MoveFileA(old_name.c_str(), new_name.c_str());
+            }
+        } while (FindNextFileA(hFind, &fd));
+        FindClose(hFind);
+#endif
     }
 }
 

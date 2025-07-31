@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-
+#define USING_WINCPP14 (1)
 class Logger {
 public:
 	Logger() : bUseConsolePrint{ true } {}
@@ -9,11 +9,15 @@ public:
 	void disable_console_print(void);
 
 	virtual bool is_file_over_10k(const std::string& file);
-	virtual void move_file_to_log(const std::string& file);
+	
+	virtual bool is_saved_log_file_exists(void);
+
 	std::string get_saved_log_file_name(void);
 
 private:
 	void write_to_file(const std::string& str);
+	void move_saved_log_file(void);
+	void move_file_to_log(const std::string& file); 
 	void print_to_console(const std::string& oss);
 	std::string getCurrentTimeString(void);
 
