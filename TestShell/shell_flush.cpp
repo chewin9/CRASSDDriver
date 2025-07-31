@@ -1,14 +1,5 @@
-#include "gmock/gmock.h"
-#include "test.h"
-#include "ishell_command.h"
-
-class ShellFlush : public IShellCommand {
-public:
-	ShellFlush(IProcessExecutor* executor) : executor_(executor) {}
-	bool Run(const std::string& cmd) override;
-private:
-	IProcessExecutor* executor_; 
-};
+#pragma once
+#include "shell_flush.h"
 
 TEST(FlushTest, TC1) {
 	MockProcessExecutor executor;

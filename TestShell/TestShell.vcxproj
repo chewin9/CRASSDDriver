@@ -178,6 +178,7 @@
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="process_executor.h" />
+    <ClInclude Include="shell_flush.h" />
     <ClInclude Include="shell_full_read.h" />
     <ClInclude Include="testscriptfactory.h" />
   </ItemGroup>

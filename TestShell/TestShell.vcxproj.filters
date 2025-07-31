@@ -62,5 +62,6 @@
     <ClInclude Include="testscriptfactory.h" />
     <ClInclude Include="shell_full_read.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="shell_flush.h" />
   </ItemGroup>
 </Project>
