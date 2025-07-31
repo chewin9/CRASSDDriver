@@ -18,6 +18,14 @@ TEST(FlushTest, TC1) {
 	flush.Run("flush");
 }
 
+TEST(FlushTest, TC2) {
+	MockProcessExecutor executor;
+	ShellFlush flush(&executor);
+
+	EXPECT_EQ(false, flush.Run("flush ADDPARAMETER"));
+}
+
+
 bool ShellFlush::Run(const std::string& cmd) {
 	
 	// check parameter valid 
