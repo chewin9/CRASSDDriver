@@ -88,8 +88,8 @@ bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int st
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeReadCommand(index));
 		try {
-			if (std::stoi(file->ReadOutputFile("ssd_output.txt").substr(2, 10), nullptr, 16) != value) {
 
+			if (std::stoi(file->ReadOutputFile("ssd_output.txt").substr(2, 10), nullptr, 16) != value) {
 				return false;
 			}
 		}
