@@ -39,57 +39,64 @@ SSD NAND 데이터를 파일 시스템에 저장하고, 다양한 SSD 명령(`wr
 - **flush** : SSD driver에 캐싱되어있는 데이터를 nand에 저장
 - **help** : 각 명령어에 대한 주요 설명
 
-## TestScript
-- **1_FullWriteAndReadCompare** : 1_ 혹은 1_FullWriteAndReadCompare 을 입력하여 실행 가능
+## 🧪 TestScript 목록 및 시나리오
 
+---
 
-- Test Scenario
-• 0 ~ 4 번 LBA 까지 Write 명령어를 수행한다
-• 0 ~ 4 번 LBA 까지 ReadCompare 수행
-• 5 ~ 9 번 LBA 까지 다른 값으로 Write 명령어를 수행한다
-• 5 ~ 9 번 LBA 까지 ReadCompare 수행
-• 10 ~ 14 번 LBA 까지 다른 값으로 Write 명령어를 수행한다
-• 10 ~ 14 번 LBA 까지 ReadCompare 수행
-• 위와 같은 규칙으로 전체 영역에 대해 Full Write + Read Compare 를 수행한다
+### **1. FullWriteAndReadCompare**
+- **실행 명령어**: `1_` 또는 `1_FullWriteAndReadCompare`
 
+#### 🔹 Test Scenario
+- LBA 0 ~ 4: Write
+- LBA 0 ~ 4: ReadCompare  
+- LBA 5 ~ 9: 다른 값으로 Write  
+- LBA 5 ~ 9: ReadCompare  
+- LBA 10 ~ 14: 다른 값으로 Write  
+- LBA 10 ~ 14: ReadCompare  
+- … 위와 같은 규칙으로 전체 LBA 영역에 대해 Full Write + ReadCompare 수행
 
-- **2_PartialLBAWrite** : 2_ 혹은 2_PartialLBAWrite 을 입력하여 실행 가능
+---
 
- 
-- Test Scenario
-• Loop 는 30 회
-• 4 번 LBA 에 값을 적는다
-• 0 번 LBA 에 같은 값을 적는다
-• 3 번 LBA 에 같은 값을 적는다
-• 1 번 LBA 에 같은 값을 적는다
-• 2 번 LBA 에 같은 값을 적는다
-• LBA 0 ~ 4 번 , ReadCompare
+### **2. PartialLBAWrite**
+- **실행 명령어**: `2_` 또는 `2_PartialLBAWrite`
 
+#### 🔹 Test Scenario
+- Loop: **30회**
+- LBA 4: 값 쓰기  
+- LBA 0: 같은 값 쓰기  
+- LBA 3: 같은 값 쓰기  
+- LBA 1: 같은 값 쓰기  
+- LBA 2: 같은 값 쓰기  
+- LBA 0 ~ 4: ReadCompare
 
-- **3_WriteReadAging** : 3_ 혹은 3_WriteReadAging 을 입력하여 실행 가능
+---
 
- 
-- Test Scenario
-• Loop 200 회
-• 0 번 LBA 에 랜덤 값을 적는다
-• 99 번 LBA 에 랜덤 값을 적는다
-• LBA 0 번과 99 번 , ReadCompare 를 수행
+### **3. WriteReadAging**
+- **실행 명령어**: `3_` 또는 `3_WriteReadAging`
 
-- **4_EraseAndWriteAging** : 4_ 혹은 4_EraseAndWriteAging 을 입력하여 실행 가능
+#### 🔹 Test Scenario
+- Loop: **200회**
+- LBA 0: 랜덤 값 Write  
+- LBA 99: 랜덤 값 Write  
+- LBA 0, 99: ReadCompare
 
- 
-- Test Scenario
-• 0 ~ 2 번 LBA 삭제
-• Loop 30 회
-• 2 번 LBA Write
-• 2 번 LBA OverWrite
-• 2 ~ 4 번 LBA 삭제
-• 2 4 번 ReadCompar e
-• 4 번 LBA Write
-• 4 번 LBA OverWrite
-• 4 ~ 6 번 LBA 삭제
-• 4 ~ 6 번 ReadCompare
-• 6 번 LBA Write
-• 6 번 LBA OverWrite
-• 6 ~ 8 번 LBA 삭제
-• 6 ~ 8 번 ReadCompare
+---
+
+### **4. EraseAndWriteAging**
+- **실행 명령어**: `4_` 또는 `4_EraseAndWriteAging`
+
+#### 🔹 Test Scenario
+- LBA 0 ~ 2: Erase  
+- Loop: **30회**  
+  - LBA 2: Write  
+  - LBA 2: Overwrite  
+  - LBA 2 ~ 4: Erase  
+  - LBA 2, 4: ReadCompare  
+  - LBA 4: Write  
+  - LBA 4: Overwrite  
+  - LBA 4 ~ 6: Erase  
+  - LBA 4 ~ 6: ReadCompare  
+  - LBA 6: Write  
+  - LBA 6: Overwrite  
+  - LBA 6 ~ 8: Erase  
+  - LBA 6 ~ 8: ReadCompare
