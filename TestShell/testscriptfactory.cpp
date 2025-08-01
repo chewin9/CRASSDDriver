@@ -114,7 +114,7 @@ bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
 		}
 	}
 
-	PRINT("Fail");
+	PRINT("Pass");
 	PrintScriptExit(true);
 	return true;
 }
