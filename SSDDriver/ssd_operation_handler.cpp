@@ -3,6 +3,8 @@
 void SsdOperationHandler::Write(const ParsedCommand& cmdInfo) {
   if (IsErrorExist(cmdInfo)) return;
 
+  if (cmdInfo.erase_size == 0) return;
+
   if (cmdBuffer.IsFlushNeeded()) {
     Flush();
   }
@@ -97,6 +99,8 @@ void SsdOperationHandler::EraseData(const ParsedCommand& cmdInfo) {
       nandData.erase(it);
     }
   }
+}
+  return true;
 }
 
 bool SsdOperationHandler::IsErrorExist(const ParsedCommand& cmdInfo) {
