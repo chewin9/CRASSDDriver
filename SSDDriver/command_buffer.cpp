@@ -68,21 +68,22 @@ void CommandBuffer::IgnoreWrite(int& mergedStart, int& mergedEnd) {
 }
 
 bool CommandBuffer::MergeErase(int& mergedStart, int& mergedEnd) {
+  bool flag = false;
   for (auto it = eraseCommandList.begin(); it != eraseCommandList.end();) {
-    if (it->lba == mergedEnd - 1 || it->lba + it->erase_size == mergedStart ||
+    if (it->lba == mergedEnd + 1 || it->lba + it->erase_size == mergedStart ||
         (it->lba <= mergedStart &&
          it->lba + it->erase_size - 1 >= mergedStart) ||
         (it->lba <= mergedEnd && it->lba + it->erase_size - 1 >= mergedEnd)) {
       mergedStart = std::min(mergedStart, it->lba);
       mergedEnd = std::max(mergedEnd, it->lba + it->erase_size - 1);
       it = eraseCommandList.erase(it);
-      return true;
+      flag = true;
     } else {
       ++it;
     }
   }
 
-  return false;
+  return flag;
 }
 
 void CommandBuffer::RearrangeMergedErase(int &mergedStart, int &mergedEnd) {
