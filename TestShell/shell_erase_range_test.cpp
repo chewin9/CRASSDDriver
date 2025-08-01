@@ -78,4 +78,13 @@ TEST_F(ShellEraseRangeTestFixture, TSEraseRangeInvalid03) {
 	checkExpectedConsoleOutput("INVALID COMMAND\n");
 }
 
+TEST_F(ShellEraseRangeTestFixture, TSEraseRangeInvalid04) {
+	shellEraseRange->Run("erase 0x0 100");
+	checkExpectedConsoleOutput("INVALID COMMAND\n");
+}
+
+TEST_F(ShellEraseRangeTestFixture, TSEraseRangeInvalid05) {
+	shellEraseRange->Run("erase 0 0x100");
+	checkExpectedConsoleOutput("INVALID COMMAND\n");
+}
 #endif

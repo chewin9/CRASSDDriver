@@ -14,7 +14,7 @@ const int MAX_ADDR = 99;
 class TestScript {
 public:
 
-	TestScript(std::string name, Logger& logger) : m_name(name), m_logger(logger) {
+	TestScript(std::string name, Logger* logger) : m_name(name), m_plogger(logger) {
 
 	}
 
@@ -30,7 +30,7 @@ public:
 
 protected:
 	std::string m_name = nullptr;
-	Logger& m_logger;
+	Logger* m_plogger;
 	const std::string SSD_NAME = "SSDDriver.exe";
 	void PrintScriptEnter();
 	void PrintScriptExit(bool result);

@@ -3,7 +3,7 @@
 
 class DummyScript : public TestScript {
 public:
-	DummyScript(std::string name, Logger& logger) : TestScript(name, logger) {}
+	DummyScript(std::string name, Logger* logger) : TestScript(name, logger) {}
 	bool Run(IProcessExecutor* exe, IFile* file) override {
 		//Script
 		return false;
@@ -12,13 +12,13 @@ public:
 
 class FullWriteAndReadCompare : public TestScript {
 public:
-	FullWriteAndReadCompare(std::string name, Logger& logger) : TestScript(name, logger) {}
+	FullWriteAndReadCompare(std::string name, Logger* logger) : TestScript(name, logger) {}
 	bool Run(IProcessExecutor* exe, IFile* file) override;
 };
 
 class PartialLBAWrite : public TestScript {
 public:
-	PartialLBAWrite(std::string name, Logger& logger) : TestScript(name, logger) {}
+	PartialLBAWrite(std::string name, Logger* logger) : TestScript(name, logger) {}
 	bool Run(IProcessExecutor* exe, IFile* file) override;
 	std::vector<std::string> value_list = { "0x00000001", "0x00000002","0x00000003","0x00000004","0x00000005" };
 
@@ -32,13 +32,13 @@ private:
 
 class WriteReadAging : public TestScript {
 public:
-	WriteReadAging(std::string name, Logger& logger) : TestScript(name, logger) {}
+	WriteReadAging(std::string name, Logger* logger) : TestScript(name, logger) {}
 	bool Run(IProcessExecutor* exe, IFile* file) override;
 };
 
 class EraseAndWriteAging : public TestScript {
 public:
-	EraseAndWriteAging(std::string name, Logger& logger) : TestScript(name, logger) {}
+	EraseAndWriteAging(std::string name, Logger* logger) : TestScript(name, logger) {}
 	bool Run(IProcessExecutor* exe, IFile* file) override;
 };
 
@@ -49,7 +49,7 @@ public:
 		return instance;
 	}
 
-	std::shared_ptr<TestScript> createTestScript(const std::string& scriptname, Logger& logger);
+	std::shared_ptr<TestScript> createTestScript(const std::string& scriptname, Logger* logger);
 
 private:
 	bool isMatch(std::string input, std::string scriptname);
