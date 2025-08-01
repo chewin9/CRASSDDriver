@@ -11,7 +11,7 @@ using namespace ::testing;
 class EraseCommandFixture : public Test {
  protected:
   FileIO fileIo;
-  CommandBuffer cmdbuffer{fileIo};
+  CommandBuffer cmdbuffer;
   SsdOperationHandler handler{fileIo, cmdbuffer};
   EraseCommand erase_command{handler};
 

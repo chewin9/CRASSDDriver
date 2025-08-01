@@ -2,9 +2,11 @@
 #include <list>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "command_parser.h"
 #include "IFileIO.h"
+
 using std::list;
 using std::string;
 using std::vector;
@@ -17,7 +19,8 @@ class CommandBuffer {
   list<ParsedCommand> bufferList;
 
   vector<string> ParsingBuftoString(const list<ParsedCommand>& cmdList);
-  list<ParsedCommand> ParsingStringtoBuf(vector<string>& bufferList);
+  list<ParsedCommand> ParsingStringtoBuf(const vector<string>& bufferArr);
+
   void OptimizeBuffer(const ParsedCommand& cmd);
   void ConvertWriteZeroValToErase(ParsedCommand& cmd);
   void DivideWriteAndEraseBuffer();
@@ -35,10 +38,10 @@ class CommandBuffer {
   const std::string WRITE_OPCODE = "W";
   const std::string ERASE_OPCODE = "E";
   const int MAX_RANGE = 10;
-
-  CommandBuffer(IFileIO& fileio) : fileio{fileio} {}
-  void RegisterBuffer(const ParsedCommand& cmdInfo);
-  string ReadBuffer(const ParsedCommand& cmdInfo);
-  bool IsFlushNeeded();
-  list<ParsedCommand> GetCommandBuffer();
+  vector<string> RegisterBuffer(const ParsedCommand& cmdInfo,
+                                const vector<string>& currentBuffer);
+  string ReadBuffer(const ParsedCommand& cmdInfo,
+                    const vector<string>& currentBuffer);
+  bool IsFlushNeeded(const vector<string>& currentBuffer);
+  list<ParsedCommand> GetCommandBuffer(const vector<string>& currentBuffer);
 };

@@ -3,19 +3,22 @@
 void SsdOperationHandler::Write(const ParsedCommand& cmdInfo) {
   if (IsErrorExist(cmdInfo)) return;
 
-  if (cmdInfo.erase_size == 0) return;
-
-  if (cmdBuffer.IsFlushNeeded()) {
+  auto currentBuffer = fileHandler.getCommandBuffer();
+  if (cmdBuffer.IsFlushNeeded(currentBuffer)) {
     Flush();
+    currentBuffer.clear();
   }
-  cmdBuffer.RegisterBuffer(cmdInfo);
-  return;
+
+  auto newBuffer = cmdBuffer.RegisterBuffer(cmdInfo, currentBuffer);
+  fileHandler.ChangeFileName(newBuffer);
 }
 
 bool SsdOperationHandler::Read(const ParsedCommand& cmdInfo) {
   if (IsErrorExist(cmdInfo)) return false;
 
-  std::string value = cmdBuffer.ReadBuffer(cmdInfo);
+  auto currentBuffer = fileHandler.getCommandBuffer();
+  std::string value = cmdBuffer.ReadBuffer(cmdInfo, currentBuffer);
+
   if (value == "") {
     value = ReadFromNand(cmdInfo);
   }
@@ -25,22 +28,27 @@ bool SsdOperationHandler::Read(const ParsedCommand& cmdInfo) {
 
 bool SsdOperationHandler::Erase(const ParsedCommand& cmdInfo) {
   if (IsErrorExist(cmdInfo)) return false;
-  if (cmdBuffer.IsFlushNeeded()) {
+  auto currentBuffer = fileHandler.getCommandBuffer();
+
+  if (cmdBuffer.IsFlushNeeded(currentBuffer)) {
     Flush();
+    currentBuffer.clear();
   }
-  cmdBuffer.RegisterBuffer(cmdInfo);
+
+  auto newBuffer = cmdBuffer.RegisterBuffer(cmdInfo, currentBuffer);
+  fileHandler.ChangeFileName(newBuffer);
   return true;
 }
 
 void SsdOperationHandler::Flush() {
+  auto currentBuffer = fileHandler.getCommandBuffer();
+  std::list<ParsedCommand> bufferList =
+      cmdBuffer.GetCommandBuffer(currentBuffer);
 
-  std::list<ParsedCommand> bufferList = cmdBuffer.GetCommandBuffer();
   fileHandler.EraseBufferDir();
   fileHandler.InitBufferDir();
   FlushToNand(bufferList);
-
 }
-
 
 void SsdOperationHandler::WriteToNand(const ParsedCommand& cmdInfo) {
   nandData = fileHandler.LoadDataFromInput();
