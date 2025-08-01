@@ -1,4 +1,5 @@
 #include "shell_read.h"
+#include "shell_util.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -8,10 +9,10 @@
 ShellRead::ShellRead(IProcessExecutor* executor) : executor_(executor) {}
 
 bool ShellRead::Run(const std::string& input) {
-	std::vector<std::string> commandVector = splitBySpace(input);
+	std::vector<std::string> commandVector = Util::splitBySpace(input);
 
 	if (checkParameterValid(commandVector) == false) {
-		printInvalidCommand();
+		Util::printInvalidCommand();
 		return false;
 	}
 
@@ -38,20 +39,6 @@ std::string Read::getSsdOutputData(void) {
 	file.close();
 
 	return ret;
-}
-
-void Read::printInvalidCommand() {
-	std::cout << INVALID_COMMAND << "\n";
-}
-
-std::vector<std::string> Read::splitBySpace(const std::string& cmd) {
-	std::istringstream iss(cmd);
-	std::vector<std::string> tokens;
-	std::string word;
-	while (iss >> word) {
-		tokens.push_back(word);
-	}
-	return tokens;
 }
 
 void ShellRead::printResult(int index, std::string value) {

@@ -1,4 +1,5 @@
 #include "shell_erase.h"
+#include "shell_util.h"
 #include <vector>
 #include <sstream>
 #include <string>
@@ -7,10 +8,10 @@
 ShellErase::ShellErase(IProcessExecutor* executor) : executor_(executor) {}
 
 bool ShellErase::Run(const std::string& input) {
-	std::vector<std::string> commandVector = splitBySpace(input);
+	std::vector<std::string> commandVector = Util::splitBySpace(input);
 
 	if (checkParameterValid(commandVector) == false) {
-		printInvalidCommand();
+		Util::printInvalidCommand();
 		return false;
 	}
 
@@ -19,20 +20,6 @@ bool ShellErase::Run(const std::string& input) {
 
 	calculateRangeAndPerformSSD(startLba, curSize);
 	return true;
-}
-
-std::vector<std::string> Erase::splitBySpace(const std::string& cmd) {
-	std::istringstream iss(cmd);
-	std::vector<std::string> tokens;
-	std::string word;
-	while (iss >> word) {
-		tokens.push_back(word);
-	}
-	return tokens;
-}
-
-void Erase::printInvalidCommand() {
-	std::cout << INVALID_COMMAND << "\n";
 }
 
 bool ShellErase::checkParameterValid(std::vector<std::string> commandVec) {

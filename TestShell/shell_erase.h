@@ -11,11 +11,8 @@ public:
 	const int MIN_INDEX = 0;
 	const int MAX_INDEX = 100;
 	const int MAX_SSD_ERASE_SIZE = 10;
-	const std::string INVALID_COMMAND = "INVALID COMMAND";
-	void printInvalidCommand();
 	void calculateRangeAndPerformSSD(int start, int size);
 	bool isDecimalString(const std::string& str);
-	std::vector<std::string> splitBySpace(const std::string& cmd);
 
 	virtual void performEraseToSSD(int index, int size) = 0;
 };

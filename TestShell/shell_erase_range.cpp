@@ -1,4 +1,5 @@
 #include "shell_erase_range.h"
+#include "shell_util.h"
 #include <vector>
 #include <sstream>
 #include <string>
@@ -7,10 +8,10 @@
 ShellEraseRange::ShellEraseRange(IProcessExecutor* executor) : executor_(executor) {}
 
 bool ShellEraseRange::Run(const std::string& input) {
-	std::vector<std::string> commandVector = splitBySpace(input);
+	std::vector<std::string> commandVector = Util::splitBySpace(input);
 
 	if (checkParameterValid(commandVector) == false) {
-		printInvalidCommand();
+		Util::printInvalidCommand();
 		return false;
 	}
 	int startLba = getStartLba(std::stoi(commandVector.at(1)), std::stoi(commandVector.at(2)));

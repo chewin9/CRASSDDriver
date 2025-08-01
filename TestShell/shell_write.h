@@ -10,10 +10,6 @@ public:
     const int START_LBA = 0;
     const int END_LBA = 100;
 
-    void printError();
-
-    std::vector<std::string> splitBySpace(const std::string& str);
-
     bool convertStoI(const std::string& str, int& val);
 
     bool is_all_uppercase(const std::string& str);

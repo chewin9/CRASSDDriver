@@ -1,7 +1,7 @@
 #pragma once
 #include "iprocess_executor.h"
 #include "shell_full_write.h"
-
+#include "shell_util.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -10,11 +10,11 @@
 bool ShellFullWrite::Run(const std::string& cmd) {
 
 	if (false == checkParameterValid(cmd)) {
-		std::cout << "INVALID COMMAND" << std::endl;
+		Util::printInvalidCommand();
 		return false;
 	}
 
-	std::vector<std::string> cmds = splitBySpace(cmd);
+	std::vector<std::string> cmds = Util::splitBySpace(cmd);
 	std::string value = cmds[1];
 
 	for (int nLBA = START_LBA; nLBA < END_LBA; nLBA++) {
@@ -27,7 +27,7 @@ bool ShellFullWrite::Run(const std::string& cmd) {
 
 bool ShellFullWrite::checkParameterValid(const std::string& cmd)
 {
-	std::vector<std::string> cmds = splitBySpace(cmd);
+	std::vector<std::string> cmds = Util::splitBySpace(cmd);
 	if (cmds.size() != 2) {
 		return false;
 	}

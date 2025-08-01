@@ -164,6 +164,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="shell_test.cpp" />
+    <ClCompile Include="shell_util.cpp" />
     <ClCompile Include="shell_write.cpp" />
     <ClCompile Include="shell_write_test.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> %(AdditionalOptions)</AdditionalOptions>
@@ -188,6 +189,7 @@
     <ClInclude Include="shell_erase.h" />
     <ClInclude Include="shell_erase_range.h" />
     <ClInclude Include="shell_full_read.h" />
+    <ClInclude Include="shell_util.h" />
     <ClInclude Include="testscriptfactory.h" />
     <ClInclude Include="testscriptlog.h" />
     <ClInclude Include="testscript_util.h" />

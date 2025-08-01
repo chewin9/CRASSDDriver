@@ -5,6 +5,7 @@
 #include <string>
 #include <tuple>
 #include "shell.h"
+#include "shell_util.h"
 
 std::tuple<std::string, std::string> Shell::parse_command(const std::string& input) {
     std::istringstream iss(input);
@@ -72,7 +73,7 @@ int Shell::Run(std::string arg) {
         else {
             if (nullptr == script_runner->getScript(input)) {
                 // no matching command
-                std::cout << "INVALID COMMAND" << std::endl;
+                Util::printInvalidCommand();
                 std::cout << "You typed : " << input << std::endl;
                 continue;
             }
