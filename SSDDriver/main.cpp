@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
   ParsedCommand cmdInfo = parser.ParseCommand(argc, argv);
   CommandBuffer cmdBuffer{fileio};
   SsdOperationHandler opHandler(fileio, cmdBuffer);
-  ICommand* command = CommandFactory::create(cmdInfo, opHandler);
+  ICommand* command = CommandFactory::create(cmdInfo.opCode, opHandler);
   if (command == nullptr) return 0;
   command->Execute(cmdInfo);
   delete command;

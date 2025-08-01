@@ -49,7 +49,7 @@ class SSDCommandTest : public ::testing::Test {
   void ExecuteCommand(ParsedCommand cmd) {
     CommandBuffer cmdbuffer{fileio};
     SsdOperationHandler opHandler(fileio, cmdbuffer);
-    ICommand* command = CommandFactory::create(cmd, opHandler);
+    ICommand* command = CommandFactory::create(cmd.opCode, opHandler);
     ASSERT_NE(command, nullptr);
     command->Execute(cmd);
     delete command;
