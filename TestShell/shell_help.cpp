@@ -1,4 +1,5 @@
 #include "shell_help.h"
+#include "shell_util.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -7,7 +8,7 @@
 ShellHelp::ShellHelp(IProcessExecutor* executor) : executor_(executor) {}
 
 bool ShellHelp::Run(const std::string& input) {
-	std::vector<std::string> commandVector = splitBySpace(input);
+	std::vector<std::string> commandVector = Util::splitBySpace(input);
 
 	if (commandVector.size() == INTRODUCE_COMMAND_SIZE) {
 		crewIntroduce();
@@ -46,16 +47,6 @@ bool ShellHelp::Run(const std::string& input) {
 		helpCommand();
 	}
 	return true;
-}
-
-std::vector<std::string> ShellHelp::splitBySpace(const std::string& cmd) {
-	std::istringstream iss(cmd);
-	std::vector<std::string> tokens;
-	std::string word;
-	while (iss >> word) {
-		tokens.push_back(word);
-	}
-	return tokens;
 }
 
 void ShellHelp::crewIntroduce() {
