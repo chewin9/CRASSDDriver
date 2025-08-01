@@ -91,15 +91,6 @@ bool file_exists(const std::string& filename) {
 void Logger::move_file_to_log(const std::string& file)
 {
     std::string log_file_name = get_saved_log_file_name();
-    std::string temp_name = log_file_name;
-    int cnt = 1;
-    while (file_exists(temp_name)) {
-        temp_name = log_file_name + std::to_string(cnt);
-        cnt++;
-    }
-
-    log_file_name = temp_name;
-
     std::ifstream in(file, std::ios::binary | std::ios::ate);
     in.clear();
     in.seekg(0);
