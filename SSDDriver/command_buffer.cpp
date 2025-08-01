@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 using namespace std;
-void OptimizeBuffer(std::list<ParsedCommand> &bufferList, const ParsedCommand &cmd)
-{
+void CommandBuffer::OptimizeBuffer(std::list<ParsedCommand> &bufferList,
+                                 const ParsedCommand &cmd) {
     ParsedCommand cmdInfo = cmd;
     if (cmdInfo.opCode == "W" && cmdInfo.value == "0x00000000")
     {
@@ -32,26 +32,6 @@ void OptimizeBuffer(std::list<ParsedCommand> &bufferList, const ParsedCommand &c
             if (it->lba == cmdInfo.lba)
             {
                 it->value = cmdInfo.value;
-
-                std::cout << "<<WRITE COMMAND>>" << std::endl;
-                for (auto i : writeCommandList)
-                {
-                    std::cout << "op: " << i.opCode << std::endl;
-                    cout << "lba: " << i.lba << endl;
-                    cout << "value: " << i.value << endl;
-                    cout << "erase size: " << i.erase_size << endl;
-                    cout << endl << endl << endl;
-                }
-                cout << "<<ERASE COMMAND>>" << endl;
-                for (auto i : eraseCommandList)
-                {
-                    cout << "op: " << i.opCode << endl;
-                    cout << "lba: " << i.lba << endl;
-                    cout << "value: " << i.value << endl;
-                    cout << "erase size: " << i.erase_size << endl;
-                    cout << endl << endl << endl;
-                }
-                cout << "===========================================" << endl;
                 eraseCommandList.splice(eraseCommandList.end(), writeCommandList);
                 bufferList = eraseCommandList;
                 return;
@@ -61,26 +41,6 @@ void OptimizeBuffer(std::list<ParsedCommand> &bufferList, const ParsedCommand &c
 
         writeCommandList.push_back(cmdInfo);
 
-
-        cout << "<<WRITE COMMAND>>" << endl;
-        for (auto i : writeCommandList)
-        {
-            cout << "op: " << i.opCode << endl;
-            cout << "lba: " << i.lba << endl;
-            cout << "value: " << i.value << endl;
-            cout << "erase size: " << i.erase_size << endl;
-            cout << endl << endl << endl;
-        }
-        cout << "<<ERASE COMMAND>>" << endl;
-        for (auto i : eraseCommandList)
-        {
-            cout << "op: " << i.opCode << endl;
-            cout << "lba: " << i.lba << endl;
-            cout << "value: " << i.value << endl;
-            cout << "erase size: " << i.erase_size << endl;
-            cout << endl << endl << endl;
-        }
-        cout << "===========================================" << endl;
         eraseCommandList.splice(eraseCommandList.end(), writeCommandList);
         bufferList = eraseCommandList;
         return;
@@ -90,7 +50,6 @@ void OptimizeBuffer(std::list<ParsedCommand> &bufferList, const ParsedCommand &c
     int mergedEnd = cmdInfo.lba + cmdInfo.erase_size - 1;
     bool merged = false;
 
-    //1. 순회를 하며 Write가 보인다면 지울수 있니없니
     for (auto it = writeCommandList.begin(); it != writeCommandList.end();)
     {
         int writeLba = it->lba;
@@ -107,7 +66,6 @@ void OptimizeBuffer(std::list<ParsedCommand> &bufferList, const ParsedCommand &c
 
     for (auto it = eraseCommandList.begin(); it != eraseCommandList.end();)
     {
-        // 겹치거나 인접한 경우
         if (it->lba == mergedEnd - 1 || it->lba + it->erase_size == mergedStart ||
             (it->lba <= mergedStart && it->lba + it->erase_size - 1 >= mergedStart) ||
             (it->lba <= mergedEnd && it->lba + it->erase_size - 1 >= mergedEnd))
@@ -127,7 +85,6 @@ void OptimizeBuffer(std::list<ParsedCommand> &bufferList, const ParsedCommand &c
 
     if (merged)
     {
-        // 병합된 범위를 나눠서 삽입
         int curStart = mergedStart;
         while (curStart <= mergedEnd)
         {
@@ -138,30 +95,8 @@ void OptimizeBuffer(std::list<ParsedCommand> &bufferList, const ParsedCommand &c
     }
     else
     {
-        // 병합 대상 없음 → 그냥 삽입
         eraseCommandList.push_back(cmdInfo);
     }
-
-
-    cout << "<<WRITE COMMAND>>" << endl;
-    for (auto i : writeCommandList)
-    {
-        cout << "op: " << i.opCode << endl;
-        cout << "lba: " << i.lba << endl;
-        cout << "value: " << i.value << endl;
-        cout << "erase size: " << i.erase_size << endl;
-        cout << endl << endl << endl;
-    }
-    cout << "<<ERASE COMMAND>>" << endl;
-    for (auto i : eraseCommandList)
-    {
-        cout << "op: " << i.opCode << endl;
-        cout << "lba: " << i.lba << endl;
-        cout << "value: " << i.value << endl;
-        cout << "erase size: " << i.erase_size << endl;
-        cout << endl << endl << endl;
-    }
-    cout << "===========================================" << endl;
 
     eraseCommandList.splice(eraseCommandList.end(), writeCommandList);
     bufferList = eraseCommandList;
@@ -171,7 +106,7 @@ void OptimizeBuffer(std::list<ParsedCommand> &bufferList, const ParsedCommand &c
 void CommandBuffer::AddBuffer(const ParsedCommand &cmdInfo)
 {
     std::vector<std::string> bufferArr;
-    // std::vector<std::string> v = fileIo.GetBuffer(); -> �갡 vector<string> v ���·� �ش�.
+    // std::vector<std::string> v = fileIo.GetBuffer();
     if (bufferArr.size() == 5)
     {
         // flush(bufferList);
@@ -179,17 +114,14 @@ void CommandBuffer::AddBuffer(const ParsedCommand &cmdInfo)
     std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
     OptimizeBuffer(bufferList, cmdInfo);
     bufferArr = ConvertParsedCommandToStringList(bufferList);
-    // ��û -> fileio���� ���۸� �ٽ� ��������. fileio.SaveBuffer()
 }
 
 
 std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo)
 {
     std::vector<std::string> bufferArr;
-    // std::vector<std::string> v = fileIo.GetBuffer(); -> �갡 vector<string> v
-    // ���·� �ش�.
+
     std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
-    // for�� ���鼭
 
     int readLba = cmdInfo.lba;
     for (auto rit = bufferList.rbegin(); rit != bufferList.rend(); ++rit)
@@ -212,7 +144,7 @@ std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo)
 }
 
 
-std::list<ParsedCommand> ParsingStringtoBuf(std::vector<std::string> &bufferList)
+std::list<ParsedCommand> CommandBuffer::ParsingStringtoBuf(std::vector<std::string> &bufferList)
 {
     std::list<ParsedCommand> parsedList;
 
@@ -223,13 +155,11 @@ std::list<ParsedCommand> ParsingStringtoBuf(std::vector<std::string> &bufferList
         std::string token;
         std::vector<std::string> tokens;
 
-        // "_" ������ ����
         while (std::getline(ss, token, '_'))
         {
             tokens.push_back(token);
         }
 
-        // �ּ� 4�� ��ū �ʿ�: [����]_[W/E]_[LBA]_[value or size]
         if (tokens.size() != 4)
         {
             cmd.errorFlag = true;
@@ -259,8 +189,8 @@ std::list<ParsedCommand> ParsingStringtoBuf(std::vector<std::string> &bufferList
     return parsedList;
 }
 
-std::vector<std::string> ConvertParsedCommandToStringList(const std::list<ParsedCommand> &cmdList)
-{
+std::vector<std::string> CommandBuffer::ConvertParsedCommandToStringList(
+    const std::list<ParsedCommand> &cmdList) {
     std::vector<std::string> result;
     int index = 1;
 
@@ -279,7 +209,6 @@ std::vector<std::string> ConvertParsedCommandToStringList(const std::list<Parsed
         }
         else
         {
-            // Unknown opCode, skip or mark error
             oss << "INVALID";
         }
 
