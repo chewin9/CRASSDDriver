@@ -1,22 +1,22 @@
 #include "command_factory.h"
-#include "readcommand.h"
-#include "writecommand.h"
-#include "erasecommand.h"
-#include "flushcommand.h"
-#include "ssd_operation_handler.h"
 
-ICommand* CommandFactory::create(const ParsedCommand& cmd, SsdOperationHandler& opHandler) {
-  if (cmd.opCode == "W") {
-    return new WriteCommand(opHandler);
-  }
-  else if (cmd.opCode == "R") {
-    return new ReadCommand(opHandler);
-  }
-  else if (cmd.opCode == "E") {
-      return new EraseCommand(opHandler);
-  } 
-  else if (cmd.opCode == "F") {
-    return new FlushCommand(opHandler);
+std::unordered_map<std::string, CommandFactory::Creator>&
+CommandFactory::getRegistry() {
+  static std::unordered_map<std::string, Creator> registry;
+  return registry;
+}
+
+void CommandFactory::registerCommand(const std::string& opCode,
+                                     Creator creator) {
+  getRegistry()[opCode] = creator;
+}
+
+ICommand* CommandFactory::create(const std::string& opCode,
+                                 SsdOperationHandler& handler) {
+  auto& registry = getRegistry();
+  auto it = registry.find(opCode);
+  if (it != registry.end()) {
+    return it->second(handler);
   }
   return nullptr;
 }

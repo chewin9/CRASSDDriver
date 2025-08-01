@@ -12,7 +12,7 @@ TEST(CommandFactoryTest, CreateReadCommand) {
   FileIO fileio;
   CommandBuffer cmdbuffer(fileio);
   SsdOperationHandler opHandler(fileio, cmdbuffer);
-  ICommand* result = factory.create(cmd, opHandler);
+  ICommand* result = factory.create(cmd.opCode, opHandler);
 
   EXPECT_NE(result, nullptr);
   EXPECT_TRUE(dynamic_cast<ReadCommand*>(result) != nullptr);
@@ -26,7 +26,7 @@ TEST(CommandFactoryTest, CreateWriteCommand) {
   FileIO fileio;
   CommandBuffer cmdbuffer(fileio);
   SsdOperationHandler opHandler(fileio, cmdbuffer);
-  ICommand* result = factory.create(cmd, opHandler);
+  ICommand* result = factory.create(cmd.opCode, opHandler);
 
   EXPECT_NE(result, nullptr);
   EXPECT_TRUE(dynamic_cast<WriteCommand*>(result) != nullptr);
@@ -40,7 +40,7 @@ TEST(CommandFactoryTest, ReturnNullPtr) {
   FileIO fileio;
   CommandBuffer cmdbuffer(fileio);
   SsdOperationHandler opHandler(fileio, cmdbuffer);
-  ICommand* result = factory.create(cmd, opHandler);
+  ICommand* result = factory.create(cmd.opCode, opHandler);
 
   EXPECT_EQ(result, nullptr);
 

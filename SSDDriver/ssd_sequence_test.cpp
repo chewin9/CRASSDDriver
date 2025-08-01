@@ -45,7 +45,7 @@ class SSDCommandSequenceTest : public ::testing::Test {
     std::vector<std::string> args = {"./SSDDriver.exe", opcode, lba};
     if (!val.empty()) args.push_back(val);
     ParsedCommand cmd = MakeCommand(args);
-    ICommand* command = CommandFactory::create(cmd, *op_handler);
+    ICommand* command = CommandFactory::create(cmd.opCode, *op_handler);
     ASSERT_NE(command, nullptr);
     command->Execute(cmd);
     delete command;
