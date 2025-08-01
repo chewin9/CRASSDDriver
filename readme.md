@@ -100,3 +100,25 @@ SSD NAND 데이터를 파일 시스템에 저장하고, 다양한 SSD 명령(`wr
   - LBA 6: Overwrite  
   - LBA 6 ~ 8: Erase  
   - LBA 6 ~ 8: ReadCompare
+
+---
+
+## 🏃 .txt 파일을 통한 TestSciprt 실행 방법
+
+아래와 같은 명령어를 통해 테스트를 수행할 수 있습니다:
+
+```bash
+TestShell.exe [파일이름].txt
+```
+
+- `[파일이름].txt` 파일에는 실행할 TestScript 이름을 한 줄씩 입력합니다.
+- 예시:
+
+```
+1_FullWriteAndReadCompare
+2_PartialLBAWrite
+3_WriteReadAging
+4_EraseAndWriteAging
+```
+
+- 위 파일을 실행하면 각 TestScript가 순차적으로 수행됩니다.
