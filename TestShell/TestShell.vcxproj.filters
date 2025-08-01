@@ -71,5 +71,6 @@
     <ClInclude Include="logger.h" />
     <ClInclude Include="shell_flush.h" />
     <ClInclude Include="testscript_util.h" />
+    <ClInclude Include="testscriptlog.h" />
   </ItemGroup>
 </Project>

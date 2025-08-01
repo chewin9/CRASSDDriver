@@ -189,6 +189,7 @@
     <ClInclude Include="shell_erase_range.h" />
     <ClInclude Include="shell_full_read.h" />
     <ClInclude Include="testscriptfactory.h" />
+    <ClInclude Include="testscriptlog.h" />
     <ClInclude Include="testscript_util.h" />
   </ItemGroup>
   <ItemGroup>
