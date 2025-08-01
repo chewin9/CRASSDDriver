@@ -119,10 +119,10 @@ std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo) {
       if (readLba == rit->lba) {
         return rit->value;
       }
+    }
 
-      if (readLba >= rit->lba && readLba <= rit->lba + rit->erase_size - 1) {
-        return "0x00000000";
-      }
+    else if (readLba >= rit->lba && readLba <= rit->lba + rit->erase_size - 1) {
+      return "0x00000000";
     }
   }
 

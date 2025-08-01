@@ -72,20 +72,33 @@ TEST_F(SSDCommandSequenceTest, MixedCommandExecutionValidation) {
   Execute("W", "57", "0x19A98428");
   Execute("W", "42", "0xB3517CC8");
 
+  Execute("R", "37");
+  EXPECT_EQ(ReadOutputFile(), "0xB823F008");
+
   // Reads and validation
   Execute("R", "47");
   EXPECT_EQ(ReadOutputFile(), "0x00000000");
 
   Execute("E", "36", "6");
 
+  Execute("R", "37");
+  EXPECT_EQ(ReadOutputFile(), "0x00000000");
+
   Execute("R", "31");
   EXPECT_EQ(ReadOutputFile(), "0x00000000");
 
   Execute("W", "63", "0x19A98428");
+
+  Execute("R", "63");
+  EXPECT_EQ(ReadOutputFile(), "0x19A98428");
   Execute("E", "9", "7");
   Execute("E", "67", "5");
+  Execute("R", "63");
+  EXPECT_EQ(ReadOutputFile(), "0x19A98428");
   Execute("E", "74", "4");
   Execute("E", "19", "7");
+  Execute("R", "63");
+  EXPECT_EQ(ReadOutputFile(), "0x19A98428");
 
   Execute("W", "76", "0x24AE8F34");
   Execute("W", "41", "0x1AE96CD8");
@@ -118,6 +131,8 @@ TEST_F(SSDCommandSequenceTest, MixedCommandExecutionValidation) {
   EXPECT_EQ(ReadOutputFile(), "0x00000000");
 
   Execute("E", "62", "9");
+  Execute("R", "63");
+  EXPECT_EQ(ReadOutputFile(), "0x00000000");
   Execute("E", "10", "10");
 
   // Validate overwritten
