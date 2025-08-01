@@ -88,19 +88,19 @@ void CommandBuffer::OptimizeBuffer(std::list<ParsedCommand> &bufferList,
 }
 
 bool CommandBuffer::IsFlushNeeded() {
-  std::vector<std::string> bufferArr = fileio.LoadCommandBufferOnly();
+  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
   if (bufferArr.size() >= 5) return true;
   return false;
 }
 
 std::list<ParsedCommand> CommandBuffer::GetCommandBuffer() {
-  std::vector<std::string> bufferArr = fileio.LoadCommandBufferOnly();
+  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
   std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
   return bufferList;
 }
 
 void CommandBuffer::AddBuffer(const ParsedCommand &cmdInfo) {
-  std::vector<std::string> bufferArr = fileio.LoadCommandBufferOnly();
+  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
   std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
 
   OptimizeBuffer(bufferList, cmdInfo);
@@ -109,7 +109,7 @@ void CommandBuffer::AddBuffer(const ParsedCommand &cmdInfo) {
 }
 
 std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo) {
-  std::vector<std::string> bufferArr = fileio.LoadCommandBufferOnly();
+  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
 
   std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
 

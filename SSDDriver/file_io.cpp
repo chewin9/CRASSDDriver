@@ -54,7 +54,7 @@ void FileIO::InitBufferDir() {
   }
 }
 
-void FileIO::EraseFolder() {
+void FileIO::EraseBufferDir() {
   fs::path dir{SSD_COMMAND_BUFFER_FOLDER};
   std::error_code ec;
 
@@ -85,7 +85,7 @@ std::vector<std::string> FileIO::getFileNames() {
   return filenames;
 }
 
-std::vector<std::string> FileIO::LoadCommandBufferOnly() {
+std::vector<std::string> FileIO::getCommandBuffer() {
   InitBufferDir();
   fs::path dir{SSD_COMMAND_BUFFER_FOLDER};
 
@@ -112,7 +112,7 @@ std::vector<std::string> FileIO::LoadCommandBufferOnly() {
 void FileIO::ChangeFileName(std::vector<std::string>& in_command) {
   fs::path dir{SSD_COMMAND_BUFFER_FOLDER};
 
-  EraseFolder();
+  EraseBufferDir();
   InitBufferDir();
   
   auto oldNames = getFileNames();

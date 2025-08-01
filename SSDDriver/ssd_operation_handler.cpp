@@ -3,7 +3,7 @@
 void SsdOperationHandler::Flush() {
 
   std::list<ParsedCommand> bufferList = cmdBuffer.GetCommandBuffer();
-  fileHandler.EraseFolder();
+  fileHandler.EraseBufferDir();
   fileHandler.InitBufferDir();
 
   for (auto i : bufferList) {

@@ -176,28 +176,15 @@ TEST_F(FileIOFixture, ReadNandFile_WithErrorFlag) {
 }
 
 
-//TEST_F(FileIOFixture, CheckChangedFileName) {
-//    std::vector<std::string> in_command = { "1_ABC", "2_DEF", "3_HIJ" };
-//    file_io.ChangeFileName(in_command);
-//
-//    auto load_command = file_io.getCommandBuffer();
-//
-//    ASSERT_EQ(load_command.size(), in_command.size());
-//
-//    for (size_t i = 0; i < in_command.size(); ++i) {
-//        EXPECT_EQ(load_command[i], in_command[i]);
-//    }
-//}
-//
-//TEST_F(FileIOFixture, CheckChangedFileName) {
-//    std::vector<std::string> in_command = { "1_ABC", "2_DEF", "3_HIJ" };
-//    file_io.ChangeFileName(in_command);
-//
-//    auto load_command = file_io.getCommandBuffer();
-//
-//    ASSERT_EQ(load_command.size(), in_command.size());
-//
-//    for (size_t i = 0; i < in_command.size(); ++i) {
-//        EXPECT_EQ(load_command[i], in_command[i]);
-//    }
-//}
+TEST_F(FileIOFixture, CheckChangedFileName) {
+    std::vector<std::string> in_command = { "1_ABC", "2_DEF", "3_HIJ" };
+    file_io.ChangeFileName(in_command);
+
+    auto load_command = file_io.getCommandBuffer();
+
+    ASSERT_EQ(load_command.size(), in_command.size());
+
+    for (size_t i = 0; i < in_command.size(); ++i) {
+        EXPECT_EQ(load_command[i], in_command[i]);
+    }
+}

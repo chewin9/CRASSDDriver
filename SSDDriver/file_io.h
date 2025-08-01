@@ -8,10 +8,11 @@ class FileIO {
   std::unordered_map<int, std::string> LoadDataFromInput();
   void WriteValueToOutputFile(std::string str);
   void SaveData(std::unordered_map<int, std::string> entries);
-  void EraseFolder();
-  void ChangeFileName(std::vector<std::string>& in_command);
-  std::vector<std::string> LoadCommandBufferOnly();
   void InitBufferDir();
+  void EraseBufferDir();
+  void ChangeFileName(std::vector<std::string>& in_command);
+  std::vector<std::string> getCommandBuffer();
+  
 
  private:
   std::vector<std::string> getFileNames();
