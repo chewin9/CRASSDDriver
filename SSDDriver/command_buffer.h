@@ -11,6 +11,7 @@ class CommandBuffer {
   std::list<ParsedCommand> ParsingStringtoBuf(std::vector<std::string>& bufferList);
   void OptimizeBuffer(std::list<ParsedCommand>& bufferList,const ParsedCommand& cmd);
  public:
+  CommandBuffer(FileIO& fileio) : fileio{fileio} {}
   void AddBuffer(const ParsedCommand& cmdInfo);
   std::string ReadBuffer(const ParsedCommand& cmdInfo);
   bool IsFlushNeeded();

@@ -43,7 +43,8 @@ TEST_F(FileIOFixture, WriteErrorOutput) {
 TEST_F(FileIOFixture, WriteOutputWithError) {
   std::remove("ssd_output.txt");
   pc.errorFlag = true;
-  SsdOperationHandler opHandler(file_io);
+  CommandBuffer cmdbuffer{file_io};
+  SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Write(pc);
   std::ifstream inFile("ssd_output.txt");
   bool fileExists = inFile.is_open();
@@ -58,40 +59,63 @@ TEST_F(FileIOFixture, WriteOutputWithError) {
   EXPECT_EQ(line, "ERROR");
 }
 
-TEST_F(FileIOFixture, WriteOutputWithNewLBA) {
+TEST_F(FileIOFixture, WriteOutputWithNewLBA_ThroughReadCheck) {
   std::remove("ssd_nand.txt");
+
+  // Write
   pc = {"W", 3, "0xABCDEF01", false};
-  SsdOperationHandler opHandler(file_io);
+  CommandBuffer cmdbuffer{file_io};
+  SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Write(pc);
 
-  std::ifstream inFile("ssd_nand.txt");
+  // Read to flush buffer and write output
+  ParsedCommand readCmd = {"R", 3, "", false};
+  opHandler.Read(readCmd);
+
+  // Check output file
+  std::ifstream inFile("ssd_output.txt");
   ASSERT_TRUE(inFile.is_open());
 
   std::string line;
   std::getline(inFile, line);
   inFile.close();
 
-  EXPECT_EQ(line, "3 0xABCDEF01");
+  EXPECT_EQ(line, "0xABCDEF01");
 }
 
-TEST_F(FileIOFixture, WriteOutput_OverwritesExistingLBA) {
-  std::ofstream out("ssd_nand.txt");
-  out << "5 0xAAAA0000\n";
-  out.close();
+TEST_F(FileIOFixture, WriteOutput_OverwritesExistingLBA_ThroughReadCheck) {
+  std::remove("ssd_nand.txt");
 
+  // 1. Write initial value
+  {
+    ParsedCommand initial = {"W", 5, "0xAAAA0000", false};
+    CommandBuffer cmdbuffer{file_io};
+    SsdOperationHandler opHandler(file_io, cmdbuffer);
+    opHandler.Write(initial);
+
+    ParsedCommand readInit = {"R", 5, "", false};
+    opHandler.Read(readInit);  // flushes initial write
+  }
+
+  // 2. Overwrite with new value
   pc = {"W", 5, "0xBBBB1111", false};
-  SsdOperationHandler opHandler(file_io);
+  CommandBuffer cmdbuffer{file_io};
+  SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Write(pc);
 
-  std::ifstream inFile("ssd_nand.txt");
+  ParsedCommand readCmd = {"R", 5, "", false};
+  opHandler.Read(readCmd);  // triggers flush and read output
+
+  std::ifstream inFile("ssd_output.txt");
   ASSERT_TRUE(inFile.is_open());
 
   std::string line;
   std::getline(inFile, line);
   inFile.close();
 
-  EXPECT_EQ(line, "5 0xBBBB1111");
+  EXPECT_EQ(line, "0xBBBB1111");
 }
+
 
 TEST_F(FileIOFixture, ReadNandFile_ValueExists) {
   std::ofstream out("ssd_nand.txt");
@@ -99,7 +123,8 @@ TEST_F(FileIOFixture, ReadNandFile_ValueExists) {
   out.close();
 
   pc = {"R", 7, "", false};
-  SsdOperationHandler opHandler(file_io);
+  CommandBuffer cmdbuffer{file_io};
+  SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Read(pc);
 
   std::ifstream inFile("ssd_output.txt");
@@ -115,7 +140,8 @@ TEST_F(FileIOFixture, ReadNandFile_ValueExists) {
 TEST_F(FileIOFixture, ReadNandFile_ValueNotFound) {
   std::remove("ssd_nand.txt");
   pc = {"R", 99, "", false};
-  SsdOperationHandler opHandler(file_io);
+  CommandBuffer cmdbuffer{file_io};
+  SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Read(pc);
 
   std::ifstream inFile("ssd_output.txt");
@@ -130,7 +156,8 @@ TEST_F(FileIOFixture, ReadNandFile_ValueNotFound) {
 
 TEST_F(FileIOFixture, ReadNandFile_WithErrorFlag) {
   pc = {"R", 10, "", true};
-  SsdOperationHandler opHandler(file_io);
+  CommandBuffer cmdbuffer{file_io};
+  SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Read(pc);
 
   std::ifstream inFile("ssd_output.txt");
