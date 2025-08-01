@@ -4,14 +4,14 @@
 #include <unordered_map>
 
 #include "command_parser.h"
-#include "file_io.h"
+#include "IFileIO.h"
 using std::list;
 using std::string;
 using std::vector;
 
 class CommandBuffer {
  private:
-  FileIO& fileio;
+  FileIOInterface& fileio;
   list<ParsedCommand> writeCommandList;
   list<ParsedCommand> eraseCommandList;
   list<ParsedCommand> bufferList;
@@ -36,7 +36,7 @@ class CommandBuffer {
   const std::string ERASE_OPCODE = "E";
   const int MAX_RANGE = 10;
 
-  CommandBuffer(FileIO& fileio) : fileio{fileio} {}
+  CommandBuffer(FileIOInterface& fileio) : fileio{fileio} {}
   void RegisterBuffer(const ParsedCommand& cmdInfo);
   string ReadBuffer(const ParsedCommand& cmdInfo);
   bool IsFlushNeeded();

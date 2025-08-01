@@ -1,5 +1,6 @@
 #include "writecommand.h"
 
+#include "file_io.h"
 #include <iostream>
 #include "command_parser.h"
 #include "gmock/gmock.h"

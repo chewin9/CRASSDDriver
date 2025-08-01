@@ -3,11 +3,12 @@
 
 #include "command_buffer.h"
 #include "command_parser.h"
-#include "file_io.h"
+#include "IFileIO.h"
+
 class SsdOperationHandler {
  private:
   std::unordered_map<int, std::string> nandData;
-  FileIO& fileHandler;
+  FileIOInterface& fileHandler;
   CommandBuffer& cmdBuffer;
   void UpdateData(const ParsedCommand& cmdInfo);
   std::string ReadData(const ParsedCommand& cmdInfo);
@@ -19,12 +20,11 @@ class SsdOperationHandler {
   void FlushToNand(std::list<ParsedCommand>& bufferList);
 
  public:
-  SsdOperationHandler(FileIO& handler, CommandBuffer& cmdBuffer)
+  SsdOperationHandler(FileIOInterface& handler, CommandBuffer& cmdBuffer)
       : fileHandler{handler}, cmdBuffer{cmdBuffer} {}
 
   void Write(const ParsedCommand& cmdInfo);
   bool Read(const ParsedCommand& cmdInfo);
   bool Erase(const ParsedCommand& cmdInfo);
   void Flush();
-  // bool erase();
 };
