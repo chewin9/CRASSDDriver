@@ -157,6 +157,9 @@
     <ClInclude Include="File.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="testscriptlog.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
