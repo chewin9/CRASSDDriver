@@ -5,6 +5,7 @@
 #include <string>
 #include <tuple>
 #include "shell.h"
+#include "command_invoker.h"
 
 std::tuple<std::string, std::string> Shell::parse_command(const std::string& input) {
     std::istringstream iss(input);
@@ -14,7 +15,7 @@ std::tuple<std::string, std::string> Shell::parse_command(const std::string& inp
     return { cmd, num_str };
 }
 
-string Shell::get_command(string& input) {
+std::string Shell::get_command(std::string& input) {
     std::cout << "> "; // Prompt
     std::getline(std::cin, input);
 
@@ -24,6 +25,9 @@ string Shell::get_command(string& input) {
 
 int Shell::Run(std::string arg) {
     std::string input;
+    CommandInvoker invoker;
+
+    invoker.RegisterAllCommand(Get_Executor());
 
     if (!arg.empty()) {
         script_runner->ScriptRunnerMode(arg, &testscriptfile);
