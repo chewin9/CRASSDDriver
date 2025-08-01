@@ -77,88 +77,88 @@ private:
 	int repeatcount = 0;
 };
 
-TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompare) {
+TEST_F(TestScriptTestFixture, FullWriteAndReadCompare) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
 	SetUpReadOutputReapeat("0x00000005");
 	CheckResult(true, "1_FullWriteAndReadCompare");
 }
 
-TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompareShortType) {
+TEST_F(TestScriptTestFixture, FullWriteAndReadCompareShortType) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
 	SetUpReadOutputReapeat("0x00000005");
 	CheckResult(true, "1_");
 }
 
-TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompareInvalidScript) {
+TEST_F(TestScriptTestFixture, FullWriteAndReadCompareInvalidScript) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
 	CheckResult(false, "1_1");
 }
 
-TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompareScriptRunFail) {
+TEST_F(TestScriptTestFixture, FullWriteAndReadCompareScriptRunFail) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(4));
 	SetUpReadOutputReapeat(INVALID_VALUE_STRING);
 	CheckResult(false, "1_");
 }
 
-TEST_F(TestScriptTestFixture, 2_PartialLBAWriteCmdTestPass)
+TEST_F(TestScriptTestFixture, PartialLBAWriteCmdTestPass)
 {
 	PartialWriteSetup(30);
 	PartialReadSetUp();
 	CheckResult(true, "2_PartialLBAWrite");
 }
 
-TEST_F(TestScriptTestFixture, 2_PartialLBAWriteCmdTestFail)
+TEST_F(TestScriptTestFixture, PartialLBAWriteCmdTestFail)
 {
 	PartialWriteSetup(1);
 	ReadSetUpFail();
 	CheckResult(false, "2_PartialLBAWrite");
 }
 
-TEST_F(TestScriptTestFixture, 2_CmdTestPass) {
+TEST_F(TestScriptTestFixture, PartialLBACmdTestPass) {
 	PartialWriteSetup(30);
 	PartialReadSetUp();
 	CheckResult(true, "2_");
 }
 
-TEST_F(TestScriptTestFixture, 2_CmdTestFail) {
+TEST_F(TestScriptTestFixture, PartialLBACmdTestFail) {
 	PartialWriteSetup(1);
 	ReadSetUpFail();
 	CheckResult(false, "2_");
 }
 
-TEST_F(TestScriptTestFixture, 3_WriteReadAgingNormal) {
+TEST_F(TestScriptTestFixture, WriteReadAgingNormal) {
 	SetUpReadOutputReapeat(TestScriptUtil::GetInstance().GetRandomValueToString());
 	CheckResult(true, "3_WriteReadAging");
 }
 
-TEST_F(TestScriptTestFixture, 3_WriteReadAgingShort) {
+TEST_F(TestScriptTestFixture, WriteReadAgingShort) {
 	SetUpReadOutputReapeat(TestScriptUtil::GetInstance().GetRandomValueToString());
 	CheckResult(true, "3_");
 }
 
-TEST_F(TestScriptTestFixture, 3_WriteReadAgingNotMatch) {
+TEST_F(TestScriptTestFixture, WriteReadAgingNotMatch) {
 	CheckResult(false, "3_3");
 }
 
-TEST_F(TestScriptTestFixture, 4_EraseAndWriteAgingPass) {
+TEST_F(TestScriptTestFixture, EraseAndWriteAgingPass) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(0));
 	SetUpReadOutputReapeat(ERASE_VALUE_STRING);
 	CheckResult(true, "4_EraseAndWriteAging");
 }
 
-TEST_F(TestScriptTestFixture, 4_EraseAndWriteAgingFail) {
+TEST_F(TestScriptTestFixture, EraseAndWriteAgingFail) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(0xA));
 	SetUpReadOutputReapeat(INVALID_VALUE_STRING);
 	CheckResult(false, "4_EraseAndWriteAging");
 }
 
-TEST_F(TestScriptTestFixture, 4_CmdTestPass) {
+TEST_F(TestScriptTestFixture, EraseAndWriteCmdTestPass) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(0));
 	SetUpReadOutputReapeat(ERASE_VALUE_STRING);
 	CheckResult(true, "4_");
 }
 
-TEST_F(TestScriptTestFixture, 4_CmdTestFail) {
+TEST_F(TestScriptTestFixture, EraseAndWriteCmdTestFail) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(0));
 	SetUpReadOutputReapeat(INVALID_VALUE_STRING);
 	CheckResult(false, "4_");
