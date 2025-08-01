@@ -69,6 +69,11 @@ bool ShellRead::checkParameterValid(std::vector<std::string> commandVec) {
 	if (commandVec.size() != VALID_READ_COMMAND_SIZE) {
 		return false;
 	}
+
+	if (isDecimalString(commandVec.at(LBA_INDEX)) == false) {
+		return false;
+	}
+
 	int index;
 	try {
 		index = std::stoi(commandVec.at(LBA_INDEX));
@@ -84,4 +89,15 @@ bool ShellRead::checkParameterValid(std::vector<std::string> commandVec) {
 void ShellRead::performReadToSSD(std::string index) {
 	std::string cmdLine = "SSDDriver.exe R " + index;
 	executor_->Process(cmdLine);
+}
+
+bool Read::isDecimalString(const std::string& str) {
+	if (str.empty()) return false;
+	size_t i = 0;
+	if (str[0] == '-' || str[0] == '+') i = 1;
+	if (i == str.size()) return false; // 부호만 있는 경우
+	for (; i < str.size(); ++i) {
+		if (!std::isdigit(str[i])) return false;
+	}
+	return true;
 }

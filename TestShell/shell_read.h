@@ -13,7 +13,7 @@ public:
     void printInvalidCommand(void);
     std::string getSsdOutputData(void);
     std::vector<std::string> splitBySpace(const std::string& cmd);
-
+    bool isDecimalString(const std::string& str);
     virtual void performReadToSSD(std::string index) = 0;
 
 };
