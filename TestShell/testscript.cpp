@@ -13,8 +13,7 @@ const int INVALID_INDEX = 0;
 
 TestScriptRunner::TestScriptRunner(IProcessExecutor* exe, IFile* _file) : execute(exe), file(_file) {
 #if defined (_DEBUG)
-	m_plogger = &Logger::getInstance();
-	m_plogger->disable_console_print();
+	Logger::getInstance().disable_console_print();
 #endif
 }
 
@@ -23,12 +22,12 @@ std::string TestScript::GetName() {
 }
 
 std::shared_ptr<TestScript> TestScriptRunner::getScript(const std::string& commandLine) {
-	return TestScriptFactory::getInstance().createTestScript(commandLine, m_plogger);
+	return TestScriptFactory::getInstance().createTestScript(commandLine);
 }
 
 bool TestScriptRunner::runScript(const std::string& commandLine) {
 	PRINT_NO_NAME("Start runScript");
-	std::shared_ptr<TestScript> script = TestScriptFactory::getInstance().createTestScript(commandLine, m_plogger);
+	std::shared_ptr<TestScript> script = TestScriptFactory::getInstance().createTestScript(commandLine);
 
 	if (script == nullptr) return false;
 
@@ -38,7 +37,7 @@ bool TestScriptRunner::runScript(const std::string& commandLine) {
 bool TestScriptRunner::ScriptRunnerMode(std::string filename, IFile *file) {
 	std::vector<std::string> scripts;
 
-	m_plogger->disable_console_print();
+	Logger::getInstance().disable_console_print();
 
 	scripts = file->ReadScriptFile(filename);
 

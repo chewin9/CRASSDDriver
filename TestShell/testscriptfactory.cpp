@@ -157,12 +157,12 @@ bool TestScriptFactory::isMatch(std::string input, std::string scriptname) {
 }
 
 
-std::shared_ptr<TestScript> TestScriptFactory::createTestScript(const std::string& scriptname, Logger* logger) {
-	if (isMatch(scriptname, "1_FullWriteAndReadCompare") == true) return std::make_shared<FullWriteAndReadCompare>("1_FullWriteAndReadCompare", logger);
-	if (isMatch(scriptname, "2_PartialLBAWrite") == true) return std::make_shared<PartialLBAWrite>("2_PartialLBAWrite", logger);
-	if (isMatch(scriptname, "3_WriteReadAging") == true) return std::make_shared<WriteReadAging>("3_WriteReadAging", logger);
-	if (isMatch(scriptname, "4_EraseAndWriteAging") == true) return std::make_shared<EraseAndWriteAging>("4_EraseAndWriteAging", logger);
+std::shared_ptr<TestScript> TestScriptFactory::createTestScript(const std::string& scriptname) {
+	if (isMatch(scriptname, "1_FullWriteAndReadCompare") == true) return std::make_shared<FullWriteAndReadCompare>("1_FullWriteAndReadCompare");
+	if (isMatch(scriptname, "2_PartialLBAWrite") == true) return std::make_shared<PartialLBAWrite>("2_PartialLBAWrite");
+	if (isMatch(scriptname, "3_WriteReadAging") == true) return std::make_shared<WriteReadAging>("3_WriteReadAging");
+	if (isMatch(scriptname, "4_EraseAndWriteAging") == true) return std::make_shared<EraseAndWriteAging>("4_EraseAndWriteAging");
 
-	logger->print(__func__, "Fail to create testScript : " + scriptname);
+	PRINT_NO_NAME(__func__, "Fail to create testScript : " + scriptname);
 	return nullptr;
 }
