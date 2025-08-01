@@ -1,4 +1,7 @@
+#pragma once
+#include <gmock/gmock.h>
 #include "file_io.h"
+#include "file_io_interface.h"
 
 #include <cstdio>
 #include <fstream>
@@ -6,7 +9,6 @@
 #include <filesystem>
 
 #include "command_parser.h"
-#include "gmock/gmock.h"
 #include "ssd_operation_handler.h"
 
 using namespace ::testing;
@@ -29,6 +31,25 @@ class FileIOFixture : public Test {
       std::remove("ssd_output.txt");
   }
 };
+
+class FileIOMock : public FileIOInterface {
+public:
+    MOCK_METHOD((std::unordered_map<int, std::string>), LoadDataFromInput, (), (override));
+    MOCK_METHOD(void, WriteValueToOutputFile, (const std::string& str), (override));
+    MOCK_METHOD(void, SaveData, ((const std::unordered_map<int, std::string>&entries)), (override));
+    MOCK_METHOD(void, InitBufferDir, (), (override));
+    MOCK_METHOD(void, EraseBufferDir, (), (override));
+    MOCK_METHOD(void, ChangeFileName, (const std::vector<std::string>& in_command), (override));
+    MOCK_METHOD(std::vector<std::string>, getCommandBuffer, (), (override));
+};
+
+TEST_F(FileIOFixture, WriteErrorOutputMock) {
+    FileIOMock mock;
+    EXPECT_CALL(mock, WriteValueToOutputFile("ERROR"))
+        .Times(1);
+    mock.WriteValueToOutputFile("ERROR");
+}
+
 
 TEST_F(FileIOFixture, WriteErrorOutput) {
   file_io.WriteValueToOutputFile("ERROR");
