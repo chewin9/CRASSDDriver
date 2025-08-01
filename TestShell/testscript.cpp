@@ -14,6 +14,7 @@
 const int INVALID_INDEX = 0;
 
 TestScriptRunner::TestScriptRunner(IProcessExecutor* exe, IFile* _file) : execute(exe), file(_file) {
+	m_logger.disable_console_print();
 }
 
 std::string TestScript::GetName() {
