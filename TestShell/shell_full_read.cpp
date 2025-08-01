@@ -31,7 +31,7 @@ bool ShellFullRead::Run(const std::string& input) {
 }
 
 bool ShellFullRead::checkParameterValid(std::vector<std::string> commandVec) {
-	if (commandVec.size() != 1) {
+	if (commandVec.size() != VALID_FULLREAD_COMMAND_SIZE) {
 		return false;
 	}
 	return true;

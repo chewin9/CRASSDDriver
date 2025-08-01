@@ -9,7 +9,7 @@ public:
     const int MIN_INDEX = 0;
     const int MAX_INDEX = 100;
     const std::string INVALID_COMMAND = "INVALID COMMAND";
-
+    const std::string SSD_OUTPUT_FILE = "ssd_output.txt";
     void printInvalidCommand(void);
     std::string getSsdOutputData(void);
     std::vector<std::string> splitBySpace(const std::string& cmd);
@@ -30,4 +30,6 @@ private:
     bool checkParameterValid(std::vector<std::string> commandVec);
 
     const std::string ERROR_RETURN = "ERROR";
+    const int LBA_INDEX = 1;
+    const int VALID_READ_COMMAND_SIZE = 2;
 };

@@ -15,4 +15,5 @@ private:
 	IProcessExecutor* executor_;
 	bool checkParameterValid(std::vector<std::string> commandVec);
 	std::string appendSsdData(int index, const std::string& Value);
+	const int VALID_FULLREAD_COMMAND_SIZE = 1;
 };

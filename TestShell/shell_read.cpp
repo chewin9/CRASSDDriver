@@ -16,11 +16,11 @@ bool ShellRead::Run(const std::string& input) {
 	}
 
 	//SSD 수행
-	performReadToSSD(commandVector.at(1));
+	performReadToSSD(commandVector.at(LBA_INDEX));
 	
 	//결과 값 읽기
 	std::string SsdData = getSsdOutputData();
-	int index = std::stoi(commandVector.at(1));
+	int index = std::stoi(commandVector.at(LBA_INDEX));
 	printResult(index, SsdData);
 
 	return true;
@@ -28,7 +28,7 @@ bool ShellRead::Run(const std::string& input) {
 
 std::string Read::getSsdOutputData(void) {
 
-	std::ifstream file("ssd_output.txt");
+	std::ifstream file(SSD_OUTPUT_FILE);
 	if (!file.is_open()) {
 		std::cout << "open fail\n";
 		return "";
@@ -66,12 +66,12 @@ void ShellRead::printResult(int index, std::string value) {
 }
 
 bool ShellRead::checkParameterValid(std::vector<std::string> commandVec) {
-	if (commandVec.size() != 2) {
+	if (commandVec.size() != VALID_READ_COMMAND_SIZE) {
 		return false;
 	}
 	int index;
 	try {
-		index = std::stoi(commandVec.at(1));
+		index = std::stoi(commandVec.at(LBA_INDEX));
 	}catch (const std::invalid_argument&) {
 		return false; // 숫자가 아님
 	}
