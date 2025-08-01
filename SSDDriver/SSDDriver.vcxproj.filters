@@ -12,10 +12,6 @@
     <Filter Include="테스트 파일">
       <UniqueIdentifier>{ea9609a7-95b0-44f4-b64d-332ec963d5c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -74,6 +70,18 @@
       <Filter>테스트 파일</Filter>
     </ClCompile>
     <ClCompile Include="flushcommand.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="command_registrtaion.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="command_creator.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="command_runner.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="command_runner.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

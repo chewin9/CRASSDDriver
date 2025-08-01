@@ -11,9 +11,3 @@ ICommand* CreateWriteCommand(SsdOperationHandler& h) {
   return new WriteCommand(h);
 }
 
-namespace {
-bool dummy = [] {
-  CommandFactory::registerCommand("W", CreateWriteCommand);
-  return true;
-}();
-}  // namespace
