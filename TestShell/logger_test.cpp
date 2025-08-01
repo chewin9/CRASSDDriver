@@ -90,8 +90,8 @@ TEST_F(LogTest, MoveLogFileToZip) {
 	EXPECT_CALL(logger, is_file_over_10k).WillRepeatedly(Return(true));
 	EXPECT_CALL(logger, is_saved_log_file_exists).WillRepeatedly(Return(true));
 
-	std::string testfile = "Testing.log";
-	std::string testzipfile = "Testing.zip";
+	std::string testfile = "log/Testing.log";
+	std::string testzipfile = "log/Testing.zip";
 
 	create_dummy_file(testfile);
 	logger.print("Shell.release()", "hello!");
