@@ -11,7 +11,7 @@ bool ShellErase::Run(const std::string& input) {
 	std::vector<std::string> commandVector = Util::splitBySpace(input);
 
 	if (checkParameterValid(commandVector) == false) {
-		Util::printInvalidCommand();
+		Util::printInvalidParameter();
 		return false;
 	}
 

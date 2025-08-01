@@ -1,6 +1,7 @@
 #pragma once
 #include "shell_flush.h"
 #include "shell_util.h"
+#include "logger.h"
 #include <string>
 #include <vector>
 
@@ -20,6 +21,7 @@ TEST(FlushTest, checkExtraParamFailCase) {
 	std::streambuf* oldCoutStreamBuf = std::cout.rdbuf();
 	std::cout.rdbuf(oss.rdbuf());
 
+	Logger::getInstance().disable_console_print();
 	EXPECT_EQ(false, flush.Run("flush ADDPARAMETER"));
 
 	std::string originalStr = oss.str();
@@ -29,11 +31,19 @@ TEST(FlushTest, checkExtraParamFailCase) {
 
 bool ShellFlush::Run(const std::string& cmd) {
 
+	Logger::getInstance().print("ShellFlush::Run", "Enter Run Function");
 	if (false == check_parameter_valid(cmd)) {
 		Util::printInvalidParameter();
 		return false;
 	}
-	executor_->Process("SSDDriver.exe F");
+
+	Logger::getInstance().print("ShellFlush::Run", "Issue SSDDriver.exe F");
+	if (0 == executor_->Process("SSDDriver.exe F")){
+		Logger::getInstance().print("ShellFlush::Run", "process Done");
+	}
+	else {
+		Logger::getInstance().print("ShellFlush::Run", "process Fail");
+	}
 	return true;
 }
 

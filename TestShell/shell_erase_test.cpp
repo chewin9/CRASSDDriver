@@ -70,23 +70,23 @@ TEST_F(ShellEraseTestFixture, TSErase06) {
 
 TEST_F(ShellEraseTestFixture, TSInvalidErase01) {
 	shellErase->Run("erase 80");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
+	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }
 
 TEST_F(ShellEraseTestFixture, TSInvalidErase02) {
 	shellErase->Run("erase -1 199");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
+	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }
 TEST_F(ShellEraseTestFixture, TSInvalidErase03) {
 	shellErase->Run("erase AA 123");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
+	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }
 TEST_F(ShellEraseTestFixture, TSInvalidErase04) {
 	shellErase->Run("erase 0x1 123");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
+	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }
 TEST_F(ShellEraseTestFixture, TSInvalidErase05) {
 	shellErase->Run("erase 0 0xA");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
+	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }
 #endif

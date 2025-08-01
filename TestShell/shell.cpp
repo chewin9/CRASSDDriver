@@ -48,7 +48,7 @@ int Shell::Run(std::string arg) {
         }
 
         if (nullptr == script_runner->getScript(input)) {
-            std::cout << "INVALID COMMAND" << std::endl;
+            Util::printInvalidCommand();
             std::cout << "You typed : " << input << std::endl;
             continue;
         }
