@@ -13,7 +13,7 @@ void CommandBuffer::InitializeBuffer() {
 }
 void CommandBuffer::RegisterBuffer(const ParsedCommand &cmdInfo) {
   InitializeBuffer();
-  std::vector<std::string> bufferArr = fileio.LoadCommandBufferOnly();
+  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
   bufferList = ParsingStringtoBuf(bufferArr);
 
   OptimizeBuffer(cmdInfo);
