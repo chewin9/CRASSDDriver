@@ -32,6 +32,7 @@ bool SsdOperationHandler::Erase(const ParsedCommand& cmdInfo) {
     nandData = fileHandler.LoadDataFromInput();
 
     EraseData(cmdInfo);
+
     fileHandler.SaveData(nandData);
     return true;
 }
@@ -63,8 +64,7 @@ bool SsdOperationHandler::EraseData(const ParsedCommand& cmdInfo) {
         if (it != nandData.end()) {
             nandData.erase(it);
         }
-
-        return true;
     }
-    return false;
+
+    return true;
 }

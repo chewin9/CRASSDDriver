@@ -4,26 +4,23 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
-
+#include <vector>
 ShellRead::ShellRead(IProcessExecutor* executor) : executor_(executor) {}
 
 bool ShellRead::Run(const std::string& input) {
-	if (checkParameterValid(input) == false) {
+	std::vector<std::string> commandVector = splitBySpace(input);
+
+	if (checkParameterValid(commandVector) == false) {
 		printInvalidCommand();
 		return false;
 	}
 
-	// Parse 하는 부분
-	std::tuple<std::string, std::string> parseCommand = parse_command(input);
-	
 	//SSD 수행
-	std::string commandLBA = std::get<1>(parseCommand);
-	std::string cmdLine = "SSDDriver.exe R " + commandLBA;
-	executor_->Process(cmdLine);
+	performReadToSSD(commandVector.at(LBA_INDEX));
 	
 	//결과 값 읽기
 	std::string SsdData = getSsdOutputData();
-	int index = std::stoi(commandLBA);
+	int index = std::stoi(commandVector.at(LBA_INDEX));
 	printResult(index, SsdData);
 
 	return true;
@@ -31,7 +28,7 @@ bool ShellRead::Run(const std::string& input) {
 
 std::string Read::getSsdOutputData(void) {
 
-	std::ifstream file("ssd_output.txt");
+	std::ifstream file(SSD_OUTPUT_FILE);
 	if (!file.is_open()) {
 		std::cout << "open fail\n";
 		return "";
@@ -47,6 +44,16 @@ void Read::printInvalidCommand() {
 	std::cout << INVALID_COMMAND << "\n";
 }
 
+std::vector<std::string> Read::splitBySpace(const std::string& cmd) {
+	std::istringstream iss(cmd);
+	std::vector<std::string> tokens;
+	std::string word;
+	while (iss >> word) {
+		tokens.push_back(word);
+	}
+	return tokens;
+}
+
 void ShellRead::printResult(int index, std::string value) {
 	if (value == ERROR_RETURN) {
 		std::cout << ERROR_RETURN << "\n";
@@ -58,18 +65,23 @@ void ShellRead::printResult(int index, std::string value) {
 	}
 }
 
-bool ShellRead::checkParameterValid(const std::string& cmd) {
-	std::tuple<std::string, std::string> cmdTuple = parse_command(cmd);
-	if (std::get<1>(cmdTuple).empty() == true) {
+bool ShellRead::checkParameterValid(std::vector<std::string> commandVec) {
+	if (commandVec.size() != VALID_READ_COMMAND_SIZE) {
 		return false;
+	}
+	int index;
+	try {
+		index = std::stoi(commandVec.at(LBA_INDEX));
+	}catch (const std::invalid_argument&) {
+		return false; // 숫자가 아님
+	}
+	catch (const std::out_of_range&) {
+		return false; // 범위를 벗어남
 	}
 	return true;
 }
 
-std::tuple<std::string, std::string> Read::parse_command(const std::string& input) {
-	std::istringstream iss(input);
-	std::string cmd;
-	std::string num_str;
-	iss >> cmd >> num_str;
-	return { cmd, num_str };
+void ShellRead::performReadToSSD(std::string index) {
+	std::string cmdLine = "SSDDriver.exe R " + index;
+	executor_->Process(cmdLine);
 }

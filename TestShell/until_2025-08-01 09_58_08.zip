@@ -1,0 +1,115 @@
+[2025-08-01 09:58:07] ReadCompare                    : Read Success
+[2025-08-01 09:58:07] WriteBlock                     : Write at address : 30 value : 00000005
+[2025-08-01 09:58:07] WriteBlock                     : Write at address : 30 value : 00000009
+[2025-08-01 09:58:07] EraseBlock                     : Erase address : 30 length : 3
+[2025-08-01 09:58:07] ReadCompare                    : 4_ReadCompare : 30 length : 3, value : 00000000
+[2025-08-01 09:58:07] ReadCompare                    : Read Success
+[2025-08-01 09:58:07] WriteBlock                     : Write at address : 32 value : 00000005
+[2025-08-01 09:58:07] WriteBlock                     : Write at address : 32 value : 00000009
+[2025-08-01 09:58:07] EraseBlock                     : Erase address : 32 length : 3
+[2025-08-01 09:58:07] ReadCompare                    : 4_ReadCompare : 32 length : 3, value : 00000000
+[2025-08-01 09:58:07] ReadCompare                    : Read Success
+[2025-08-01 09:58:07] WriteBlock                     : Write at address : 34 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 34 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 34 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 34 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 36 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 36 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 36 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 36 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 38 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 38 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 38 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 38 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 40 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 40 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 40 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 40 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 42 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 42 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 42 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 42 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 44 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 44 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 44 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 44 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 46 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 46 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 46 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 46 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 48 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 48 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 48 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 48 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 50 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 50 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 50 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 50 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 52 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 52 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 52 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 52 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 54 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 54 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 54 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 54 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 56 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 56 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 56 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 56 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 58 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 58 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 58 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 58 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 60 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 60 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 60 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 60 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 62 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 62 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 62 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 62 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 64 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 64 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 64 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 64 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 66 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 66 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 66 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 66 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 68 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 68 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 68 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 68 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 70 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 70 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 70 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 70 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 72 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 72 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 72 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 72 length : 3, value : 00000000
+[2025-08-01 09:58:08] ReadCompare                    : Read Success
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 74 value : 00000005
+[2025-08-01 09:58:08] WriteBlock                     : Write at address : 74 value : 00000009
+[2025-08-01 09:58:08] EraseBlock                     : Erase address : 74 length : 3
+[2025-08-01 09:58:08] ReadCompare                    : 4_ReadCompare : 74 length : 3, value : 00000000

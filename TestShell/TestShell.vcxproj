@@ -119,6 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,6 +141,7 @@
     </ClCompile>
     <ClCompile Include="process_executor.cpp" />
     <ClCompile Include="shell.cpp" />
+    <ClCompile Include="shell_flush.cpp" />
     <ClCompile Include="shell_erase.cpp" />
     <ClCompile Include="shell_erase_range.cpp" />
     <ClCompile Include="shell_erase_range_test.cpp" />
@@ -175,16 +177,19 @@
     <ClCompile Include="testscript_test.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="testscript_util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="File.h" />
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="process_executor.h" />
+    <ClInclude Include="shell_flush.h" />
     <ClInclude Include="shell_erase.h" />
     <ClInclude Include="shell_erase_range.h" />
     <ClInclude Include="shell_full_read.h" />
     <ClInclude Include="testscriptfactory.h" />
+    <ClInclude Include="testscript_util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shell.h" />

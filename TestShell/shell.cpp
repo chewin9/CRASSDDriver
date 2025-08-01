@@ -53,6 +53,10 @@ int Shell::Run(std::string arg) {
             std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellFullRead>(executor);
             cmd->Run(input);
         }
+        else if (cmd == "flush") {
+            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellFlush>(executor);
+            cmd->Run(input);
+        }
         else if (cmd == "help") {
             std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellHelp>(executor);
             cmd->Run(input);

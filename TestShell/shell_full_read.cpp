@@ -11,36 +11,39 @@
 ShellFullRead::ShellFullRead(IProcessExecutor* executor) : executor_(executor) {}
 
 bool ShellFullRead::Run(const std::string& input) {
-	
-	if (checkParameterValid(input) == false) {
+	std::vector<std::string> commandVector = splitBySpace(input);
+
+	if (checkParameterValid(commandVector) == false) {
 		printInvalidCommand();
 		return false;
 	}
-	
+
 	std::stringstream ret;
 	for (int i = MIN_INDEX; i < MAX_INDEX; i++) {
-		std::string cmdLine = "SSDDriver.exe R " + std::to_string(i);
-		executor_->Process(cmdLine);
+		performReadToSSD(std::to_string(i));
 
 		std::string SsdData = getSsdOutputData();
-
-		ret << overWriteRead(i, SsdData);
+		ret << appendSsdData(i, SsdData);
 	}
 
 	std::cout << ret.str() << "\n";
 	return true;
 }
 
-bool ShellFullRead::checkParameterValid(const std::string& input) {
-	std::tuple<std::string, std::string> cmdTuple = parse_command(input);
-	if (!std::get<1>(cmdTuple).empty()) {
+bool ShellFullRead::checkParameterValid(std::vector<std::string> commandVec) {
+	if (commandVec.size() != VALID_FULLREAD_COMMAND_SIZE) {
 		return false;
 	}
 	return true;
 }
 
-std::string ShellFullRead::overWriteRead(int index, const std::string& Value) {
+std::string ShellFullRead::appendSsdData(int index, const std::string& Value) {
 	std::stringstream tempString;
 	tempString << std::setw(2) << std::setfill('0') << index << " " << Value << "\n";
 	return tempString.str();
+}
+
+void ShellFullRead::performReadToSSD(std::string index) {
+	std::string cmdLine = "SSDDriver.exe R " + index;
+	executor_->Process(cmdLine);
 }
