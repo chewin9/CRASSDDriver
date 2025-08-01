@@ -5,20 +5,29 @@
 #include <string>
 #include <vector>
 
+#include "command_buffer.h"
 #include "command_factory.h"
 #include "command_parser.h"
 #include "file_io.h"
+#include "ssd_operation_handler.h"
 
 class SSDCommandTest : public ::testing::Test {
  protected:
   void SetUp() override {
     std::remove("ssd_nand.txt");
     std::remove("ssd_output.txt");
+
+    // Command buffer directory 초기화
+    system("rm -rf command_buffer");
+    system("mkdir command_buffer");
   }
+
+  void TearDown() override { ClearTestFiles(); }
 
   void ClearTestFiles() {
     std::remove("ssd_nand.txt");
     std::remove("ssd_output.txt");
+    system("rm -rf command_buffer");
   }
 
   std::string ReadOutputFile() {
@@ -38,7 +47,8 @@ class SSDCommandTest : public ::testing::Test {
   }
 
   void ExecuteCommand(ParsedCommand cmd) {
-    SsdOperationHandler opHandler(fileio);
+    CommandBuffer cmdbuffer{fileio};
+    SsdOperationHandler opHandler(fileio, cmdbuffer);
     ICommand* command = CommandFactory::create(cmd, opHandler);
     ASSERT_NE(command, nullptr);
     command->Execute(cmd);
@@ -54,21 +64,21 @@ class SSDCommandTest : public ::testing::Test {
     }
     return false;
   }
-public:
-    FileIO fileio;
+
+  FileIO fileio;
 };
 
 TEST_F(SSDCommandTest, FileWriteAndCheck) {
-  ParsedCommand cmd = MakeCommand({"./SSDDriver.exe", "W", "42", "0xCAFEBABE"});
-  ExecuteCommand(cmd);
-  EXPECT_TRUE(CheckNandFileContains("42 0xCAFEBABE"));
+  ExecuteCommand(MakeCommand({"./SSDDriver.exe", "W", "42", "0xCAFEBABE"}));
+  ExecuteCommand(MakeCommand({"./SSDDriver.exe", "R", "42"}));
+  EXPECT_EQ(ReadOutputFile(), "0xCAFEBABE");
 }
 
 TEST_F(SSDCommandTest, OverwriteSameLba) {
   ExecuteCommand(MakeCommand({"./SSDDriver.exe", "W", "42", "0xAAAABBBB"}));
   ExecuteCommand(MakeCommand({"./SSDDriver.exe", "W", "42", "0xCCCCDDDD"}));
-  EXPECT_TRUE(CheckNandFileContains("42 0xCCCCDDDD"));
-  EXPECT_FALSE(CheckNandFileContains("42 0xAAAABBBB"));
+  ExecuteCommand(MakeCommand({"./SSDDriver.exe", "R", "42"}));
+  EXPECT_EQ(ReadOutputFile(), "0xCCCCDDDD");
 }
 
 TEST_F(SSDCommandTest, OutOfRangeLBA) {
@@ -100,46 +110,62 @@ TEST_F(SSDCommandTest, InvalidLba_ShouldWriteErrorToOutputFile) {
 }
 
 TEST_F(SSDCommandTest, MultiWriteRead_ThirdValueShouldMatch) {
-  ClearTestFiles();
-
   std::vector<std::pair<std::string, std::string>> writes = {
-      {"0", "0xAAAABBBB"}, {"1", "0x11112222"},
-      {"2", "0x33334444"},  // <== 우리가 read할 대상
+      {"0", "0xAAAABBBB"}, {"1", "0x11112222"}, {"2", "0x33334444"},
       {"3", "0x55556666"}, {"4", "0x77778888"},
   };
 
   for (const auto& write : writes) {
-    std::string lba = write.first;
-    std::string value = write.second;
-
-    std::vector<std::string> args = {"./SSDDriver.exe", "W", lba, value};
-    std::vector<char*> argv;
-    for (auto& s : args) argv.push_back(&s[0]);
-    int argc = static_cast<int>(argv.size());
-
-    CommandParser parser;
-    ParsedCommand cmd = parser.ParseCommand(argc, argv.data());
-    SsdOperationHandler opHandler(fileio);
-    ICommand* writeCmd = CommandFactory::create(cmd, opHandler);
-    ASSERT_NE(writeCmd, nullptr);
-    writeCmd->Execute(cmd);
-    delete writeCmd;
+    ExecuteCommand(
+        MakeCommand({"./SSDDriver.exe", "W", write.first, write.second}));
   }
 
-  std::vector<std::string> readArgs = {"./SSDDriver.exe", "R", "2"};
-  std::vector<char*> readArgv;
-  for (auto& s : readArgs) readArgv.push_back(&s[0]);
-  int readArgc = static_cast<int>(readArgv.size());
+  ExecuteCommand(MakeCommand({"./SSDDriver.exe", "R", "2"}));
+  EXPECT_EQ(ReadOutputFile(), "0x33334444");
+}
 
-  CommandParser parser;
-  ParsedCommand readCmd = parser.ParseCommand(readArgc, readArgv.data());
+TEST_F(SSDCommandTest, RandomCommandExecution_MixedOps) {
+  std::vector<std::vector<std::string>> commands = {{"E", "23", "7"},
+                                                    {"E", "34", "1"},
+                                                    {"E", "29", "6"},
+                                                    {"W", "14", "0x650DCB38"},
+                                                    {"W", "37", "0xB823F008"},
+                                                    {"W", "70", "0x19A98428"},
+                                                    {"W", "57", "0x19A98428"},
+                                                    {"W", "42", "0xB3517CC8"},
+                                                    {"R", "47"},
+                                                    {"E", "36", "6"},
+                                                    {"R", "31"},
+                                                    {"W", "63", "0x19A98428"},
+                                                    {"E", "9", "7"},
+                                                    {"E", "67", "5"},
+                                                    {"E", "74", "4"},
+                                                    {"E", "19", "7"},
+                                                    {"W", "76", "0x24AE8F34"},
+                                                    {"W", "41", "0x1AE96CD8"},
+                                                    {"R", "9"},
+                                                    {"W", "3", "0xF51E84CA"},
+                                                    {"R", "54"},
+                                                    {"R", "37"},
+                                                    {"E", "5", "6"},
+                                                    {"R", "79"},
+                                                    {"W", "2", "0xB50674A5"},
+                                                    {"R", "26"},
+                                                    {"R", "56"},
+                                                    {"R", "70"},
+                                                    {"E", "62", "9"},
+                                                    {"E", "10", "10"}};
 
-  SsdOperationHandler opHandler(fileio);
-  ICommand* readCommand = CommandFactory::create(readCmd, opHandler);
-  ASSERT_NE(readCommand, nullptr);
-  readCommand->Execute(readCmd);
-  delete readCommand;
+  for (const auto& cmdArgs : commands) {
+    std::vector<std::string> args = {"./SSDDriver.exe"};
+    args.insert(args.end(), cmdArgs.begin(), cmdArgs.end());
+    ParsedCommand cmd = MakeCommand(args);
+    ExecuteCommand(cmd);
 
-  std::string output = ReadOutputFile();
-  EXPECT_EQ(output, "0x33334444");
+    // Read일 경우 결과 출력
+    if (cmd.opCode == "R") {
+      std::string result = ReadOutputFile();
+      std::cout << "Read LBA " << cmd.lba << " → " << result << std::endl;
+    }
+  }
 }
