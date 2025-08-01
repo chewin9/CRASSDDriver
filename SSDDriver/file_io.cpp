@@ -66,3 +66,44 @@ void FileIO::EraseFolder() {
     }
 
 }
+
+std::vector<std::string> FileIO::LoadCommandBuffer() {
+
+    fs::path dir{ SSD_COMMAND_BUFFER_FOLDER };
+
+    std::vector<std::string> filenames;
+    std::error_code ec;
+    
+    if (!fs::exists(dir, ec) || !fs::is_directory(dir, ec)) {
+        return {};
+    }
+
+    for (const auto& command : fs::directory_iterator(dir, ec)) {
+        if (ec) break;
+        
+        filenames.push_back(command.path().filename().string());
+    }
+
+    std::sort(filenames.begin(), filenames.end());
+    return filenames;
+
+}
+
+void FileIO::ChangeFileName(std::vector<std::string>& in_command) {
+
+    auto oldNames = LoadCommandBuffer();
+    fs::path dir{ SSD_COMMAND_BUFFER_FOLDER };
+    std::error_code ec;
+
+    size_t count = std::min(oldNames.size(), in_command.size());
+    for (size_t i = 0; i < count; ++i) {
+        fs::path oldPath = dir / oldNames[i];
+        fs::path newPath = dir / in_command[i];
+        fs::rename(oldPath, newPath, ec);
+        if (ec) {
+            throw std::runtime_error("fail to change file name");
+        }
+    }
+
+
+}
