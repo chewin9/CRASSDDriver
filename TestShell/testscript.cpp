@@ -96,15 +96,12 @@ bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int st
 	std::snprintf(buffer, 100, "%s : %d length : %d, value : %08X", __func__, startaddr, len, value);
 	std::string str(buffer);
 
-	std::string outputfile;
-
 	PRINT(str);
 
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeReadCommand(index));
 		try {
-			outputfile = file->ReadOutputFile("ssd_output.txt");
-			if (std::stoul(outputfile.substr(outStartPos, outEndPos), nullptr, HEX) != value) {
+			if (std::stoul(file->ReadOutputFile("ssd_output.txt").substr(outStartPos, outEndPos), nullptr, HEX) != value) {
 				PRINT("Read result is mismatched :");
 				return false;
 			}
