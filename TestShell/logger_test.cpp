@@ -22,6 +22,7 @@ MATCHER(IsExistingFile, "checks if file exists") {
 
 class MockLogger : public Logger {
 public:
+	MockLogger() {};
 	MOCK_METHOD(bool, is_file_over_10k, (const std::string& file), (override));
 	MOCK_METHOD(bool, is_saved_log_file_exists, (), (override));
 };
@@ -39,7 +40,9 @@ public:
 		//std::cout <<"result: "<< oss.str() << std::endl;
 		logger.set_log_default_file_name();
 	}
-	Logger logger;
+
+	NiceMock<MockLogger> logger;
+
 	std::ostringstream oss;
 	std::streambuf* oldCoutStreamBuf;
 	std::string filename = "test_latest.log";
@@ -52,11 +55,9 @@ public:
 		// File is created and remains empty
 		// ofs will automatically close when going out of scope
 	}
-
 };
 
 TEST_F(LogTest, NormalLogOutput) {
-
 	logger.print("Shell.release()", "hello!");
 
 	EXPECT_THAT(oss.str(), Not(StrEq(""))); 
@@ -65,7 +66,6 @@ TEST_F(LogTest, NormalLogOutput) {
 }
 
 TEST_F(LogTest, NoLogOutputOnConsole) {
-
 	logger.disable_console_print();
 	logger.print("Shell.release()", "hello!");
 
@@ -75,7 +75,6 @@ TEST_F(LogTest, NoLogOutputOnConsole) {
 }
 
 TEST_F(LogTest, MoveFileWhenOver10K) {
-	MockLogger logger;
 	EXPECT_CALL(logger, is_file_over_10k).WillRepeatedly(Return(true));
 
 	logger.print("Shell.release()", "hello!");
@@ -88,7 +87,6 @@ TEST_F(LogTest, MoveFileWhenOver10K) {
 }
 
 TEST_F(LogTest, MoveLogFileToZip) {
-	MockLogger logger;
 	EXPECT_CALL(logger, is_file_over_10k).WillRepeatedly(Return(true));
 	EXPECT_CALL(logger, is_saved_log_file_exists).WillRepeatedly(Return(true));
 

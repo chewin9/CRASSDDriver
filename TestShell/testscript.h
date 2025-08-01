@@ -47,9 +47,7 @@ private:
 	//Method
 	IProcessExecutor* execute = nullptr;
 	IFile* file = nullptr;
-	Logger m_logger;
-
-
+	Logger* m_plogger;
 	//Variable
 	std::vector<TestScript*> testScripts;
 };
