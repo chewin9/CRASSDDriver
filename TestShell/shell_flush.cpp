@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-TEST(FlushTest, TC1) {
+TEST(FlushTest, checkSuccess) {
 	MockProcessExecutor executor;
 	ShellFlush flush(&executor);
 	EXPECT_CALL(executor, Process("SSDDriver.exe F")).Times(1);
@@ -11,11 +11,19 @@ TEST(FlushTest, TC1) {
 	flush.Run("flush");
 }
 
-TEST(FlushTest, TC2) {
+TEST(FlushTest, checkExtraParamFailCase) {
 	MockProcessExecutor executor;
 	ShellFlush flush(&executor);
 
+	std::ostringstream oss;
+	std::streambuf* oldCoutStreamBuf = std::cout.rdbuf();
+	std::cout.rdbuf(oss.rdbuf());
+
 	EXPECT_EQ(false, flush.Run("flush ADDPARAMETER"));
+
+	std::string originalStr = oss.str();
+	EXPECT_EQ(originalStr, "INVALID COMMAND\n");
+	std::cout.rdbuf(oldCoutStreamBuf);
 }
 
 bool ShellFlush::Run(const std::string& cmd) {
