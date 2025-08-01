@@ -111,7 +111,8 @@ std::vector<std::string> FileIO::LoadCommandBufferOnly() {
 
 void FileIO::ChangeFileName(std::vector<std::string>& in_command) {
   fs::path dir{SSD_COMMAND_BUFFER_FOLDER};
-
+  EraseFolder();
+  GenFolderAndEmtyFiles();
   auto oldNames = LoadCommandBuffer();
   std::error_code ec;
 

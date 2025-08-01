@@ -65,6 +65,12 @@ TEST_F(SSDCommandSequenceTest, MixedCommandExecutionValidation) {
   Execute("E", "34", "1");
   Execute("E", "29", "6");
 
+
+  Execute("E", "11", "10");
+
+
+
+
   // Writes
   Execute("W", "14", "0x650DCB38");
   Execute("W", "37", "0xB823F008");
