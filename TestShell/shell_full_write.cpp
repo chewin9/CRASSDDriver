@@ -28,11 +28,11 @@ bool ShellFullWrite::Run(const std::string& cmd) {
 bool ShellFullWrite::checkParameterValid(const std::string& cmd)
 {
 	std::vector<std::string> cmds = splitBySpace(cmd);
-	std::string value = cmds[1];
 	if (cmds.size() != 2) {
 		return false;
 	}
 
+	std::string value = cmds[1];
 	if (value.size() != 10) {
 		return false;
 	}
