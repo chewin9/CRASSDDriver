@@ -22,6 +22,10 @@
     <ClCompile Include="testscriptfactory.cpp" />
     <ClCompile Include="shell_full_read.cpp" />
     <ClCompile Include="shell_full_read_test.cpp" />
+    <ClCompile Include="shell_erase.cpp" />
+    <ClCompile Include="shell_erase_test.cpp" />
+    <ClCompile Include="shell_erase_range.cpp" />
+    <ClCompile Include="shell_erase_range_test.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="logger_test.cpp" />
     <ClCompile Include="shell_flush.cpp" />
@@ -61,6 +65,8 @@
     <ClInclude Include="File.h" />
     <ClInclude Include="testscriptfactory.h" />
     <ClInclude Include="shell_full_read.h" />
+    <ClInclude Include="shell_erase.h" />
+    <ClInclude Include="shell_erase_range.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="shell_flush.h" />
   </ItemGroup>

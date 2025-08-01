@@ -5,6 +5,8 @@
 #include "shell_full_write.h"
 #include "shell_full_read.h"
 #include "shell_flush.h"
+#include "shell_erase.h"
+#include "shell_erase_range.h"
 #include "testscript.h"
 #include "shell_help.h"
 #include "process_executor.h"
