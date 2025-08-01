@@ -42,7 +42,7 @@ void FileIO::WriteValueToOutputFile(std::string val) {
   outFile << val << std::endl;
 }
 
-void FileIO::GenFolderAndEmtyFiles() {
+void FileIO::InitBufferDir() {
   if (fs::exists(SSD_COMMAND_BUFFER_FOLDER)) return;
 
   fs::create_directory(SSD_COMMAND_BUFFER_FOLDER);
@@ -54,7 +54,7 @@ void FileIO::GenFolderAndEmtyFiles() {
   }
 }
 
-void FileIO::EraseFolder() {
+void FileIO::EraseBufferDir() {
   fs::path dir{SSD_COMMAND_BUFFER_FOLDER};
   std::error_code ec;
 
@@ -63,8 +63,8 @@ void FileIO::EraseFolder() {
   }
 }
 
-std::vector<std::string> FileIO::LoadCommandBuffer() {
-  GenFolderAndEmtyFiles();
+std::vector<std::string> FileIO::getFileNames() {
+  InitBufferDir();
 
   fs::path dir{SSD_COMMAND_BUFFER_FOLDER};
 
@@ -85,8 +85,8 @@ std::vector<std::string> FileIO::LoadCommandBuffer() {
   return filenames;
 }
 
-std::vector<std::string> FileIO::LoadCommandBufferOnly() {
-  GenFolderAndEmtyFiles();
+std::vector<std::string> FileIO::getCommandBuffer() {
+  InitBufferDir();
   fs::path dir{SSD_COMMAND_BUFFER_FOLDER};
 
   std::vector<std::string> filenames;
@@ -111,9 +111,11 @@ std::vector<std::string> FileIO::LoadCommandBufferOnly() {
 
 void FileIO::ChangeFileName(std::vector<std::string>& in_command) {
   fs::path dir{SSD_COMMAND_BUFFER_FOLDER};
-  EraseFolder();
-  GenFolderAndEmtyFiles();
-  auto oldNames = LoadCommandBuffer();
+
+  EraseBufferDir();
+  InitBufferDir();
+  
+  auto oldNames = getFileNames();
   std::error_code ec;
 
   size_t count = std::min(oldNames.size(), in_command.size());

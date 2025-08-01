@@ -1,9 +1,11 @@
 #include "ssd_operation_handler.h"
 
 void SsdOperationHandler::Flush() {
+
   std::list<ParsedCommand> bufferList = cmdBuffer.GetCommandBuffer();
-  fileHandler.EraseFolder();
-  fileHandler.GenFolderAndEmtyFiles();
+  fileHandler.EraseBufferDir();
+  fileHandler.InitBufferDir();
+
   for (auto i : bufferList) {
     if (i.opCode == "W") {
       _Write(i);

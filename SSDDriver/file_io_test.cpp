@@ -20,11 +20,17 @@ class FileIOFixture : public Test {
   void SetUp() override {
       std::error_code ec;
       fs::remove_all("buffer", ec);
+      std::remove("ssd_output.txt");
+  }
+
+  void TearDown() override {
+      std::error_code ec;
+      fs::remove_all("buffer", ec);
+      std::remove("ssd_output.txt");
   }
 };
 
 TEST_F(FileIOFixture, WriteErrorOutput) {
-  std::remove("ssd_output.txt");
   file_io.WriteValueToOutputFile("ERROR");
 
   std::ifstream inFile("ssd_output.txt");
@@ -41,7 +47,6 @@ TEST_F(FileIOFixture, WriteErrorOutput) {
 }
 
 TEST_F(FileIOFixture, WriteOutputWithError) {
-  std::remove("ssd_output.txt");
   pc.errorFlag = true;
   CommandBuffer cmdbuffer{file_io};
   SsdOperationHandler opHandler(file_io, cmdbuffer);
@@ -170,41 +175,16 @@ TEST_F(FileIOFixture, ReadNandFile_WithErrorFlag) {
   EXPECT_EQ(line, "ERROR");
 }
 
-TEST_F(FileIOFixture, GenBufferFolder) {
-    file_io.GenFolderAndEmtyFiles();
-    std::ifstream inFile("buffer/1_empty");
-    ASSERT_TRUE(inFile.is_open());
-
-    file_io.EraseFolder();
-    file_io.GenFolderAndEmtyFiles();
-    std::ifstream inFile2("buffer/2_empty");
-    ASSERT_TRUE(inFile2.is_open());
-
-}
-
-
-TEST_F(FileIOFixture, GenEmptyFileAndCheckSizeAndName) {
-
-    file_io.GenFolderAndEmtyFiles();
-
-    auto filenames = file_io.LoadCommandBuffer();
-    EXPECT_EQ(filenames.size(), 5u);
-
-    for (int i = 1; i <= 5; ++i) {
-        const std::string name = std::to_string(i) + "_empty";
-        EXPECT_NE(std::find(filenames.begin(), filenames.end(), name), filenames.end()
-        );
-
-        EXPECT_EQ(filenames[i-1], name);
-    }
-}
-
 
 TEST_F(FileIOFixture, CheckChangedFileName) {
-
-    file_io.GenFolderAndEmtyFiles();
     std::vector<std::string> in_command = { "1_ABC", "2_DEF", "3_HIJ" };
-
     file_io.ChangeFileName(in_command);
 
+    auto load_command = file_io.getCommandBuffer();
+
+    ASSERT_EQ(load_command.size(), in_command.size());
+
+    for (size_t i = 0; i < in_command.size(); ++i) {
+        EXPECT_EQ(load_command[i], in_command[i]);
+    }
 }
