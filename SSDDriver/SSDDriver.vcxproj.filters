@@ -73,6 +73,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="command_buffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssd_sequence_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="file_io.h">
@@ -97,6 +103,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="erasecommand.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="command_buffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

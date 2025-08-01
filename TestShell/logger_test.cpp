@@ -31,16 +31,18 @@ public:
 	void SetUp() override {
 		oldCoutStreamBuf = std::cout.rdbuf();
 		std::cout.rdbuf(oss.rdbuf());
+		logger.set_log_file_name(filename);
 	}
 	
 	void TearDown() override {
 		std::cout.rdbuf(oldCoutStreamBuf);
 		//std::cout <<"result: "<< oss.str() << std::endl;
+		logger.set_log_default_file_name();
 	}
 	Logger logger;
 	std::ostringstream oss;
 	std::streambuf* oldCoutStreamBuf;
-	std::string filename = "latest.log";
+	std::string filename = "test_latest.log";
 
 	void create_dummy_file(const std::string& filename) {
 		std::ofstream ofs(filename.c_str());  // or just std::ofstream ofs(filename);

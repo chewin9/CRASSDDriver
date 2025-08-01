@@ -5,20 +5,11 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
+#include <cstdio>
+#include <filesystem>
 #include "logger.h"
 
-#if (USING_WINCPP14)
-#include <windows.h>
-
-bool has_log_extension(const std::string& name) {
-    size_t n = name.size();
-    return n >= 4 && name.substr(n - 4) == ".log";
-}
-
-std::string replace_extension_with_zip(const std::string& name) {
-    return name.substr(0, name.size() - 4) + ".zip";
-}
-#endif 
+namespace fs = std::filesystem;
 
 void Logger::print(const std::string& classFunc, const std::string& message)
 {    
@@ -73,26 +64,33 @@ void Logger::move_saved_log_file(void)
     // check if other .log file exist,
     if (true == is_saved_log_file_exists())
     {
-#if (USING_WINCPP14)
-        WIN32_FIND_DATAA fd;
-        HANDLE hFind = FindFirstFileA("*.log", &fd);
-        do {
-            std::string old_name = fd.cFileName;
-            if (old_name == filename) continue;
-            if (has_log_extension(old_name)) {
-                std::string new_name = replace_extension_with_zip(old_name);
-                MoveFileA(old_name.c_str(), new_name.c_str());
+        std::string dir = ".";
+        for (const auto& entry : fs::directory_iterator(dir)) {
+            if (entry.is_regular_file() && entry.path().extension() == ".log") {
+                fs::path old_path = entry.path();
+                if (old_path.string().find(filename) != std::string::npos) continue;
+                // Construct new path: replace .log with .zip
+                fs::path new_path = old_path;
+                new_path.replace_extension(".zip");
+                try {
+                    fs::rename(old_path, new_path);
+                }
+                catch (const fs::filesystem_error& e) {
+                    std::cerr << "Error renaming file: " << e.what() << std::endl;
+                }
             }
-        } while (FindNextFileA(hFind, &fd));
-        FindClose(hFind);
-#endif
+        }
     }
+}
+
+bool file_exists(const std::string& filename) {
+    std::ifstream file(filename.c_str());
+    return file.good();
 }
 
 void Logger::move_file_to_log(const std::string& file)
 {
     std::string log_file_name = get_saved_log_file_name();
-
     std::ifstream in(file, std::ios::binary | std::ios::ate);
     in.clear();
     in.seekg(0);
@@ -117,23 +115,30 @@ std::string Logger::get_saved_log_file_name(void)
     return log_file_name;
 }
 
+void Logger::set_log_file_name(const std::string& name)
+{
+    filename = name;
+}
+
+void Logger::set_log_default_file_name()
+{
+    filename = defaultFileName;
+}
+
 bool Logger::is_saved_log_file_exists(void)
 {
-#if (USING_WINCPP14)
-    // any .log file other than filename exist
-    WIN32_FIND_DATAA fd;
-    HANDLE hFind = FindFirstFileA("*.log", &fd);
-    if (hFind == INVALID_HANDLE_VALUE) {
-        return false;
+    bool found = false;
+    for (const auto& entry : fs::directory_iterator(".")) {
+        if (entry.is_regular_file() && entry.path().extension() == ".log") {
+            found = true;
+            break; // You can stop as soon as one .log file is found
+        }
     }
-    else {
-        return true;
-    }
-#endif 
+    return found;
 }
 
 bool Logger::is_diabled_console_print() {
-    return bUseConsolePrint;
+    return !bUseConsolePrint;
 }
 
 void Logger::disable_console_print(void)

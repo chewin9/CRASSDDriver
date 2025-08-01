@@ -1,35 +1,89 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="shell_write.h" />
-    <ClCompile Include="shell_write_test.cpp" />
-    <ClCompile Include="testscript.cpp" />
-    <ClCompile Include="testscript_test.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
-    <ClCompile Include="process_executor.cpp" />
-    <ClCompile Include="shell_read_test.cpp" />
-    <ClCompile Include="shell_read.cpp" />
-    <ClCompile Include="shell_write.cpp" />
-    <ClCompile Include="shell_full_write.cpp" />
-    <ClCompile Include="shell.cpp" />
-    <ClCompile Include="shell_help.cpp" />
-    <ClCompile Include="shell_help_test.cpp" />
-    <ClCompile Include="shell_test.cpp" />
-    <ClCompile Include="File.cpp" />
-    <ClCompile Include="ishell_command.h" />
-    <ClCompile Include="testscriptfactory.cpp" />
-    <ClCompile Include="shell_full_read.cpp" />
-    <ClCompile Include="shell_full_read_test.cpp" />
-    <ClCompile Include="shell_erase.cpp" />
-    <ClCompile Include="shell_erase_test.cpp" />
-    <ClCompile Include="shell_erase_range.cpp" />
-    <ClCompile Include="shell_erase_range_test.cpp" />
-    <ClCompile Include="logger.cpp" />
-    <ClCompile Include="logger_test.cpp" />
-    <ClCompile Include="shell_flush.cpp" />
-    <ClCompile Include="testscript_util.cpp" />
+    <ClCompile Include="File.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="process_executor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_erase.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_erase_range.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_flush.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_full_read.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_full_write.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_help.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_read.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_write.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="testscript.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="testscript_util.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="testscriptfactory.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="logger_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_erase_range_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_erase_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_full_read_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_help_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_read_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_write_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="testscript_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ishell_command.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_write.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
@@ -44,10 +98,6 @@
     <ClCompile Include="shell_write_test.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClInclude Include="iprocess_executor.h" />
-    <ClInclude Include="process_executor.h" />
-    <ClInclude Include="testscript.h" />
-    <ClInclude Include="test.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -59,17 +109,67 @@
     <ClInclude Include="process_executor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="shell_read.h" />
-    <ClInclude Include="shell_full_write.h" />
-    <ClInclude Include="shell.h" />
-    <ClInclude Include="shell_help.h" />
-    <ClInclude Include="File.h" />
-    <ClInclude Include="testscriptfactory.h" />
-    <ClInclude Include="shell_full_read.h" />
-    <ClInclude Include="shell_erase.h" />
-    <ClInclude Include="shell_erase_range.h" />
-    <ClInclude Include="logger.h" />
-    <ClInclude Include="shell_flush.h" />
-    <ClInclude Include="testscript_util.h" />
+    <ClInclude Include="iprocess_executor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="process_executor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="shell.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_erase.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_erase_range.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_flush.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_full_read.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_help.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_full_write.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_read.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="test.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="testscript.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="testscript_util.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="testscriptfactory.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="File.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="testscriptlog.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{44433f60-5da2-4802-8494-5cec751df87b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="테스트 파일">
+      <UniqueIdentifier>{a15b5bea-9950-4dff-ac7b-80fc9de69250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{6016db7e-2541-4b32-9437-24cbf35eac9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
