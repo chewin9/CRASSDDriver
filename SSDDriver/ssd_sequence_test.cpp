@@ -22,7 +22,7 @@ class SSDCommandSequenceTest : public ::testing::Test {
     std::remove("ssd_output.txt");
     system("rm -rf buffer && mkdir buffer");
 
-    cmd_buffer = new CommandBuffer(file_io);
+    cmd_buffer = new CommandBuffer;
     op_handler = new SsdOperationHandler(file_io, *cmd_buffer);
   }
 

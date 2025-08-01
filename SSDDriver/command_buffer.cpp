@@ -11,14 +11,13 @@ void CommandBuffer::InitializeBuffer() {
   eraseCommandList = {};
   bufferList = {};
 }
-void CommandBuffer::RegisterBuffer(const ParsedCommand &cmdInfo) {
+vector<string> CommandBuffer::RegisterBuffer(
+    const ParsedCommand &cmdInfo, const vector<string> &currentBuffer) {
   InitializeBuffer();
-  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
-  bufferList = ParsingStringtoBuf(bufferArr);
+  bufferList = ParsingStringtoBuf(currentBuffer);
 
   OptimizeBuffer(cmdInfo);
-  bufferArr = ParsingBuftoString(bufferList);
-  fileio.ChangeFileName(bufferArr);
+  return ParsingBuftoString(bufferList);
 }
 
 void CommandBuffer::ConvertWriteZeroValToErase(ParsedCommand &cmdInfo) {
@@ -56,7 +55,7 @@ void CommandBuffer::OptimizeWriteCommand(ParsedCommand &cmdInfo) {
   writeCommandList.push_back(cmdInfo);
 }
 
-void CommandBuffer::IgnoreWrite(int& mergedStart, int& mergedEnd) {
+void CommandBuffer::IgnoreWrite(int &mergedStart, int &mergedEnd) {
   for (auto it = writeCommandList.begin(); it != writeCommandList.end();) {
     int writeLba = it->lba;
     if (writeLba >= mergedStart && writeLba <= mergedEnd) {
@@ -66,6 +65,7 @@ void CommandBuffer::IgnoreWrite(int& mergedStart, int& mergedEnd) {
     }
   }
 }
+
 
 bool CommandBuffer::MergeErase(int& mergedStart, int& mergedEnd) {
   bool flag = false;
@@ -111,10 +111,9 @@ void CommandBuffer::OptimizeEraseCommand(ParsedCommand cmdInfo) {
   if (merged) {
     RearrangeMergedErase(mergedStart, mergedEnd);
     return;
-  } 
+  }
 
-   eraseCommandList.push_back(cmdInfo);
-  
+  eraseCommandList.push_back(cmdInfo);
 }
 
 void CommandBuffer::OptimizeBuffer(const ParsedCommand &cmd) {
@@ -134,22 +133,20 @@ void CommandBuffer::OptimizeBuffer(const ParsedCommand &cmd) {
   return;
 }
 
-bool CommandBuffer::IsFlushNeeded() {
-  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
-  if (bufferArr.size() >= 5) return true;
+bool CommandBuffer::IsFlushNeeded(const vector<string> &currentBuffer) {
+  if (currentBuffer.size() >= 5) return true;
   return false;
 }
 
-std::list<ParsedCommand> CommandBuffer::GetCommandBuffer() {
-  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
-  std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
+std::list<ParsedCommand> CommandBuffer::GetCommandBuffer(
+    const vector<string> &currentBuffer) {
+  std::list<ParsedCommand> bufferList = ParsingStringtoBuf(currentBuffer);
   return bufferList;
 }
 
-std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo) {
-  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
-
-  std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
+std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo,
+                                      const vector<string> &currentBuffer) {
+  std::list<ParsedCommand> bufferList = ParsingStringtoBuf(currentBuffer);
 
   int readLba = cmdInfo.lba;
   for (auto cmd = bufferList.rbegin(); cmd != bufferList.rend(); ++cmd) {
@@ -168,7 +165,7 @@ std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo) {
 }
 
 std::list<ParsedCommand> CommandBuffer::ParsingStringtoBuf(
-    std::vector<std::string> &bufferArr) {
+    const std::vector<std::string> &bufferArr) {
   std::list<ParsedCommand> parsedList;
 
   for (const auto &bufferStr : bufferArr) {

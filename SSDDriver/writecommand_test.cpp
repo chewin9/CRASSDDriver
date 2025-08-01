@@ -22,7 +22,7 @@ class WriteCommandFixture : public Test {
 TEST_F(WriteCommandFixture, WriteNewFile) {
   for (int i = 0; i < MAX_VAL_SIZE; i++) {
     ParsedCommand cmdInfo = {"W", normalLba, normalValue, false};
-    CommandBuffer cmdbuffer{fileio};
+    CommandBuffer cmdbuffer;
     SsdOperationHandler opHandler(fileio, cmdbuffer);
     WriteCommand write_command(opHandler);
     EXPECT_EQ(true, write_command.Execute(cmdInfo));
@@ -31,7 +31,7 @@ TEST_F(WriteCommandFixture, WriteNewFile) {
 
 TEST_F(WriteCommandFixture, OverwirteNewLBA) {
   ParsedCommand cmdInfo = {"W", normalLba, normalValue, false};
-  CommandBuffer cmdbuffer{fileio};
+  CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(fileio, cmdbuffer);
   WriteCommand write_command(opHandler);
   write_command.Execute(cmdInfo);

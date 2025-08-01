@@ -26,5 +26,4 @@ class SsdOperationHandler {
   bool Read(const ParsedCommand& cmdInfo);
   bool Erase(const ParsedCommand& cmdInfo);
   void Flush();
-  // bool erase();
 };

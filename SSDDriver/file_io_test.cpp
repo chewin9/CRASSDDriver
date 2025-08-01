@@ -48,7 +48,7 @@ TEST_F(FileIOFixture, WriteErrorOutput) {
 
 TEST_F(FileIOFixture, WriteOutputWithError) {
   pc.errorFlag = true;
-  CommandBuffer cmdbuffer{file_io};
+  CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Write(pc);
   std::ifstream inFile("ssd_output.txt");
@@ -69,7 +69,7 @@ TEST_F(FileIOFixture, WriteOutputWithNewLBA_ThroughReadCheck) {
 
   // Write
   pc = {"W", 3, "0xABCDEF01", false};
-  CommandBuffer cmdbuffer{file_io};
+  CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Write(pc);
 
@@ -94,7 +94,7 @@ TEST_F(FileIOFixture, WriteOutput_OverwritesExistingLBA_ThroughReadCheck) {
   // 1. Write initial value
   {
     ParsedCommand initial = {"W", 5, "0xAAAA0000", false};
-    CommandBuffer cmdbuffer{file_io};
+    CommandBuffer cmdbuffer;
     SsdOperationHandler opHandler(file_io, cmdbuffer);
     opHandler.Write(initial);
 
@@ -104,7 +104,7 @@ TEST_F(FileIOFixture, WriteOutput_OverwritesExistingLBA_ThroughReadCheck) {
 
   // 2. Overwrite with new value
   pc = {"W", 5, "0xBBBB1111", false};
-  CommandBuffer cmdbuffer{file_io};
+  CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Write(pc);
 
@@ -128,7 +128,7 @@ TEST_F(FileIOFixture, ReadNandFile_ValueExists) {
   out.close();
 
   pc = {"R", 7, "", false};
-  CommandBuffer cmdbuffer{file_io};
+  CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Read(pc);
 
@@ -145,7 +145,7 @@ TEST_F(FileIOFixture, ReadNandFile_ValueExists) {
 TEST_F(FileIOFixture, ReadNandFile_ValueNotFound) {
   std::remove("ssd_nand.txt");
   pc = {"R", 99, "", false};
-  CommandBuffer cmdbuffer{file_io};
+  CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Read(pc);
 
@@ -161,7 +161,7 @@ TEST_F(FileIOFixture, ReadNandFile_ValueNotFound) {
 
 TEST_F(FileIOFixture, ReadNandFile_WithErrorFlag) {
   pc = {"R", 10, "", true};
-  CommandBuffer cmdbuffer{file_io};
+  CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.Read(pc);
 

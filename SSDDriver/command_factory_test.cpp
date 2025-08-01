@@ -9,7 +9,7 @@ TEST(CommandFactoryTest, CreateReadCommand) {
 	CommandFactory factory;
   ParsedCommand cmd = {"R", 10, "", false};
   FileIO fileio;
-  CommandBuffer cmdbuffer(fileio);
+  CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(fileio, cmdbuffer);
   ICommand* result = factory.create(cmd.opCode, opHandler);
 
@@ -23,7 +23,7 @@ TEST(CommandFactoryTest, CreateWriteCommand) {
   CommandFactory factory;
   ParsedCommand cmd = {"W", 10, "0xAAAABBBB", false};
   FileIO fileio;
-  CommandBuffer cmdbuffer(fileio);
+  CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(fileio, cmdbuffer);
   ICommand* result = factory.create(cmd.opCode, opHandler);
 
@@ -37,7 +37,7 @@ TEST(CommandFactoryTest, ReturnNullPtr) {
   CommandFactory factory;
   ParsedCommand cmd = {"S", 10, "0xAAAABBBB", false};
   FileIO fileio;
-  CommandBuffer cmdbuffer(fileio);
+  CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(fileio, cmdbuffer);
   ICommand* result = factory.create(cmd.opCode, opHandler);
 
