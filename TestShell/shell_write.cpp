@@ -63,7 +63,7 @@ bool ShellWrite::checkParameterValid(const std::string& input)
 }
 
 void Write::printError() {
-    std::cout << "INVALID COMMAND" << std::endl;
+    std::cout << INVALID_PARAMETER << std::endl;
 }
 
 std::vector<std::string> Write::splitBySpace(const std::string& str) {

@@ -17,7 +17,7 @@ public:
 	std::ostringstream oss;
 	std::streambuf* oldCoutStreamBuf;
 
-	const std::string INVALID_COMMAND = "INVALID COMMAND\n";
+	const std::string INVALID_PARAMETER = "INVALID PARAMETER\n";
 	const std::string WRITE_DONE = "[Write] Done\n";
 	const std::string WRITE_FULL_DONE = "[WriteFull] Done\n";
 
@@ -48,27 +48,27 @@ TEST_F(ShellWriteTestFixture, ssd_write) {
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_Read) {
 	shell_write->Run("read 3 0xAAAABBBB");
-	checkExpectedConsoleOutput(INVALID_COMMAND);
+	checkExpectedConsoleOutput(INVALID_PARAMETER);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_writeLBA) {
 	shell_write->Run("write 100000 0xAAAABBBB");
-	checkExpectedConsoleOutput(INVALID_COMMAND);
+	checkExpectedConsoleOutput(INVALID_PARAMETER);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data) {
 	shell_write->Run("write 22 ZXCVBNMAqp");
-	checkExpectedConsoleOutput(INVALID_COMMAND);
+	checkExpectedConsoleOutput(INVALID_PARAMETER);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data2) {
 	shell_write->Run("write 22 0xZXCVBNMA");
-	checkExpectedConsoleOutput(INVALID_COMMAND);
+	checkExpectedConsoleOutput(INVALID_PARAMETER);
 }
 
 TEST_F(ShellWriteTestFixture, ssd_write_checkparam_invalid_data3) {
 	shell_write->Run("write aa 0xZXCVBNMA");
-	checkExpectedConsoleOutput(INVALID_COMMAND);
+	checkExpectedConsoleOutput(INVALID_PARAMETER);
 }
 
 TEST_F(ShellWriteTestFixture, full_write_success) {
@@ -81,15 +81,15 @@ TEST_F(ShellWriteTestFixture, full_write_success) {
 
 TEST_F(ShellWriteTestFixture, full_write_invalid_param_overHexValue) {
 	full_write->Run("fullwrite 0xQWERTYUI");
-	checkExpectedConsoleOutput(INVALID_COMMAND);
+	checkExpectedConsoleOutput(INVALID_PARAMETER);
 }
 
 TEST_F(ShellWriteTestFixture, full_write_invalid_param_notHexFormat) {
 	full_write->Run("fullwrite 12345678");
-	checkExpectedConsoleOutput(INVALID_COMMAND);
+	checkExpectedConsoleOutput(INVALID_PARAMETER);
 }
 
 TEST_F(ShellWriteTestFixture, full_write_invalid_param_multiParam) {
 	full_write->Run("fullwrite 99 0xABCDFFFF");
-	checkExpectedConsoleOutput(INVALID_COMMAND);
+	checkExpectedConsoleOutput(INVALID_PARAMETER);
 }

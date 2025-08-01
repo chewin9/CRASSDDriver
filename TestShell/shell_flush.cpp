@@ -22,7 +22,7 @@ TEST(FlushTest, checkExtraParamFailCase) {
 	EXPECT_EQ(false, flush.Run("flush ADDPARAMETER"));
 
 	std::string originalStr = oss.str();
-	EXPECT_EQ(originalStr, "INVALID COMMAND\n");
+	EXPECT_EQ(originalStr, "INVALID PARAMETER\n");
 	std::cout.rdbuf(oldCoutStreamBuf);
 }
 
@@ -59,5 +59,5 @@ bool ShellFlush::check_parameter_valid(const std::string& cmd) {
 }
 
 void ShellFlush::print_invalid_command(void) {
-	std::cout << "INVALID COMMAND" << std::endl;
+	std::cout << INVALID_PARAMETER << std::endl;
 }

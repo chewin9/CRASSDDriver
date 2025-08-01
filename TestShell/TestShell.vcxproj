@@ -174,9 +174,7 @@
     <ClCompile Include="shell_write.h" />
     <ClCompile Include="testscript.cpp" />
     <ClCompile Include="testscriptfactory.cpp" />
-    <ClCompile Include="testscript_test.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
-    </ClCompile>
+    <ClCompile Include="testscript_test.cpp" />
     <ClCompile Include="testscript_util.cpp" />
   </ItemGroup>
   <ItemGroup>
