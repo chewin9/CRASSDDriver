@@ -9,6 +9,8 @@
 #include "testscript_util.h"
 #include "testscriptlog.h"
 
+const int HEX = 16;
+
 bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 	//Script
 	int value = 5;
@@ -66,7 +68,7 @@ bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFil
 	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
 		exe->Process(makeReadCommand(readcount));
 		try {
-			IsPass = IsPass && (stoi(file->ReadOutputFile("ssd_output.txt").substr(2, 10)) == std::stoul(value_list[readcount], nullptr, 16));
+			IsPass = IsPass && (stoul(file->ReadOutputFile("ssd_output.txt").substr(2, 10)) == std::stoul(value_list[readcount], nullptr, HEX));
 		}
 		catch (std::exception e) {
 			m_plogger->print(__func__, "Exception");
@@ -82,7 +84,7 @@ void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
 {
 	for (int writecount = 0; writecount < MAX_TEST_AREA; writecount++)
 	{
-		exe->Process(makeWriteCommand(writecount, std::stoul(value_list[writecount], nullptr, 16)));
+		exe->Process(makeWriteCommand(writecount, std::stoul(value_list[writecount], nullptr, HEX)));
 	}
 }
 
