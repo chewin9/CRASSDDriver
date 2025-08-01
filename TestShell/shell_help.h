@@ -12,6 +12,11 @@ public:
 private:
     IProcessExecutor* executor_;
     std::vector<std::string> splitBySpace(const std::string& cmd);
+
+    const int INTRODUCE_COMMAND_SIZE = 1;
+    const int VALID_HELP_COMMAND_SIZE = 2;
+    const int HELP_COMMAND_IDEX = 1;
+
     void crewIntroduce(void);
     void helpCommand(void);
     void writeCommand(void);
