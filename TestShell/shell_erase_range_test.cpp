@@ -65,26 +65,26 @@ TEST_F(ShellEraseRangeTestFixture, TSEraseRange05) {
 
 TEST_F(ShellEraseRangeTestFixture, TSEraseRangeInvalid01) {
 	shellEraseRange->Run("erase 0 -1");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
+	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }
 
 TEST_F(ShellEraseRangeTestFixture, TSEraseRangeInvalid02) {
 	shellEraseRange->Run("erase 0 100");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
+	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }
 
 TEST_F(ShellEraseRangeTestFixture, TSEraseRangeInvalid03) {
 	shellEraseRange->Run("erase 0");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
+	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }
 
 TEST_F(ShellEraseRangeTestFixture, TSEraseRangeInvalid04) {
 	shellEraseRange->Run("erase 0x0 100");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
+	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }
 
 TEST_F(ShellEraseRangeTestFixture, TSEraseRangeInvalid05) {
 	shellEraseRange->Run("erase 0 0x100");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
+	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }
 #endif
