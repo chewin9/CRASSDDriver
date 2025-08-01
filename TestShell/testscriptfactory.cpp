@@ -17,7 +17,7 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 	int start = 0;
 	const int length = 5;
 
-	PRINT("start");
+	PRINT("Start");
 
 	PrintScriptEnter();
 
@@ -90,7 +90,7 @@ void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
 
 bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
 	//Script
-	PRINT("start");
+	PRINT("Start");
 
 	PrintScriptEnter();
 
@@ -118,7 +118,7 @@ bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
 }
 
 bool EraseAndWriteAging::Run(IProcessExecutor* exe, IFile* file) {
-	PRINT("start");
+	PRINT("Start");
 
 	PrintScriptEnter();
 
