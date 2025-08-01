@@ -1,78 +1,73 @@
 #include "ssd_operation_handler.h"
 
+void SsdOperationHandler::Write(const ParsedCommand& cmdInfo) {
+  if (IsErrorExist(cmdInfo)) return;
+
+  if (cmdBuffer.IsFlushNeeded()) {
+    Flush();
+  }
+  cmdBuffer.RegisterBuffer(cmdInfo);
+  return;
+}
+
+bool SsdOperationHandler::Read(const ParsedCommand& cmdInfo) {
+  if (IsErrorExist(cmdInfo)) return false;
+
+  std::string value = cmdBuffer.ReadBuffer(cmdInfo);
+  if (value == "") {
+    value = ReadFromNand(cmdInfo);
+  }
+  fileHandler.WriteValueToOutputFile(value);
+  return true;
+}
+
+bool SsdOperationHandler::Erase(const ParsedCommand& cmdInfo) {
+  if (IsErrorExist(cmdInfo)) return false;
+  if (cmdBuffer.IsFlushNeeded()) {
+    Flush();
+  }
+  cmdBuffer.RegisterBuffer(cmdInfo);
+  return true;
+}
+
 void SsdOperationHandler::Flush() {
 
   std::list<ParsedCommand> bufferList = cmdBuffer.GetCommandBuffer();
   fileHandler.EraseBufferDir();
   fileHandler.InitBufferDir();
+  FlushToNand(bufferList);
 
-  for (auto i : bufferList) {
-    if (i.opCode == "W") {
-      _Write(i);
-    }
-
-    else if (i.opCode == "E") {
-      _Erase(i);
-    }
-
-  }
 }
 
-void SsdOperationHandler::Write(const ParsedCommand& cmdInfo) {
-  if (cmdInfo.errorFlag) {
-    fileHandler.WriteValueToOutputFile("ERROR");
-    return;
-  }
 
-  if (cmdBuffer.IsFlushNeeded()) {
-    Flush();
-  }
-  cmdBuffer.AddBuffer(cmdInfo);
-  return;
-}
-
-void SsdOperationHandler::_Write(const ParsedCommand& cmdInfo) {
+void SsdOperationHandler::WriteToNand(const ParsedCommand& cmdInfo) {
   nandData = fileHandler.LoadDataFromInput();
   UpdateData(cmdInfo);
   fileHandler.SaveData(nandData);
 }
 
-bool SsdOperationHandler::Read(const ParsedCommand& cmdInfo) {
-  if (cmdInfo.errorFlag) {
-    fileHandler.WriteValueToOutputFile("ERROR");
-    return false;
-  }
-
-  std::string value = cmdBuffer.ReadBuffer(cmdInfo);
-  if (value == "") {
-    nandData = fileHandler.LoadDataFromInput();
-    std::string value = ReadData(cmdInfo);
-    fileHandler.WriteValueToOutputFile(value);
-  } else {
-    fileHandler.WriteValueToOutputFile(value);
-  }
-  return true;
-}
-
-bool SsdOperationHandler::Erase(const ParsedCommand& cmdInfo) {
-  if (cmdInfo.errorFlag) {
-    fileHandler.WriteValueToOutputFile("ERROR");
-    return false;
-  }
-  if (cmdBuffer.IsFlushNeeded()) {
-    Flush();
-   
-  }
-  cmdBuffer.AddBuffer(cmdInfo);
-  return true;
-}
-
-void SsdOperationHandler::_Erase(const ParsedCommand& cmdInfo) {
+std::string SsdOperationHandler::ReadFromNand(const ParsedCommand& cmdInfo) {
   nandData = fileHandler.LoadDataFromInput();
+  std::string value = ReadData(cmdInfo);
+  return value;
+}
 
+void SsdOperationHandler::EraseFromNand(const ParsedCommand& cmdInfo) {
+  nandData = fileHandler.LoadDataFromInput();
   EraseData(cmdInfo);
-
   fileHandler.SaveData(nandData);
+}
+
+void SsdOperationHandler::FlushToNand(std::list<ParsedCommand>& bufferList) {
+  for (auto cmd : bufferList) {
+    if (cmd.opCode == "W") {
+      WriteToNand(cmd);
+    }
+
+    else if (cmd.opCode == "E") {
+      EraseFromNand(cmd);
+    }
+  }
 }
 
 std::string SsdOperationHandler::ReadData(const ParsedCommand& cmdInfo) {
@@ -95,13 +90,19 @@ void SsdOperationHandler::UpdateData(const ParsedCommand& cmdInfo) {
   return;
 }
 
-bool SsdOperationHandler::EraseData(const ParsedCommand& cmdInfo) {
+void SsdOperationHandler::EraseData(const ParsedCommand& cmdInfo) {
   for (int i = 0; i < cmdInfo.erase_size; i++) {
     auto it = nandData.find(cmdInfo.lba + i);
     if (it != nandData.end()) {
       nandData.erase(it);
     }
   }
+}
 
-  return true;
+bool SsdOperationHandler::IsErrorExist(const ParsedCommand& cmdInfo) {
+  if (cmdInfo.errorFlag) {
+    fileHandler.WriteValueToOutputFile("ERROR");
+    return true;
+  }
+  return false;
 }
