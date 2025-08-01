@@ -5,7 +5,17 @@
 #include <sstream>
 #include <string>
 #include <vector>
-using namespace std;
+
+void CommandBuffer::RegisterBuffer(const ParsedCommand &cmdInfo) {
+  std::vector<std::string> bufferArr = fileio.LoadCommandBufferOnly();
+  std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
+
+  OptimizeBuffer(bufferList, cmdInfo);
+  bufferArr = ConvertParsedCommandToStringList(bufferList);
+  fileio.ChangeFileName(bufferArr);
+}
+
+
 void CommandBuffer::OptimizeBuffer(std::list<ParsedCommand> &bufferList,
                                    const ParsedCommand &cmd) {
   ParsedCommand cmdInfo = cmd;
@@ -99,14 +109,7 @@ std::list<ParsedCommand> CommandBuffer::GetCommandBuffer() {
   return bufferList;
 }
 
-void CommandBuffer::AddBuffer(const ParsedCommand &cmdInfo) {
-  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
-  std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
 
-  OptimizeBuffer(bufferList, cmdInfo);
-  bufferArr = ConvertParsedCommandToStringList(bufferList);
-  fileio.ChangeFileName(bufferArr);
-}
 
 std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo) {
   std::vector<std::string> bufferArr = fileio.getCommandBuffer();
