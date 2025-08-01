@@ -13,25 +13,7 @@
 #include "shell_help.h"
 #include "process_executor.h"
 #include "File.h"
-
-class CommandInvoker {
-public:
-    void registerCommand(const std::string& name, std::shared_ptr<IShellCommand> command) {
-        commands[name] = command;
-    }
-
-    bool executeCommand(const std::string& name, const std::string& input) {
-        auto it = commands.find(name);
-        if (it != commands.end()) {
-            it->second->Run(input);
-            return true;
-        }
-        return false;
-    }
-
-private:
-    std::unordered_map<std::string, std::shared_ptr<IShellCommand>> commands;
-};
+#include "command_invoker.h"
 
 class Shell {
 public:
