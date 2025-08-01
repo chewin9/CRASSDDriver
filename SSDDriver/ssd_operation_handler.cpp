@@ -24,6 +24,8 @@ void SsdOperationHandler::Write(const ParsedCommand& cmdInfo) {
     return;
   }
 
+  if (cmdInfo.erase_size == 0) return;
+
   if (cmdBuffer.IsFlushNeeded()) {
     Flush();
   }
