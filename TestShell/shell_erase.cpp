@@ -14,8 +14,8 @@ bool ShellErase::Run(const std::string& input) {
 		return false;
 	}
 
-	int startLba = std::stoi(commandVector.at(1));
-	int curSize = std::stoi(commandVector.at(2));
+	int startLba = std::stoi(commandVector.at(START_LBA_INDEX));
+	int curSize = std::stoi(commandVector.at(ERASE_SIZE_INDEX));
 
 	calculateRangeAndPerformSSD(startLba, curSize);
 	return true;
@@ -37,13 +37,18 @@ void Erase::printInvalidCommand() {
 
 bool ShellErase::checkParameterValid(std::vector<std::string> commandVec) {
 	// commandVec : 'earse', 'LBA', 'SIZE'
-	if (commandVec.size() != 3) {
+	if (commandVec.size() != VALID_ERASE_COMMAND_SIZE) {
 		return false;
 	}
-
+	if (isDecimalString(commandVec.at(START_LBA_INDEX)) == false ||
+		isDecimalString(commandVec.at(ERASE_SIZE_INDEX)) == false) {
+		return false;
+	}
 	int inputLba;
+	int inputSize;
 	try {
-		inputLba = std::stoi(commandVec.at(1));
+		inputLba = std::stoi(commandVec.at(START_LBA_INDEX));
+		inputSize = std::stoi(commandVec.at(ERASE_SIZE_INDEX));
 	}
 	catch (const std::invalid_argument&) {
 		return false; // 숫자가 아님
@@ -65,9 +70,9 @@ void Erase::calculateRangeAndPerformSSD(int start, int size) {
 
 	if (size > 0) {
 		// 양수: 위로(증가 방향)
-		while (left > 0 && cur < 100) {
-			int chunk = std::min(10, left);
-			if (cur + chunk > 100) {
+		while (left > MIN_INDEX && cur < MAX_INDEX) {
+			int chunk = std::min(MAX_SSD_ERASE_SIZE, left);
+			if (cur + chunk > MAX_INDEX) {
 				chunk = 100 - cur;
 			}
 			if (chunk <= 0) {
@@ -80,11 +85,11 @@ void Erase::calculateRangeAndPerformSSD(int start, int size) {
 		}
 	}
 	else {
-		while (left > 0 && cur >= 0) {
-			int chunk = std::min(10, left);
-			if (cur - chunk + 1 < 0)
+		while (left > MIN_INDEX && cur >= MIN_INDEX) {
+			int chunk = std::min(MAX_SSD_ERASE_SIZE, left);
+			if (cur - chunk + 1 < MIN_INDEX)
 				chunk = cur + 1;
-			if (chunk <= 0) break;
+			if (chunk <= MIN_INDEX) break;
 
 			performEraseToSSD(cur - chunk + 1, chunk);
 
@@ -102,4 +107,15 @@ void ShellErase::performEraseToSSD(int index, int size) {
 #if(CONSOLE_TEST)
 	std::cout << "(" << index << ", " << size << ")\n";
 #endif
+}
+
+bool Erase::isDecimalString(const std::string& str) {
+	if (str.empty()) return false;
+	size_t i = 0;
+	if (str[0] == '-' || str[0] == '+') i = 1;
+	if (i == str.size()) return false; // 부호만 있는 경우
+	for (; i < str.size(); ++i) {
+		if (!std::isdigit(str[i])) return false;
+	}
+	return true;
 }

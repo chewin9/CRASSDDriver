@@ -21,12 +21,17 @@ bool ShellEraseRange::Run(const std::string& input) {
 }
 
 bool ShellEraseRange::checkParameterValid(std::vector<std::string> commandVec) {
-	if (commandVec.size() != 3) return false;
+	if (commandVec.size() != VALID_ERASE_RANGE_COMMAND_SIZE) return false;
+
+	if (isDecimalString(commandVec.at(START_LBA)) == false ||
+		isDecimalString(commandVec.at(END_LBA)) == false) {
+		return false;
+	}
 	int startLba, endLba;
 
 	try {
-		startLba = std::stoi(commandVec.at(1));
-		endLba = std::stoi(commandVec.at(2));
+		startLba = std::stoi(commandVec.at(START_LBA));
+		endLba = std::stoi(commandVec.at(END_LBA));
 	}
 	catch (const std::invalid_argument&) {
 		return false; // ¼ýÀÚ°¡ ¾Æ´Ô

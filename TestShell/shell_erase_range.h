@@ -15,4 +15,7 @@ private:
 	bool checkParameterValid(std::vector<std::string> commandVec);
 	int getStartLba(int num1, int num2);
 	int getEraseSize(int num1, int num2);
+	const int START_LBA = 1;
+	const int END_LBA = 2;
+	const int VALID_ERASE_RANGE_COMMAND_SIZE = 3;
 };
