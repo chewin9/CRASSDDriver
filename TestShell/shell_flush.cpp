@@ -30,7 +30,7 @@ TEST(FlushTest, checkExtraParamFailCase) {
 bool ShellFlush::Run(const std::string& cmd) {
 
 	if (false == check_parameter_valid(cmd)) {
-		Util::printInvalidCommand();
+		Util::printInvalidParameter();
 		return false;
 	}
 	executor_->Process("SSDDriver.exe F");

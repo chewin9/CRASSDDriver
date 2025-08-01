@@ -9,7 +9,7 @@
 bool ShellWrite::Run(const std::string& input) {
 
     if (false == checkParameterValid(input)) {
-        Util::printInvalidCommand();
+        Util::printInvalidParameter();
         return false;
     }
 

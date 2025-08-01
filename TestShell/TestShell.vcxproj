@@ -173,7 +173,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="shell_write.h" />
     <ClCompile Include="testscript.cpp" />
     <ClCompile Include="testscriptfactory.cpp" />
     <ClCompile Include="testscript_test.cpp" />
@@ -190,6 +189,7 @@
     <ClInclude Include="shell_erase_range.h" />
     <ClInclude Include="shell_full_read.h" />
     <ClInclude Include="shell_util.h" />
+    <ClInclude Include="shell_write.h" />
     <ClInclude Include="testscriptfactory.h" />
     <ClInclude Include="testscriptlog.h" />
     <ClInclude Include="testscript_util.h" />
