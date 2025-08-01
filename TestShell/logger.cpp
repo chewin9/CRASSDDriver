@@ -132,6 +132,10 @@ bool Logger::is_saved_log_file_exists(void)
 #endif 
 }
 
+bool Logger::is_diabled_console_print() {
+    return bUseConsolePrint;
+}
+
 void Logger::disable_console_print(void)
 {
     bUseConsolePrint = false;

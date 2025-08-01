@@ -13,6 +13,8 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 	int start = 0;
 	const int length = 5;
 
+	m_logger.print(__func__, "start " + m_name);
+
 	PrintScriptEnter();
 
 	for (start = 0; start < MAX_ADDR; start += length) {
@@ -25,6 +27,7 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 		}
 	}
 
+	m_logger.print(__func__, "Pass : " + m_name);
 	PrintScriptExit(true);
 
 	return true;
@@ -33,6 +36,8 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 bool PartialLBAWrite::Run(IProcessExecutor* exe, IFile* file)
 {
 	bool IsPass = true;
+
+	m_logger.print(__func__, "start " + m_name);
 
 	PrintScriptEnter();
 
@@ -54,16 +59,19 @@ bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFil
 {
 	bool IsPass = true;
 
+	m_logger.print(__func__, "");
+
 	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
 		exe->Process(makeReadCommand(readcount));
 		try {
 			IsPass = IsPass && (stoi(file->ReadOutputFile("ssd_output.txt").substr(2, 10)) == std::stoul(value_list[readcount], nullptr, 16));
 		}
 		catch (std::exception e) {
+			m_logger.print(__func__, "Exception");
 			return false;
 		}
 	}
-
+	m_logger.print(__func__, m_name + ((IsPass) ? "PASS" : "FAIL"));
 	return IsPass;
 }
 
@@ -79,6 +87,8 @@ bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
 	//Script
 	std::srand(std::time({}));
 	unsigned int data = rand();
+
+	m_logger.print(__func__, "start " + m_name);
 
 	PrintScriptEnter();
 
@@ -98,12 +108,15 @@ bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
 		}
 	}
 
+	m_logger.print(__func__, "Fail " + m_name);
 	PrintScriptExit(true);
 	return true;
 }
 
 bool EraseAndWriteAging::Run(IProcessExecutor* exe, IFile* file) {
 	EraseBlock(exe, 0, 3);
+
+	m_logger.print(__func__, "start " + m_name);
 
 	for (int j = 0;j < 30; j++) {
 		for (int i = 2; i < 98; i+=2) {
@@ -117,6 +130,8 @@ bool EraseAndWriteAging::Run(IProcessExecutor* exe, IFile* file) {
 			}
 		}
 	}
+
+	m_logger.print(__func__, "Pass " + m_name);
 
 	PrintScriptExit(true);
 	return true;
@@ -141,5 +156,7 @@ std::shared_ptr<TestScript> TestScriptFactory::createTestScript(const std::strin
 	if (isMatch(scriptname, "2_PartialLBAWrite") == true) return std::make_shared<PartialLBAWrite>(scriptname, logger);
 	if (isMatch(scriptname, "3_WriteReadAging") == true) return std::make_shared<WriteReadAging>(scriptname, logger);
 	if (isMatch(scriptname, "4_EraseAndWriteAging") == true) return std::make_shared<EraseAndWriteAging>(scriptname, logger);
+
+	logger.print(__func__, "Fail to create testScript : " + scriptname);
 	return nullptr;
 }

@@ -47,7 +47,7 @@ private:
 	//Method
 	IProcessExecutor* execute = nullptr;
 	IFile* file = nullptr;
-	Logger logger;
+	Logger m_logger;
 
 
 	//Variable

@@ -16,11 +16,12 @@ TestScriptRunner::TestScriptRunner(IProcessExecutor* exe, IFile* _file) : execut
 }
 
 std::shared_ptr<TestScript> TestScriptRunner::getScript(const std::string& commandLine) {
-	return TestScriptFactory::getInstance().createTestScript(commandLine, logger);
+	return TestScriptFactory::getInstance().createTestScript(commandLine, m_logger);
 }
 
 bool TestScriptRunner::runScript(const std::string& commandLine) {
-	std::shared_ptr<TestScript> script = TestScriptFactory::getInstance().createTestScript(commandLine, logger);
+	m_logger.print(__func__, "Start runScript");
+	std::shared_ptr<TestScript> script = TestScriptFactory::getInstance().createTestScript(commandLine, m_logger);
 
 	if (script == nullptr) return false;
 
@@ -30,6 +31,7 @@ bool TestScriptRunner::runScript(const std::string& commandLine) {
 bool TestScriptRunner::ScriptRunnerMode(std::string filename, IFile *file) {
 	std::vector<std::string> scripts;
 
+	m_logger.disable_console_print();
 
 	scripts = file->ReadScriptFile(filename);
 
@@ -64,39 +66,61 @@ std::string TestScript::makeEraseCommand(unsigned int addr, unsigned int size) {
 }
 
 void TestScript::WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value) {
+	char buffer[50];  // maximum expected length of the float
+	std::snprintf(buffer, 50, "Write at address : %d value : %08X", startaddr, value);
+	std::string str(buffer);
+
+	m_logger.print(__func__, str);
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeWriteCommand(index, value));
 	}
 }
 
 void TestScript::EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len) {
+	char buffer[50];  // maximum expected length of the float
+	std::snprintf(buffer, 50, "Erase address : %d length : %d", startaddr, len);
+	std::string str(buffer);
+
+	m_logger.print(__func__, str);
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeEraseCommand(index, len));
 	}
 }
 
 void TestScript::PrintScriptEnter() {
-	std::cout << m_name << " ___ Run... ";
+	if (m_logger.is_diabled_console_print()) {
+		std::cout << m_name << " ___ Run... ";
+	}
 }
 
 void TestScript::PrintScriptExit(bool result) {
-	std::string res = (result == true) ? "Pass" : "Fail";
-	std::cout << res << "\n";
+	if (m_logger.is_diabled_console_print()) {
+		std::string res = (result == true) ? "Pass" : "Fail";
+		std::cout << res << "\n";
+	}
 }
 
 bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int startaddr, unsigned int len, unsigned value) {
+	char buffer[100];  // maximum expected length of the float
+	std::snprintf(buffer, 100, " : Read Compare : %d length : %d, value : %08X", startaddr, len, value);
+	std::string str(buffer);
+
+	m_logger.print(__func__, m_name + str);
+
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeReadCommand(index));
 		try {
 			if (std::stoi(file->ReadOutputFile("ssd_output.txt").substr(2, 10), nullptr, 16) != value) {
-
+				m_logger.print(__func__, "Read result is mismatched :" + m_name);
 				return false;
 			}
 		}
 		catch (std::exception e) {
+			m_logger.print(__func__, "Thrown exception : stoi failed");
 			return false;
 		}
 	}
 
+	m_logger.print(__func__, "Read Success");
 	return true;
 }
