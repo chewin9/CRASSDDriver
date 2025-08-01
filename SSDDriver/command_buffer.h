@@ -1,19 +1,44 @@
 #pragma once
-#include "command_parser.h"
-#include "file_io.h"
+#include <list>
 #include <string>
 #include <unordered_map>
-#include <list>
+
+#include "command_parser.h"
+#include "file_io.h"
+using std::list;
+using std::string;
+using std::vector;
+
 class CommandBuffer {
  private:
   FileIO& fileio;
-  std::vector<std::string> ConvertParsedCommandToStringList(const std::list<ParsedCommand>& cmdList);
-  std::list<ParsedCommand> ParsingStringtoBuf(std::vector<std::string>& bufferList);
-  void OptimizeBuffer(std::list<ParsedCommand>& bufferList,const ParsedCommand& cmd);
+  list<ParsedCommand> writeCommandList;
+  list<ParsedCommand> eraseCommandList;
+  list<ParsedCommand> bufferList;
+
+  vector<string> ParsingBuftoString(const list<ParsedCommand>& cmdList);
+  list<ParsedCommand> ParsingStringtoBuf(vector<string>& bufferList);
+  void OptimizeBuffer(const ParsedCommand& cmd);
+  void ConvertWriteZeroValToErase(ParsedCommand& cmd);
+  void DivideWriteAndEraseBuffer();
+  void MergeWriteAndEraseBuffer(ParsedCommand cmdInfo);
+  void OptimizeWriteCommand(ParsedCommand& cmdInfo);
+  void OptimizeEraseCommand(ParsedCommand cmdInfo);
+  void InitializeBuffer();
+  void IgnoreWrite(int& mergedStart, int& mergedEnd);
+  bool MergeErase(int& mergedStart, int& mergedEnd);
+  void RearrangeMergedErase(int& mergedStart, int& mergedEnd);
+
  public:
+  const std::string ERASED_VALUE = "0x00000000";
+  const std::string VALUE_NOT_FIND = "";
+  const std::string WRITE_OPCODE = "W";
+  const std::string ERASE_OPCODE = "E";
+  const int MAX_RANGE = 10;
+
   CommandBuffer(FileIO& fileio) : fileio{fileio} {}
-  void AddBuffer(const ParsedCommand& cmdInfo);
-  std::string ReadBuffer(const ParsedCommand& cmdInfo);
+  void RegisterBuffer(const ParsedCommand& cmdInfo);
+  string ReadBuffer(const ParsedCommand& cmdInfo);
   bool IsFlushNeeded();
-  std::list<ParsedCommand> GetCommandBuffer();
+  list<ParsedCommand> GetCommandBuffer();
 };
