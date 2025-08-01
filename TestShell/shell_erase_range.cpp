@@ -10,7 +10,7 @@ bool ShellEraseRange::Run(const std::string& input) {
 	std::vector<std::string> commandVector = splitBySpace(input);
 
 	if (checkParameterValid(commandVector) == false) {
-		printInvalidCommand();
+		printInvalidParameter();
 		return false;
 	}
 	int startLba = getStartLba(std::stoi(commandVector.at(1)), std::stoi(commandVector.at(2)));

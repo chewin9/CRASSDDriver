@@ -14,7 +14,7 @@ bool ShellFullRead::Run(const std::string& input) {
 	std::vector<std::string> commandVector = splitBySpace(input);
 
 	if (checkParameterValid(commandVector) == false) {
-		printInvalidCommand();
+		printInvalidParameter();
 		return false;
 	}
 

@@ -10,7 +10,7 @@ bool ShellErase::Run(const std::string& input) {
 	std::vector<std::string> commandVector = splitBySpace(input);
 
 	if (checkParameterValid(commandVector) == false) {
-		printInvalidCommand();
+		printInvalidParameter();
 		return false;
 	}
 
@@ -31,8 +31,8 @@ std::vector<std::string> Erase::splitBySpace(const std::string& cmd) {
 	return tokens;
 }
 
-void Erase::printInvalidCommand() {
-	std::cout << INVALID_COMMAND << "\n";
+void Erase::printInvalidParameter() {
+	std::cout << INVALID_PARAMETER << "\n";
 }
 
 bool ShellErase::checkParameterValid(std::vector<std::string> commandVec) {
@@ -73,7 +73,7 @@ void Erase::calculateRangeAndPerformSSD(int start, int size) {
 		while (left > MIN_INDEX && cur < MAX_INDEX) {
 			int chunk = std::min(MAX_SSD_ERASE_SIZE, left);
 			if (cur + chunk > MAX_INDEX) {
-				chunk = 100 - cur;
+				chunk = MAX_INDEX - cur;
 			}
 			if (chunk <= 0) {
 				break;

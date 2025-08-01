@@ -11,7 +11,7 @@ bool ShellRead::Run(const std::string& input) {
 	std::vector<std::string> commandVector = splitBySpace(input);
 
 	if (checkParameterValid(commandVector) == false) {
-		printInvalidCommand();
+		printInvalidParameter();
 		return false;
 	}
 
@@ -40,8 +40,8 @@ std::string Read::getSsdOutputData(void) {
 	return ret;
 }
 
-void Read::printInvalidCommand() {
-	std::cout << INVALID_COMMAND << "\n";
+void Read::printInvalidParameter() {
+	std::cout << INVALID_PARAMETER << "\n";
 }
 
 std::vector<std::string> Read::splitBySpace(const std::string& cmd) {

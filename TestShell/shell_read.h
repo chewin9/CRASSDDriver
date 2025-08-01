@@ -8,9 +8,9 @@ class Read {
 public:
     const int MIN_INDEX = 0;
     const int MAX_INDEX = 100;
-    const std::string INVALID_COMMAND = "INVALID COMMAND";
+    const std::string INVALID_PARAMETER= "INVALID PARAMETER";
     const std::string SSD_OUTPUT_FILE = "ssd_output.txt";
-    void printInvalidCommand(void);
+    void printInvalidParameter(void);
     std::string getSsdOutputData(void);
     std::vector<std::string> splitBySpace(const std::string& cmd);
     bool isDecimalString(const std::string& str);
