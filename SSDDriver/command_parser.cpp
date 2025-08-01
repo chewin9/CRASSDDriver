@@ -1,5 +1,4 @@
 #include "command_parser.h"
-
 #include <stdexcept>
 
 void CommandParser::CheckException(int argc, char* argv[],

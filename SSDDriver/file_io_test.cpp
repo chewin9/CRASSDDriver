@@ -1,7 +1,5 @@
-#pragma once
-#include <gmock/gmock.h>
 #include "file_io.h"
-#include "file_io_interface.h"
+#include "IFileIO.h"
 
 #include <cstdio>
 #include <fstream>
@@ -9,6 +7,8 @@
 #include <filesystem>
 
 #include "command_parser.h"
+#include "gmock/gmock.h"
+#include <gtest/gtest.h>
 #include "ssd_operation_handler.h"
 
 using namespace ::testing;
@@ -21,14 +21,16 @@ class FileIOFixture : public Test {
 
   void SetUp() override {
       std::error_code ec;
-      fs::remove_all("buffer", ec);
-      std::remove("ssd_output.txt");
+      fs::remove_all(FileIOInterface::SSD_COMMAND_BUFFER_FOLDER, ec);
+      std::remove(FileIOInterface::SSD_OUTPUT_FILE.c_str());
+      std::remove(FileIOInterface::SSD_NAND_FILE.c_str());
   }
 
   void TearDown() override {
       std::error_code ec;
-      fs::remove_all("buffer", ec);
-      std::remove("ssd_output.txt");
+      fs::remove_all(FileIOInterface::SSD_COMMAND_BUFFER_FOLDER, ec);
+      std::remove(FileIOInterface::SSD_OUTPUT_FILE.c_str());
+      std::remove(FileIOInterface::SSD_NAND_FILE.c_str());
   }
 };
 
@@ -36,20 +38,12 @@ class FileIOMock : public FileIOInterface {
 public:
     MOCK_METHOD((std::unordered_map<int, std::string>), LoadDataFromInput, (), (override));
     MOCK_METHOD(void, WriteValueToOutputFile, (const std::string& str), (override));
-    MOCK_METHOD(void, SaveData, ((const std::unordered_map<int, std::string>&entries)), (override));
+    MOCK_METHOD(void, SaveData, ((const std::unordered_map<int, std::string>& entries)), (override));
     MOCK_METHOD(void, InitBufferDir, (), (override));
     MOCK_METHOD(void, EraseBufferDir, (), (override));
     MOCK_METHOD(void, ChangeFileName, (const std::vector<std::string>& in_command), (override));
-    MOCK_METHOD(std::vector<std::string>, getCommandBuffer, (), (override));
+    MOCK_METHOD((std::vector<std::string>), getCommandBuffer, (), (override));
 };
-
-TEST_F(FileIOFixture, WriteErrorOutputMock) {
-    FileIOMock mock;
-    EXPECT_CALL(mock, WriteValueToOutputFile("ERROR"))
-        .Times(1);
-    mock.WriteValueToOutputFile("ERROR");
-}
-
 
 TEST_F(FileIOFixture, WriteErrorOutput) {
   file_io.WriteValueToOutputFile("ERROR");
@@ -208,4 +202,52 @@ TEST_F(FileIOFixture, CheckChangedFileName) {
     for (size_t i = 0; i < in_command.size(); ++i) {
         EXPECT_EQ(load_command[i], in_command[i]);
     }
+}
+
+
+class FileIOMockTest : public Test {
+protected:
+    FileIOMock     mock;
+    CommandBuffer  cmdBuf{ mock };
+    SsdOperationHandler handler{ mock, cmdBuf };
+    ParsedCommand  pc;
+};
+
+TEST_F(FileIOMockTest, Write_WithErrorFlag_WritesErrorOnly) {
+    pc = { "W", 1, "", true, 0 };
+
+    EXPECT_CALL(mock, WriteValueToOutputFile("ERROR")).Times(1);
+    EXPECT_CALL(mock, LoadDataFromInput()).Times(0);
+    EXPECT_CALL(mock, SaveData(_)).Times(0);
+
+    handler.Write(pc);
+}
+
+TEST_F(FileIOMockTest, Read_ValueExists_WritesValue) {
+    pc = { "R", 7, "", false, 0 };
+
+    EXPECT_CALL(mock, LoadDataFromInput())
+        .WillOnce(Return(std::unordered_map<int, std::string>{{7, "VAL"}}));
+    EXPECT_CALL(mock, WriteValueToOutputFile("VAL")).Times(1);
+
+    handler.Read(pc);
+}
+
+TEST_F(FileIOMockTest, Read_ValueNotFound_WritesDefault) {
+    pc = { "R", 9, "", false, 0 };
+
+    EXPECT_CALL(mock, LoadDataFromInput())
+        .WillOnce(Return(std::unordered_map<int, std::string>{}));
+    EXPECT_CALL(mock, WriteValueToOutputFile("0x00000000")).Times(1);
+
+    handler.Read(pc);
+}
+
+TEST_F(FileIOMockTest, Read_WithErrorFlag_WritesError) {
+    pc = { "R", 5, "", true, 0 };
+
+    EXPECT_CALL(mock, WriteValueToOutputFile("ERROR")).Times(1);
+    EXPECT_CALL(mock, LoadDataFromInput()).Times(0);
+
+    handler.Read(pc);
 }
