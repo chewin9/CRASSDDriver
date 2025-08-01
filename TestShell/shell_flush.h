@@ -12,4 +12,6 @@ private:
 	bool check_parameter_valid(const std::string& cmd);
 	void print_invalid_command(void);
 	IProcessExecutor* executor_;
+	const std::string INVALID_PARAMETER = "INVALID PARAMETER";
+
 };

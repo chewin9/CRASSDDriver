@@ -17,7 +17,7 @@ public:
 	std::ostringstream oss;
 	std::streambuf* oldCoutStreamBuf;
 
-	const std::string INVALID_COMMAND = "INVALID COMMAND\n";
+	const std::string INVALID_COMMAND = "INVALID PARAMETER\n";
 	const std::string WRITE_DONE = "[Write] Done\n";
 	const std::string WRITE_FULL_DONE = "[WriteFull] Done\n";
 

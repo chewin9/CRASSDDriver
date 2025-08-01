@@ -38,7 +38,8 @@ TEST_F(ShellHelpTestFixture, CrewIntroducePrintsCorrectOutput) {
 		"  -help fullwrite\n"
 		"  -help fullread\n"
 		"  -help erase\n"
-		"  -help erase_range\n";
+		"  -help erase_range\n"
+		"  -help flush\n";
 	checkExpectedConsoleOutput(expected);
 }
 
