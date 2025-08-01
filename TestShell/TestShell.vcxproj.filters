@@ -29,6 +29,7 @@
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="logger_test.cpp" />
     <ClCompile Include="shell_flush.cpp" />
+    <ClCompile Include="testscript_util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
@@ -69,5 +70,6 @@
     <ClInclude Include="shell_erase_range.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="shell_flush.h" />
+    <ClInclude Include="testscript_util.h" />
   </ItemGroup>
 </Project>

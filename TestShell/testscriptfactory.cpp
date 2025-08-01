@@ -6,6 +6,7 @@
 #include <ctime>
 #include <memory>
 #include "File.h"
+#include "testscript_util.h"
 
 bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 	//Script
@@ -77,8 +78,7 @@ void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
 
 bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
 	//Script
-	std::srand(std::time({}));
-	unsigned int data = rand();
+	unsigned int data = TestScriptUtil::GetInstance().GetRandomValue();
 
 	PrintScriptEnter();
 

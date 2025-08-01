@@ -3,6 +3,10 @@
 #include "test.h"
 #include "File.h"
 #include <vector>
+#include <string>
+#include <sstream>
+#include <iomanip>
+#include "testscript_util.h"
 
 using namespace testing;
 
@@ -26,13 +30,13 @@ public:
 				.Times(30);
 		}
 
-		count = 0;
+		repeatcount = 0;
 
 		EXPECT_CALL(mockfile, ReadOutputFile(_))
 			.Times(150)  // 정확한 호출 횟수
 			.WillRepeatedly(Invoke([&]() {
-			int value = (count % 5) + 1;  // 1 → 5 반복
-			count++;
+			int value = (repeatcount % 5) + 1;  // 1 → 5 반복
+			repeatcount++;
 
 			std::string temp = "0x0000000" + std::to_string(value);
 			return temp;
@@ -58,7 +62,7 @@ public:
 	{
 		EXPECT_CALL(mockfile, ReadOutputFile(_)).WillRepeatedly(Return(value));
 	}
-	int count = 0;
+
 protected:
 	NiceMock<MockProcessExecutor> mock;
 	NiceMock<MockFile> mockfile;
@@ -70,6 +74,7 @@ private:
 	std::vector<std::string> value_list = { "0x00000001", "0x00000002", "0x00000003","0x00000004","0x00000005" };
 	const int MAX_TEST_BLOCK = 5;
 	const std::string SSD_DRIVER_NAME = "SSDDriver.exe";
+	int repeatcount = 0;
 };
 
 TEST_F(TestScriptTestFixture, 1_FullWriteAndReadCompare) {
@@ -122,10 +127,12 @@ TEST_F(TestScriptTestFixture, 2_CmdTestFail) {
 }
 
 TEST_F(TestScriptTestFixture, 3_WriteReadAgingNormal) {
-	CheckResult(true, "3_WriteReadAgingNormal");
+	SetUpReadOutputReapeat(TestScriptUtil::GetInstance().GetRandomValueToString());
+	CheckResult(true, "3_WriteReadAging");
 }
 
 TEST_F(TestScriptTestFixture, 3_WriteReadAgingShort) {
+	SetUpReadOutputReapeat(TestScriptUtil::GetInstance().GetRandomValueToString());
 	CheckResult(true, "3_");
 }
 
