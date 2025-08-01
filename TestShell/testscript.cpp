@@ -102,7 +102,7 @@ void TestScript::PrintScriptExit(bool result) {
 
 bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int startaddr, unsigned int len, unsigned value) {
 	char buffer[100];  // maximum expected length of the float
-	std::snprintf(buffer, 100, " : Read Compare : %d length : %d, value : %08X", startaddr, len, value);
+	std::snprintf(buffer, 100, "%s : %d length : %d, value : %08X", __func__, startaddr, len, value);
 	std::string str(buffer);
 
 	m_logger.print(__func__, m_name + str);
