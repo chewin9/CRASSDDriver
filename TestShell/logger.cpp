@@ -42,6 +42,11 @@ void Logger::write_to_file(const std::string& str) {
 
     if (true == is_file_over_10k(filename))
     {
+        // check if log directory exist
+        if (!(fs::exists("log") && fs::is_directory("log"))) {
+            fs::create_directories("log");
+        }
+        
         move_saved_log_file();
 
         move_file_to_log(filename);
@@ -64,7 +69,7 @@ void Logger::move_saved_log_file(void)
     // check if other .log file exist,
     if (true == is_saved_log_file_exists())
     {
-        std::string dir = ".";
+        std::string dir = "log";
         for (const auto& entry : fs::directory_iterator(dir)) {
             if (entry.is_regular_file() && entry.path().extension() == ".log") {
                 fs::path old_path = entry.path();
@@ -110,7 +115,7 @@ void Logger::save_last_time_printed(std::string& timeprint)
 
 std::string Logger::get_saved_log_file_name(void)
 {
-    std::string log_file_name = "until_" + lastTimePrinted + ".log";
+    std::string log_file_name = "log/until_" + lastTimePrinted + ".log";
     std::replace(log_file_name.begin(), log_file_name.end(), ':', '_');
     return log_file_name;
 }

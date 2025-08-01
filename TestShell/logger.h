@@ -3,7 +3,10 @@
 
 class Logger {
 public:
-	Logger() : bUseConsolePrint{ true }, lastTimePrinted{ "" } {}
+	static Logger& getInstance() {
+		static Logger instance;
+		return instance;
+	}
 	void print(const std::string& function_str, const std::string& message);
 	void save_last_time_printed(std::string& timeprint);
 	void disable_console_print(void);
@@ -15,6 +18,9 @@ public:
 
 	void set_log_file_name(const std::string& name);
 	void set_log_default_file_name(void);
+protected: 
+	Logger() : bUseConsolePrint{ true }, lastTimePrinted{ "" } {}
+
 private:
 	void write_to_file(const std::string& str);
 	void move_saved_log_file(void);
