@@ -163,6 +163,5 @@ std::shared_ptr<TestScript> TestScriptFactory::createTestScript(const std::strin
 	if (isMatch(scriptname, "3_WriteReadAging") == true) return std::make_shared<WriteReadAging>("3_WriteReadAging");
 	if (isMatch(scriptname, "4_EraseAndWriteAging") == true) return std::make_shared<EraseAndWriteAging>("4_EraseAndWriteAging");
 
-	PRINT_NO_NAME("Fail to create testScript : " + scriptname);
 	return nullptr;
 }
