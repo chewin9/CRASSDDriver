@@ -73,8 +73,8 @@ void TestScript::WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsig
 	std::string str(buffer);
 
 	PRINT_NO_NAME(str);
-	for (unsigned int index = startaddr; index < startaddr + len; index++) {
-		exe->Process(makeWriteCommand(index, value));
+	for (unsigned int cur_addr = startaddr; cur_addr < startaddr + len; cur_addr++) {
+		exe->Process(makeWriteCommand(cur_addr, value));
 	}
 }
 
@@ -84,8 +84,8 @@ void TestScript::EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsig
 	std::string str(buffer);
 
 	PRINT(str);
-	for (unsigned int index = startaddr; index < startaddr + len; index++) {
-		exe->Process(makeEraseCommand(index, len));
+	for (unsigned int cur_addr = startaddr; cur_addr < startaddr + len; cur_addr++) {
+		exe->Process(makeEraseCommand(cur_addr, len));
 	}
 }
 
@@ -99,8 +99,8 @@ bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int st
 
 	PRINT(str);
 
-	for (unsigned int index = startaddr; index < startaddr + len; index++) {
-		exe->Process(makeReadCommand(index));
+	for (unsigned int cur_addr = startaddr; cur_addr < startaddr + len; cur_addr++) {
+		exe->Process(makeReadCommand(cur_addr));
 		try {
 			if (std::stoul(file->ReadOutputFile("ssd_output.txt").substr(outStartPos, outEndPos), nullptr, HEX) != value) {
 				PRINT("Read result is mismatched :");
