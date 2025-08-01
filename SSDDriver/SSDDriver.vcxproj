@@ -134,11 +134,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="command_runner.cpp" />
+    <ClCompile Include="command_runner.h" />
     <ClCompile Include="command_buffer.cpp" />
+    <ClCompile Include="command_creator.h" />
     <ClCompile Include="command_factory.cpp" />
     <ClCompile Include="command_factory_test.cpp" />
     <ClCompile Include="command_parser.cpp" />
     <ClCompile Include="command_parser_test.cpp" />
+    <ClCompile Include="command_registrtaion.cpp" />
     <ClCompile Include="erasecommand.cpp" />
     <ClCompile Include="erasecommand_test.cpp" />
     <ClCompile Include="file_io_test.cpp" />

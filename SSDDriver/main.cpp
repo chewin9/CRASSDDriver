@@ -1,6 +1,4 @@
-#include "ICommand.h"
-#include "command_factory.h"
-#include "command_parser.h"
+#include "command_runner.h"
 #include "gmock/gmock.h"
 
 #if (_DEBUG)
@@ -10,15 +8,8 @@ int main(void) {
 }
 #else
 int main(int argc, char* argv[]) {
-  CommandParser parser;
-  FileIO fileio;
-
-  ParsedCommand cmdInfo = parser.ParseCommand(argc, argv);
-  CommandBuffer cmdBuffer;
-  SsdOperationHandler opHandler(fileio, cmdBuffer);
-  ICommand* command = CommandFactory::create(cmdInfo.opCode, opHandler);
-  if (command == nullptr) return 0;
-  command->Execute(cmdInfo);
-  delete command;
+  CommandRunner runner;
+  runner.Run(argc, argv);
+  return 0;
 }
 #endif

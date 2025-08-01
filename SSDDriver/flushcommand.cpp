@@ -10,10 +10,3 @@ bool FlushCommand::Execute(const ParsedCommand&) {
 ICommand* CreateFlushCommand(SsdOperationHandler& h) {
   return new FlushCommand(h);
 }
-
-namespace {
-bool dummy = [] {
-  CommandFactory::registerCommand("F", CreateFlushCommand);
-  return true;
-}();
-}  // namespace

@@ -10,10 +10,3 @@ bool EraseCommand::Execute(const ParsedCommand& cmdInfo) {
 ICommand* CreateEraseCommand(SsdOperationHandler& h) {
   return new EraseCommand(h);
 }
-
-namespace {
-bool dummy = [] {
-  CommandFactory::registerCommand("E", CreateEraseCommand);
-  return true;
-}();
-}  // namespace

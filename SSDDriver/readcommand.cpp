@@ -10,10 +10,3 @@ bool ReadCommand::Execute(const ParsedCommand& cmdInfo) {
 ICommand* CreateReadCommand(SsdOperationHandler& h) {
   return new ReadCommand(h);
 }
-
-namespace {
-bool dummy = [] {
-  CommandFactory::registerCommand("R", CreateReadCommand);
-  return true;
-}();
-}  // namespace
