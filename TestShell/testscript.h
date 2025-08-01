@@ -8,6 +8,7 @@
 #include "iprocess_executor.h"
 #include "File.h"
 #include "logger.h"
+#include "ssdaccessor.h"
 
 const int MAX_ADDR = 99;
 
@@ -20,17 +21,10 @@ public:
 
 	virtual bool Run(IProcessExecutor* exe, IFile* file) = 0;
 	std::string GetName();
-	std::string makeWriteCommand(unsigned int addr, unsigned int value);
-	std::string makeReadCommand(unsigned int addr);
-	std::string makeEraseCommand(unsigned int addr, unsigned int size);
-	void WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len, unsigned int value);
-	void EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsigned int len);
-	bool ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int startaddr, unsigned int len, unsigned value);
-	std::string GetSSDName() { return SSD_NAME; }
 
 protected:
 	std::string m_name = nullptr;
-	const std::string SSD_NAME = "SSDDriver.exe";
+	SsdAccessor accessor;
 	void PrintScriptEnter();
 	void PrintScriptExit(bool result);
 };
