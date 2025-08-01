@@ -1,15 +1,6 @@
 #pragma once
 #include "testscript.h"
 
-class DummyScript : public TestScript {
-public:
-	DummyScript(std::string name, Logger& logger) : TestScript(name, logger) {}
-	bool Run(IProcessExecutor* exe, IFile* file) override {
-		//Script
-		return false;
-	}
-};
-
 class FullWriteAndReadCompare : public TestScript {
 public:
 	FullWriteAndReadCompare(std::string name, Logger& logger) : TestScript(name, logger) {}
