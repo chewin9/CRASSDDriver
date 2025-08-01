@@ -23,8 +23,8 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 
 	for (start = 0; start < MAX_ADDR; start += length) {
 		for (int index = start;index < start + length; index++) {
-			WriteBlock(exe, start, length, value);
-			if (ReadCompare(exe, file, start, length, value) == false) {
+			accessor.WriteBlock(exe, start, length, value);
+			if (accessor.ReadCompare(exe, file, start, length, value) == false) {
 				PrintScriptExit(false);
 				return false;
 			}
@@ -62,11 +62,12 @@ bool PartialLBAWrite::Run(IProcessExecutor* exe, IFile* file)
 bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFile* file)
 {
 	bool IsPass = true;
+	CommandBuilder command;
 
 	PRINT("");
 
 	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
-		exe->Process(makeReadCommand(readcount));
+		exe->Process(command.makeReadCommand(readcount));
 		try {
 			IsPass = IsPass && (stoul(file->ReadOutputFile("ssd_output.txt").substr(2, 10)) == std::stoul(value_list[readcount], nullptr, HEX));
 		}
@@ -82,9 +83,10 @@ bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFil
 
 void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
 {
+	CommandBuilder command;
 	for (int writecount = 0; writecount < MAX_TEST_AREA; writecount++)
 	{
-		exe->Process(makeWriteCommand(writecount, std::stoul(value_list[writecount], nullptr, HEX)));
+		exe->Process(command.makeWriteCommand(writecount, std::stoul(value_list[writecount], nullptr, HEX)));
 	}
 }
 
@@ -98,21 +100,21 @@ bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
 
 	for (int count = 0; count < 200; count++) {
 
-		WriteBlock(exe, 0, 1, data);
+		accessor.WriteBlock(exe, 0, 1, data);
 
-		if (ReadCompare(exe, file, 0, 1, data) == false) {
+		if (accessor.ReadCompare(exe, file, 0, 1, data) == false) {
 			PrintScriptExit(false);
 			return false;
 		}
 
-		WriteBlock(exe, 99, 1, data);
-		if (ReadCompare(exe, file, 99, 1, data) == false) {
+		accessor.WriteBlock(exe, 99, 1, data);
+		if (accessor.ReadCompare(exe, file, 99, 1, data) == false) {
 			PrintScriptExit(false);
 			return false;
 		}
 	}
 
-	PRINT("Fail");
+	PRINT("Pass");
 	PrintScriptExit(true);
 	return true;
 }
@@ -122,15 +124,15 @@ bool EraseAndWriteAging::Run(IProcessExecutor* exe, IFile* file) {
 
 	PrintScriptEnter();
 
-	EraseBlock(exe, 0, 3);
+	accessor.EraseBlock(exe, 0, 3);
 
 	for (int j = 0;j < 30; j++) {
 		for (int i = 2; i < 98; i+=2) {
-			WriteBlock(exe, i, 1, 5);
-			WriteBlock(exe, i, 1, 9);
-			EraseBlock(exe, i, 3);
+			accessor.WriteBlock(exe, i, 1, 5);
+			accessor.WriteBlock(exe, i, 1, 9);
+			accessor.EraseBlock(exe, i, 3);
 
-			if (ReadCompare(exe, file, i, 3, 0) == false) {
+			if (accessor.ReadCompare(exe, file, i, 3, 0) == false) {
 				PrintScriptExit(false);
 				return false;
 			}
