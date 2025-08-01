@@ -100,8 +100,6 @@ void SsdOperationHandler::EraseData(const ParsedCommand& cmdInfo) {
     }
   }
 }
-  return true;
-}
 
 bool SsdOperationHandler::IsErrorExist(const ParsedCommand& cmdInfo) {
   if (cmdInfo.errorFlag) {
