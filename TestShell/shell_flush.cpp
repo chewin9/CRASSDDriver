@@ -23,7 +23,7 @@ TEST(FlushTest, checkExtraParamFailCase) {
 	EXPECT_EQ(false, flush.Run("flush ADDPARAMETER"));
 
 	std::string originalStr = oss.str();
-	EXPECT_EQ(originalStr, "INVALID COMMAND\n");
+	EXPECT_EQ(originalStr, "INVALID PARAMETER\n");
 	std::cout.rdbuf(oldCoutStreamBuf);
 }
 

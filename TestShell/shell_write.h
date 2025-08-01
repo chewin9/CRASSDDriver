@@ -9,6 +9,7 @@ class Write {
 public:
     const int START_LBA = 0;
     const int END_LBA = 100;
+    const std::string INVALID_PARAMETER = "INVALID PARAMETER";
 
     bool convertStoI(const std::string& str, int& val);
 

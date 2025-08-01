@@ -60,7 +60,7 @@ void Erase::calculateRangeAndPerformSSD(int start, int size) {
 		while (left > MIN_INDEX && cur < MAX_INDEX) {
 			int chunk = std::min(MAX_SSD_ERASE_SIZE, left);
 			if (cur + chunk > MAX_INDEX) {
-				chunk = 100 - cur;
+				chunk = MAX_INDEX - cur;
 			}
 			if (chunk <= 0) {
 				break;

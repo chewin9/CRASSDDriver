@@ -1,14 +1,6 @@
 #pragma once
 
-#include "shell_read.h"
-#include "shell_write.h"
-#include "shell_full_write.h"
-#include "shell_full_read.h"
-#include "shell_flush.h"
-#include "shell_erase.h"
-#include "shell_erase_range.h"
 #include "testscript.h"
-#include "shell_help.h"
 #include "process_executor.h"
 #include "File.h"
 
@@ -25,12 +17,12 @@ public:
     }
 
     int Run(std::string arg = "");
-    virtual string get_command(string& input);
+    virtual std::string get_command(std::string& input);
+    IProcessExecutor* Get_Executor() { return executor; }
 
 private:
     IProcessExecutor* executor;
     File testscriptfile;
-
     TestScriptRunner* script_runner;
 
     std::tuple<std::string, std::string> parse_command(const std::string& input);

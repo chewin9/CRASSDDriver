@@ -63,5 +63,5 @@ TEST_F(ShellFullReadTestFixture, TSFullRead01) {	//
 
 TEST_F(ShellFullReadTestFixture, TSFullRead02) {	//
 	shellFullRead->Run("fullread 1");
-	checkExpectedConsoleOutput("INVALID COMMAND\n");
+	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }

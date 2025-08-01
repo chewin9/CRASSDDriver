@@ -17,7 +17,7 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 	int start = 0;
 	const int length = 5;
 
-	PRINT("start");
+	PRINT("Start");
 
 	PrintScriptEnter();
 
@@ -31,7 +31,7 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 		}
 	}
 
-	m_plogger->print(__func__, "Pass : " + m_name);
+	PRINT("Pass");
 	PrintScriptExit(true);
 
 	return true;
@@ -63,7 +63,7 @@ bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFil
 {
 	bool IsPass = true;
 
-	m_plogger->print(__func__, "");
+	PRINT("");
 
 	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
 		exe->Process(makeReadCommand(readcount));
@@ -71,7 +71,7 @@ bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFil
 			IsPass = IsPass && (stoul(file->ReadOutputFile("ssd_output.txt").substr(2, 10)) == std::stoul(value_list[readcount], nullptr, HEX));
 		}
 		catch (std::exception e) {
-			m_plogger->print(__func__, "Exception");
+			PRINT("Exception");
 			return false;
 		}
 	}
@@ -90,7 +90,7 @@ void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
 
 bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
 	//Script
-	PRINT("start");
+	PRINT("Start");
 
 	PrintScriptEnter();
 
@@ -118,7 +118,7 @@ bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {
 }
 
 bool EraseAndWriteAging::Run(IProcessExecutor* exe, IFile* file) {
-	PRINT("start");
+	PRINT("Start");
 
 	PrintScriptEnter();
 
@@ -157,12 +157,12 @@ bool TestScriptFactory::isMatch(std::string input, std::string scriptname) {
 }
 
 
-std::shared_ptr<TestScript> TestScriptFactory::createTestScript(const std::string& scriptname, Logger* logger) {
-	if (isMatch(scriptname, "1_FullWriteAndReadCompare") == true) return std::make_shared<FullWriteAndReadCompare>("1_FullWriteAndReadCompare", logger);
-	if (isMatch(scriptname, "2_PartialLBAWrite") == true) return std::make_shared<PartialLBAWrite>("2_PartialLBAWrite", logger);
-	if (isMatch(scriptname, "3_WriteReadAging") == true) return std::make_shared<WriteReadAging>("3_WriteReadAging", logger);
-	if (isMatch(scriptname, "4_EraseAndWriteAging") == true) return std::make_shared<EraseAndWriteAging>("4_EraseAndWriteAging", logger);
+std::shared_ptr<TestScript> TestScriptFactory::createTestScript(const std::string& scriptname) {
+	if (isMatch(scriptname, "1_FullWriteAndReadCompare") == true) return std::make_shared<FullWriteAndReadCompare>("1_FullWriteAndReadCompare");
+	if (isMatch(scriptname, "2_PartialLBAWrite") == true) return std::make_shared<PartialLBAWrite>("2_PartialLBAWrite");
+	if (isMatch(scriptname, "3_WriteReadAging") == true) return std::make_shared<WriteReadAging>("3_WriteReadAging");
+	if (isMatch(scriptname, "4_EraseAndWriteAging") == true) return std::make_shared<EraseAndWriteAging>("4_EraseAndWriteAging");
 
-	logger->print(__func__, "Fail to create testScript : " + scriptname);
+	PRINT_NO_NAME(__func__, "Fail to create testScript : " + scriptname);
 	return nullptr;
 }

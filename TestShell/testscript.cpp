@@ -2,8 +2,6 @@
 #include <string>
 #include <exception>
 #include <iostream>
-#include <random>
-#include <ctime>
 #include <vector>
 #include "File.h"
 #include "testscriptfactory.h"
@@ -15,8 +13,7 @@ const int INVALID_INDEX = 0;
 
 TestScriptRunner::TestScriptRunner(IProcessExecutor* exe, IFile* _file) : execute(exe), file(_file) {
 #if defined (_DEBUG)
-	m_plogger = &Logger::getInstance();
-	m_plogger->disable_console_print();
+	Logger::getInstance().disable_console_print();
 #endif
 }
 
@@ -25,12 +22,12 @@ std::string TestScript::GetName() {
 }
 
 std::shared_ptr<TestScript> TestScriptRunner::getScript(const std::string& commandLine) {
-	return TestScriptFactory::getInstance().createTestScript(commandLine, m_plogger);
+	return TestScriptFactory::getInstance().createTestScript(commandLine);
 }
 
 bool TestScriptRunner::runScript(const std::string& commandLine) {
 	PRINT_NO_NAME("Start runScript");
-	std::shared_ptr<TestScript> script = TestScriptFactory::getInstance().createTestScript(commandLine, m_plogger);
+	std::shared_ptr<TestScript> script = TestScriptFactory::getInstance().createTestScript(commandLine);
 
 	if (script == nullptr) return false;
 
@@ -40,7 +37,7 @@ bool TestScriptRunner::runScript(const std::string& commandLine) {
 bool TestScriptRunner::ScriptRunnerMode(std::string filename, IFile *file) {
 	std::vector<std::string> scripts;
 
-	m_plogger->disable_console_print();
+	Logger::getInstance().disable_console_print();
 
 	scripts = file->ReadScriptFile(filename);
 
@@ -76,8 +73,8 @@ void TestScript::WriteBlock(IProcessExecutor* exe, unsigned int startaddr, unsig
 	std::string str(buffer);
 
 	PRINT_NO_NAME(str);
-	for (unsigned int index = startaddr; index < startaddr + len; index++) {
-		exe->Process(makeWriteCommand(index, value));
+	for (unsigned int cur_addr = startaddr; cur_addr < startaddr + len; cur_addr++) {
+		exe->Process(makeWriteCommand(cur_addr, value));
 	}
 }
 
@@ -87,8 +84,8 @@ void TestScript::EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsig
 	std::string str(buffer);
 
 	PRINT(str);
-	for (unsigned int index = startaddr; index < startaddr + len; index++) {
-		exe->Process(makeEraseCommand(index, len));
+	for (unsigned int cur_addr = startaddr; cur_addr < startaddr + len; cur_addr++) {
+		exe->Process(makeEraseCommand(cur_addr, len));
 	}
 }
 
@@ -102,8 +99,8 @@ bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int st
 
 	PRINT(str);
 
-	for (unsigned int index = startaddr; index < startaddr + len; index++) {
-		exe->Process(makeReadCommand(index));
+	for (unsigned int cur_addr = startaddr; cur_addr < startaddr + len; cur_addr++) {
+		exe->Process(makeReadCommand(cur_addr));
 		try {
 			if (std::stoul(file->ReadOutputFile("ssd_output.txt").substr(outStartPos, outEndPos), nullptr, HEX) != value) {
 				PRINT("Read result is mismatched :");
@@ -121,13 +118,13 @@ bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int st
 }
 
 void TestScript::PrintScriptEnter() {
-	if (m_plogger->is_diabled_console_print()) {
+	if (Logger::getInstance().is_diabled_console_print()) {
 		std::cout << m_name << " ___ Run... ";
 	}
 }
 
 void TestScript::PrintScriptExit(bool result) {
-	if (m_plogger->is_diabled_console_print()) {
+	if (Logger::getInstance().is_diabled_console_print()) {
 		std::string res = (result == true) ? "Pass" : "Fail";
 		std::cout << res << std::endl;
 	}
