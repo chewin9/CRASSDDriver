@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="commandbuilder.cpp" />
     <ClCompile Include="command_invoker.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="ishell_command.h" />
@@ -173,12 +174,14 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="ssdaccessor.cpp" />
     <ClCompile Include="testscript.cpp" />
     <ClCompile Include="testscriptfactory.cpp" />
     <ClCompile Include="testscript_test.cpp" />
     <ClCompile Include="testscript_util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="commandbuilder.h" />
     <ClInclude Include="command_invoker.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="iprocess_executor.h" />
