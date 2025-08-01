@@ -84,6 +84,12 @@
     <ClCompile Include="shell_write_test.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
+    <ClCompile Include="commandbuilder.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssdaccessor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
@@ -158,6 +164,10 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="testscriptlog.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="commandbuilder.h" />
+    <ClInclude Include="ssdaccessor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="commandbuilder.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="ishell_command.h" />
     <ClCompile Include="logger.cpp" />
@@ -172,12 +173,14 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="shell_write.h" />
+    <ClCompile Include="ssdaccessor.cpp" />
     <ClCompile Include="testscript.cpp" />
     <ClCompile Include="testscriptfactory.cpp" />
     <ClCompile Include="testscript_test.cpp" />
     <ClCompile Include="testscript_util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="commandbuilder.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="logger.h" />
@@ -186,6 +189,7 @@
     <ClInclude Include="shell_erase.h" />
     <ClInclude Include="shell_erase_range.h" />
     <ClInclude Include="shell_full_read.h" />
+    <ClInclude Include="ssdaccessor.h" />
     <ClInclude Include="testscriptfactory.h" />
     <ClInclude Include="testscriptlog.h" />
     <ClInclude Include="testscript_util.h" />

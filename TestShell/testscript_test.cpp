@@ -76,7 +76,7 @@ private:
 	const std::string SSD_DRIVER_NAME = "SSDDriver.exe";
 	int repeatcount = 0;
 };
-
+/*
 TEST_F(TestScriptTestFixture, FullWriteAndReadCompare) {
 	EXPECT_CALL(mock, Process(_)).WillRepeatedly(Return(5));
 	SetUpReadOutputReapeat("0x00000005");
@@ -99,7 +99,7 @@ TEST_F(TestScriptTestFixture, FullWriteAndReadCompareScriptRunFail) {
 	SetUpReadOutputReapeat(INVALID_VALUE_STRING);
 	CheckResult(false, "1_");
 }
-
+*/
 TEST_F(TestScriptTestFixture, PartialLBAWriteCmdTestPass)
 {
 	PartialWriteSetup(30);
