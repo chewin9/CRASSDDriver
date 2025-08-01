@@ -87,3 +87,8 @@ TEST_F(ShellReadTestFixture, TSReadInvalidLBA03) {	//
 	readShell->Run("read");
 	checkExpectedConsoleOutput("INVALID COMMAND\n");
 }
+
+TEST_F(ShellReadTestFixture, TSReadInvalidLBA04) {	//
+	readShell->Run("read 0x4");
+	checkExpectedConsoleOutput("INVALID COMMAND\n");
+}
