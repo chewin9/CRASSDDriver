@@ -6,6 +6,7 @@
 #include <tuple>
 #include "shell.h"
 #include "command_invoker.h"
+#include "shell_util.h"
 
 std::tuple<std::string, std::string> Shell::parse_command(const std::string& input) {
     std::istringstream iss(input);

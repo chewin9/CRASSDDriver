@@ -1,5 +1,6 @@
 #pragma once
 #include "shell_flush.h"
+#include "shell_util.h"
 #include <string>
 #include <vector>
 
@@ -29,25 +30,16 @@ TEST(FlushTest, checkExtraParamFailCase) {
 bool ShellFlush::Run(const std::string& cmd) {
 
 	if (false == check_parameter_valid(cmd)) {
-		print_invalid_command();
+		Util::printInvalidParameter();
 		return false;
 	}
 	executor_->Process("SSDDriver.exe F");
 	return true;
 }
 
-std::vector<std::string> ShellFlush::split_by_space(const std::string& str) {
-	std::istringstream iss(str);
-	std::vector<std::string> tokens;
-	std::string word;
-	while (iss >> word) {
-		tokens.push_back(word);
-	}
-	return tokens;
-}
 
 bool ShellFlush::check_parameter_valid(const std::string& cmd) {
-	std::vector<std::string> cmdLineVector = split_by_space(cmd);
+	std::vector<std::string> cmdLineVector = Util::splitBySpace(cmd);
 
 	if (cmdLineVector.size() != 1) {
 		return false;
@@ -56,8 +48,4 @@ bool ShellFlush::check_parameter_valid(const std::string& cmd) {
 		return false;
 	}
 	return true;
-}
-
-void ShellFlush::print_invalid_command(void) {
-	std::cout << INVALID_PARAMETER << std::endl;
 }

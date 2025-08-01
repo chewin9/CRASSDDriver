@@ -1,5 +1,6 @@
 #pragma once
 #include "shell_write.h"
+#include "shell_util.h"
 #include <memory>
 #include <string>
 #include <sstream>
@@ -8,7 +9,7 @@
 bool ShellWrite::Run(const std::string& input) {
 
     if (false == checkParameterValid(input)) {
-        printError();
+        Util::printInvalidParameter();
         return false;
     }
 
@@ -23,7 +24,7 @@ bool ShellWrite::checkParameterValid(const std::string& input)
 {
     // check input parameter valid
     //"write 3 0xAAAABBBB"   
-    vector<string> cmdLineVector = splitBySpace(input);
+    vector<string> cmdLineVector = Util::splitBySpace(input);
 
     if (cmdLineVector.size() != 3) {
         return false;
@@ -60,20 +61,6 @@ bool ShellWrite::checkParameterValid(const std::string& input)
     }
 
     return true;
-}
-
-void Write::printError() {
-    std::cout << INVALID_PARAMETER << std::endl;
-}
-
-std::vector<std::string> Write::splitBySpace(const std::string& str) {
-    std::istringstream iss(str);
-    std::vector<std::string> tokens;
-    std::string word;
-    while (iss >> word) {
-        tokens.push_back(word);
-    }
-    return tokens;
 }
 
 bool Write::convertStoI(const std::string& str, int& val) {

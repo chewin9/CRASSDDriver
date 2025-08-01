@@ -1,6 +1,7 @@
 #pragma once
 #include "iprocess_executor.h"
 #include "shell_full_read.h"
+#include "shell_util.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -11,10 +12,10 @@
 ShellFullRead::ShellFullRead(IProcessExecutor* executor) : executor_(executor) {}
 
 bool ShellFullRead::Run(const std::string& input) {
-	std::vector<std::string> commandVector = splitBySpace(input);
+	std::vector<std::string> commandVector = Util::splitBySpace(input);
 
 	if (checkParameterValid(commandVector) == false) {
-		printInvalidParameter();
+		Util::printInvalidParameter();
 		return false;
 	}
 
