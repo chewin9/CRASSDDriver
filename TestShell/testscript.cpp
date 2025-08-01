@@ -88,7 +88,7 @@ void TestScript::EraseBlock(IProcessExecutor* exe, unsigned int startaddr, unsig
 	}
 }
 
-bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int startaddr, unsigned int len, unsigned value) {
+bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int startaddr, unsigned int len, unsigned int value) {
 	char buffer[100]; 
 	const int outStartPos = 2;
 	const int outEndPos = 10;
@@ -101,7 +101,7 @@ bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int st
 	for (unsigned int index = startaddr; index < startaddr + len; index++) {
 		exe->Process(makeReadCommand(index));
 		try {
-			if (std::stoi(file->ReadOutputFile("ssd_output.txt").substr(outStartPos, outEndPos), nullptr, HEX) != value) {
+			if (std::stoul(file->ReadOutputFile("ssd_output.txt").substr(outStartPos, outEndPos), nullptr, HEX) != value) {
 				PRINT("Read result is mismatched :");
 				return false;
 			}
