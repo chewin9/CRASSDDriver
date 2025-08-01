@@ -1,10 +1,10 @@
 #pragma once
 #include "shell_write.h"
 #include <memory>
-
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "logger.h"
 
 bool ShellWrite::Run(const std::string& input) {
 

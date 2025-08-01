@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 
-#define USING_WINCPP14 (1)
 class Logger {
 public:
 	Logger() : bUseConsolePrint{ true }, lastTimePrinted{ "" } {}
