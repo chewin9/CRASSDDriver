@@ -10,11 +10,11 @@ public:
 	void disable_console_print(void);
 
 	virtual bool is_file_over_10k(const std::string& file);
-	
 	virtual bool is_saved_log_file_exists(void);
-
 	std::string get_saved_log_file_name(void);
 
+	void set_log_file_name(const std::string& name);
+	void set_log_default_file_name(void);
 private:
 	void write_to_file(const std::string& str);
 	void move_saved_log_file(void);
@@ -22,7 +22,8 @@ private:
 	void print_to_console(const std::string& oss);
 	std::string getCurrentTimeString(void);
 
-	const std::string filename = "latest.log";
+	const std::string defaultFileName = "latest.log";
+	std::string filename = defaultFileName;
 	bool bUseConsolePrint;
 	std::string lastTimePrinted;
 };

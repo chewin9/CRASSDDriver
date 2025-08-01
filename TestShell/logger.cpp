@@ -117,6 +117,15 @@ std::string Logger::get_saved_log_file_name(void)
     return log_file_name;
 }
 
+void Logger::set_log_file_name(const std::string& name)
+{
+}
+
+void Logger::set_log_default_file_name()
+{
+    filename = defaultFileName;
+}
+
 bool Logger::is_saved_log_file_exists(void)
 {
 #if (USING_WINCPP14)
