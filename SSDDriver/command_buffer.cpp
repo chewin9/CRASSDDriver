@@ -104,9 +104,11 @@ void CommandBuffer::OptimizeEraseCommand(ParsedCommand cmdInfo) {
 
   if (merged) {
     RearrangeMergedErase(mergedStart, mergedEnd);
-  } else {
-    eraseCommandList.push_back(cmdInfo);
-  }
+    return;
+  } 
+
+   eraseCommandList.push_back(cmdInfo);
+  
 }
 
 void CommandBuffer::OptimizeBuffer(const ParsedCommand &cmd) {
