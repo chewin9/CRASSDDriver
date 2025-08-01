@@ -83,6 +83,8 @@
     </ClCompile>
     <ClCompile Include="shell_write_test.cpp">
       <Filter>테스트 파일</Filter>
+    <ClCompile Include="command_invoker.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +160,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="testscriptlog.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="command_invoker.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

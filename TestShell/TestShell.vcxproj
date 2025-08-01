@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="command_invoker.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="ishell_command.h" />
     <ClCompile Include="logger.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="testscript_util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="command_invoker.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="logger.h" />

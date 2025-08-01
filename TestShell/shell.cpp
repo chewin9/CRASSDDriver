@@ -31,59 +31,27 @@ int Shell::Run(std::string arg) {
     }
 
     while (true) {
-        string cmd = get_command(input);
+        std::string cmd = get_command(input);
 
         if (cmd == "exit") {
             std::cout << "Exiting program.\n";
             break;
         }
-        else if (cmd == "write") {
-            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellWrite>(executor);
-            cmd->Run(input);
-        }
-        else if (cmd == "fullwrite") {
-            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellFullWrite>(executor);
-            cmd->Run(input);
-        }
-        else if (cmd == "read") {
-            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellRead>(executor);
-            cmd->Run(input);
-        }
-        else if (cmd == "fullread") {
-            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellFullRead>(executor);
-            cmd->Run(input);
-        }
-        else if (cmd == "flush") {
-            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellFlush>(executor);
-            cmd->Run(input);
-        }
-        else if (cmd == "help") {
-            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellHelp>(executor);
-            cmd->Run(input);
-        }
-        else if (cmd == "erase") {
-            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellErase>(executor);
-            cmd->Run(input);
-        }
-        else if (cmd == "erase_range") {
-            std::shared_ptr<IShellCommand> cmd = std::make_shared<ShellEraseRange>(executor);
-            cmd->Run(input);
-        }
-        else {
-            if (nullptr == script_runner->getScript(input)) {
-                // no matching command
-                std::cout << "INVALID COMMAND" << std::endl;
-                std::cout << "You typed : " << input << std::endl;
-                continue;
-            }
 
-            if (true == script_runner->runScript(input)) {
-                std::cout << "script pass" << std::endl;
-                continue;
-            }
+        if (invoker.executeCommand(cmd, input)) {
+            continue;
+        }
 
-            std::cout << "script fail" << std::endl;
+        if (nullptr == script_runner->getScript(input)) {
+            std::cout << "INVALID COMMAND" << std::endl;
+            std::cout << "You typed : " << input << std::endl;
+            continue;
+        }
+
+        if (script_runner->runScript(input)) {
+            continue;
         }
     }
+
     return 0;
 }
