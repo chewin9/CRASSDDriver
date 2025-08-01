@@ -118,13 +118,13 @@ bool TestScript::ReadCompare(IProcessExecutor* exe, IFile* file, unsigned int st
 }
 
 void TestScript::PrintScriptEnter() {
-	if (m_plogger->is_diabled_console_print()) {
+	if (Logger::getInstance().is_diabled_console_print()) {
 		std::cout << m_name << " ___ Run... ";
 	}
 }
 
 void TestScript::PrintScriptExit(bool result) {
-	if (m_plogger->is_diabled_console_print()) {
+	if (Logger::getInstance().is_diabled_console_print()) {
 		std::string res = (result == true) ? "Pass" : "Fail";
 		std::cout << res << std::endl;
 	}

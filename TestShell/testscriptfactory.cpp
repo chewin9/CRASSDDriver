@@ -31,7 +31,7 @@ bool FullWriteAndReadCompare::Run(IProcessExecutor* exe, IFile* file) {
 		}
 	}
 
-	m_plogger->print(__func__, "Pass : " + m_name);
+	PRINT("Pass");
 	PrintScriptExit(true);
 
 	return true;
@@ -63,7 +63,7 @@ bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFil
 {
 	bool IsPass = true;
 
-	m_plogger->print(__func__, "");
+	PRINT("");
 
 	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
 		exe->Process(makeReadCommand(readcount));
@@ -71,7 +71,7 @@ bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFil
 			IsPass = IsPass && (stoul(file->ReadOutputFile("ssd_output.txt").substr(2, 10)) == std::stoul(value_list[readcount], nullptr, HEX));
 		}
 		catch (std::exception e) {
-			m_plogger->print(__func__, "Exception");
+			PRINT("Exception");
 			return false;
 		}
 	}
