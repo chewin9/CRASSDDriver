@@ -8,6 +8,7 @@ public:
 	void print(const std::string& function_str, const std::string& message);
 	void save_last_time_printed(std::string& timeprint);
 	void disable_console_print(void);
+	bool is_diabled_console_print();
 
 	virtual bool is_file_over_10k(const std::string& file);
 	virtual bool is_saved_log_file_exists(void);
