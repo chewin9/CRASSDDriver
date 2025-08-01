@@ -141,6 +141,7 @@
     </ClCompile>
     <ClCompile Include="process_executor.cpp" />
     <ClCompile Include="shell.cpp" />
+    <ClCompile Include="shell_flush.cpp" />
     <ClCompile Include="shell_erase.cpp" />
     <ClCompile Include="shell_erase_range.cpp" />
     <ClCompile Include="shell_erase_range_test.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="iprocess_executor.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="process_executor.h" />
+    <ClInclude Include="shell_flush.h" />
     <ClInclude Include="shell_erase.h" />
     <ClInclude Include="shell_erase_range.h" />
     <ClInclude Include="shell_full_read.h" />
