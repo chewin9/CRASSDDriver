@@ -10,5 +10,5 @@ public:
     EraseCommand(SsdOperationHandler& opHandler)
         : opHandler{ opHandler } {
     }
-    bool Execute(const ParsedCommand& cmdInfo) override;
+    void Execute(const ParsedCommand& cmdInfo) override;
 };

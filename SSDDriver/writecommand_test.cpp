@@ -25,7 +25,7 @@ TEST_F(WriteCommandFixture, WriteNewFile) {
     CommandBuffer cmdbuffer;
     SsdOperationHandler opHandler(fileio, cmdbuffer);
     WriteCommand write_command(opHandler);
-    EXPECT_EQ(true, write_command.Execute(cmdInfo));
+    write_command.Execute(cmdInfo);
   }
 }
 
@@ -45,5 +45,5 @@ TEST_F(WriteCommandFixture, OverwirteNewLBA) {
   new_value = "0x1298CDEF";
   ParsedCommand cmdInfo_new_lba = {"W", new_lba, new_value, false};
   WriteCommand write_command_with_new_lba(opHandler);
-  EXPECT_EQ(true, write_command.Execute(cmdInfo_new_lba));
+  write_command.Execute(cmdInfo_new_lba);
 }

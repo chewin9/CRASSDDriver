@@ -49,10 +49,9 @@ class SSDCommandTest : public ::testing::Test {
   void ExecuteCommand(ParsedCommand cmd) {
     CommandBuffer cmdbuffer;
     SsdOperationHandler opHandler(fileio, cmdbuffer);
-    ICommand* command = CommandFactory::create(cmd.opCode, opHandler);
+    std::unique_ptr<ICommand> command = CommandFactory::create(cmd.opCode, opHandler);
     ASSERT_NE(command, nullptr);
     command->Execute(cmd);
-    delete command;
   }
 
   bool CheckNandFileContains(const std::string& expectedLine) {

@@ -1,8 +1,6 @@
 #include "ssd_operation_handler.h"
 
-void SsdOperationHandler::Write(const ParsedCommand& cmdInfo) {
-  if (IsErrorExist(cmdInfo)) return;
-
+void SsdOperationHandler::WriteAndErase(const ParsedCommand& cmdInfo) {
   auto currentBuffer = fileHandler.getCommandBuffer();
   if (cmdBuffer.IsFlushNeeded(currentBuffer)) {
     Flush();
@@ -13,9 +11,7 @@ void SsdOperationHandler::Write(const ParsedCommand& cmdInfo) {
   fileHandler.ChangeFileName(newBuffer);
 }
 
-bool SsdOperationHandler::Read(const ParsedCommand& cmdInfo) {
-  if (IsErrorExist(cmdInfo)) return false;
-
+void SsdOperationHandler::Read(const ParsedCommand& cmdInfo) {
   auto currentBuffer = fileHandler.getCommandBuffer();
   std::string value = cmdBuffer.ReadBuffer(cmdInfo, currentBuffer);
 
@@ -23,21 +19,6 @@ bool SsdOperationHandler::Read(const ParsedCommand& cmdInfo) {
     value = ReadFromNand(cmdInfo);
   }
   fileHandler.WriteValueToOutputFile(value);
-  return true;
-}
-
-bool SsdOperationHandler::Erase(const ParsedCommand& cmdInfo) {
-  if (IsErrorExist(cmdInfo)) return false;
-  auto currentBuffer = fileHandler.getCommandBuffer();
-
-  if (cmdBuffer.IsFlushNeeded(currentBuffer)) {
-    Flush();
-    currentBuffer.clear();
-  }
-
-  auto newBuffer = cmdBuffer.RegisterBuffer(cmdInfo, currentBuffer);
-  fileHandler.ChangeFileName(newBuffer);
-  return true;
 }
 
 void SsdOperationHandler::Flush() {
@@ -107,12 +88,4 @@ void SsdOperationHandler::EraseData(const ParsedCommand& cmdInfo) {
       nandData.erase(it);
     }
   }
-}
-
-bool SsdOperationHandler::IsErrorExist(const ParsedCommand& cmdInfo) {
-  if (cmdInfo.errorFlag) {
-    fileHandler.WriteValueToOutputFile("ERROR");
-    return true;
-  }
-  return false;
 }

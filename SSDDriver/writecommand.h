@@ -9,5 +9,5 @@ class WriteCommand : public ICommand {
  public:
   WriteCommand(SsdOperationHandler& opHandler)
       : opHandler{opHandler} {}
-  bool Execute(const ParsedCommand& cmdInfo) override;
+  void Execute(const ParsedCommand& cmdInfo) override;
 };

@@ -7,17 +7,18 @@
 #include "ssd_operation_handler.h"
 
 TEST(CommandFactoryTest, CreateReadCommand) { 
-	CommandFactory factory;
+  CommandFactory factory;
   ParsedCommand cmd = {"R", 10, "", false};
   FileIO fileio;
   CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(fileio, cmdbuffer);
-  ICommand* result = factory.create(cmd.opCode, opHandler);
+  std::unique_ptr<ICommand> result = CommandFactory::create(cmd.opCode, opHandler);
+
 
   EXPECT_NE(result, nullptr);
-  EXPECT_TRUE(dynamic_cast<ReadCommand*>(result) != nullptr);
+  EXPECT_TRUE(dynamic_cast<ReadCommand*>(result.get()) != nullptr);
 
-  delete result;
+
 }
 
 TEST(CommandFactoryTest, CreateWriteCommand) {
@@ -26,12 +27,10 @@ TEST(CommandFactoryTest, CreateWriteCommand) {
   FileIO fileio;
   CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(fileio, cmdbuffer);
-  ICommand* result = factory.create(cmd.opCode, opHandler);
+  std::unique_ptr<ICommand> result = factory.create(cmd.opCode, opHandler);
 
   EXPECT_NE(result, nullptr);
-  EXPECT_TRUE(dynamic_cast<WriteCommand*>(result) != nullptr);
-
-  delete result;
+  EXPECT_TRUE(dynamic_cast<WriteCommand*>(result.get()) != nullptr);
 }
 
 TEST(CommandFactoryTest, ReturnNullPtr) {
@@ -40,9 +39,7 @@ TEST(CommandFactoryTest, ReturnNullPtr) {
   FileIO fileio;
   CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(fileio, cmdbuffer);
-  ICommand* result = factory.create(cmd.opCode, opHandler);
-
+  std::unique_ptr<ICommand> result = factory.create(cmd.opCode, opHandler);
   EXPECT_EQ(result, nullptr);
 
-  delete result;
 }

@@ -45,7 +45,7 @@ bool CommandParser::IsValueErrorExist(const ParsedCommand& cmd) {
 
 bool CommandParser::IsEraseSizeErrorExist(const ParsedCommand& cmd) {
   if (cmd.opCode == "E") {
-    if (cmd.erase_size < MIN_VAL || cmd.erase_size > SIZE_OF_VALUE) return true;
+    if (cmd.erase_size <= MIN_VAL || cmd.erase_size > SIZE_OF_VALUE) return true;
 
     if (cmd.lba + cmd.erase_size > 100) return true;
   }

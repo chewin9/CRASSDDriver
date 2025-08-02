@@ -2,11 +2,11 @@
 
 #include "command_factory.h"
 
-bool ReadCommand::Execute(const ParsedCommand& cmdInfo) {
-  bool result = opHandler.Read(cmdInfo);
-  return result;
+void ReadCommand::Execute(const ParsedCommand& cmdInfo) {
+	opHandler.Read(cmdInfo);
 }
 
-ICommand* CreateReadCommand(SsdOperationHandler& h) {
-  return new ReadCommand(h);
+std::unique_ptr<ICommand> CreateReadCommand(SsdOperationHandler& h) {
+	return std::make_unique<ReadCommand>(h);
 }
+

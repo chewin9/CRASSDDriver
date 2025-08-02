@@ -71,7 +71,7 @@ TEST_F(FileIOFixture, WriteOutputWithError) {
   pc.errorFlag = true;
   CommandBuffer cmdbuffer{file_io};
   SsdOperationHandler opHandler(file_io, cmdbuffer);
-  opHandler.Write(pc);
+  opHandler.WriteAndErase(pc);
   std::ifstream inFile("ssd_output.txt");
   bool fileExists = inFile.is_open();
 
@@ -90,7 +90,7 @@ TEST_F(FileIOFixture, WriteOutputWithNewLBA_ThroughReadCheck) {
   pc = {"W", 3, "0xABCDEF01", false};
   CommandBuffer cmdbuffer;
   SsdOperationHandler opHandler(file_io, cmdbuffer);
-  opHandler.Write(pc);
+  opHandler.WriteAndErase(pc);
 
   ParsedCommand readCmd = {"R", 3, "", false};
   opHandler.Read(readCmd);
@@ -111,7 +111,7 @@ TEST_F(FileIOFixture, WriteOutput_OverwritesExistingLBA_ThroughReadCheck) {
     ParsedCommand initial = {"W", 5, "0xAAAA0000", false};
     CommandBuffer cmdbuffer;
     SsdOperationHandler opHandler(file_io, cmdbuffer);
-    opHandler.Write(initial);
+    opHandler.WriteAndErase(initial);
 
     ParsedCommand readInit = {"R", 5, "", false};
     opHandler.Read(readInit);

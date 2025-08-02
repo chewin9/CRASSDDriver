@@ -11,12 +11,11 @@ void CommandFactory::registerCommand(const std::string& opCode,
   getRegistry()[opCode] = creator;
 }
 
-ICommand* CommandFactory::create(const std::string& opCode,
-                                 SsdOperationHandler& handler) {
-  auto& registry = getRegistry();
-  auto it = registry.find(opCode);
-  if (it != registry.end()) {
-    return it->second(handler);
-  }
-  return nullptr;
+std::unique_ptr<ICommand> CommandFactory::create(const std::string& opCode, SsdOperationHandler& handler) {
+    auto& registry = getRegistry();
+    auto it = registry.find(opCode);
+    if (it != registry.end()) {
+        return it->second(handler);  // Factory returns unique_ptr
+    }
+    return nullptr;
 }

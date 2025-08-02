@@ -1,20 +1,25 @@
 #include "command_runner.h"
+#include "command_factory.h"
+#include <memory>
 
-CommandRunner::CommandRunner() {
-  opHandler = new SsdOperationHandler(fileio, cmdBuffer);
+CommandRunner::CommandRunner(CommandParser& p, FileIO& f, CommandBuffer& c, SsdOperationHandler& o)
+    : parser{ p }, fileio{ f }, cmdBuffer{ c }, opHandler{ o } {
 }
 
-CommandRunner::~CommandRunner() { delete opHandler; }
-
 void CommandRunner::Run(int argc, char* argv[]) {
-  ParsedCommand cmdInfo = parser.ParseCommand(argc, argv);
+    ParsedCommand cmdInfo = parser.ParseCommand(argc, argv);
 
-  ICommand* command = CommandFactory::create(cmdInfo.opCode, *opHandler);
-  if (!command) {
-    fileio.WriteValueToOutputFile("ERROR");  // Optional error handling
-    return;
-  }
+    if (cmdInfo.errorFlag) {
+        fileio.WriteValueToOutputFile("ERROR");
+        return;
+    }
 
-  command->Execute(cmdInfo);
-  delete command;
+    std::unique_ptr<ICommand> command(CommandFactory::create(cmdInfo.opCode, opHandler));
+
+    if (!command) {
+        fileio.WriteValueToOutputFile("ERROR");
+        return;
+    }
+
+    command->Execute(cmdInfo);
 }

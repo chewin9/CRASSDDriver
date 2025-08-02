@@ -23,7 +23,7 @@ TEST_F(ReadCommandFixture, NormalRead) {
     CommandBuffer cmdbuffer;
     SsdOperationHandler opHandler(fileio, cmdbuffer);
     ReadCommand rc(opHandler);
-    EXPECT_TRUE(rc.Execute(cmdInfo));
+    rc.Execute(cmdInfo);
   }
 }
 
@@ -33,6 +33,6 @@ TEST_F(ReadCommandFixture, AbNormalRead) {
     CommandBuffer cmdbuffer;
     SsdOperationHandler opHandler(fileio, cmdbuffer);
     ReadCommand rc(opHandler);
-    EXPECT_FALSE(rc.Execute(cmdInfo));
+    rc.Execute(cmdInfo);
   }
 }

@@ -2,12 +2,12 @@
 
 #include "command_factory.h"
 
-bool WriteCommand::Execute(const ParsedCommand& cmdInfo) {
-  opHandler.Write(cmdInfo);
-  return true;
+void WriteCommand::Execute(const ParsedCommand& cmdInfo) {
+  opHandler.WriteAndErase(cmdInfo);
 };
 
-ICommand* CreateWriteCommand(SsdOperationHandler& h) {
-  return new WriteCommand(h);
+std::unique_ptr<ICommand> CreateWriteCommand(SsdOperationHandler& h) {
+	return std::make_unique<WriteCommand>(h);
 }
+
 

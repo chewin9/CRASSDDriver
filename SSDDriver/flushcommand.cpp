@@ -2,11 +2,11 @@
 
 #include "command_factory.h"
 
-bool FlushCommand::Execute(const ParsedCommand&) {
+void FlushCommand::Execute(const ParsedCommand&) {
   opHandler.Flush();
-  return true;
 };
 
-ICommand* CreateFlushCommand(SsdOperationHandler& h) {
-  return new FlushCommand(h);
+std::unique_ptr<ICommand> CreateFlushCommand(SsdOperationHandler& h) {
+	return std::make_unique<FlushCommand>(h);
 }
+
