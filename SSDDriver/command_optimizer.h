@@ -2,6 +2,7 @@
 
 #include "command_parser.h"
 #include <list>
+
 using std::list;
 
 class ICommandOptimizer {

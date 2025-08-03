@@ -71,3 +71,4 @@ ParsedCommand CommandParser::ParseCommand(int argc, char* argv[]) {
   }
   return cmd;
 }
+

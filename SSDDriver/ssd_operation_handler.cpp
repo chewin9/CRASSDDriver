@@ -1,6 +1,7 @@
 #include "ssd_operation_handler.h"
 
 void SsdOperationHandler::WriteAndErase(const ParsedCommand& cmdInfo) {
+  if (IsErrorExist(cmdInfo)) return;
   auto currentBuffer = fileHandler.getCommandBuffer();
   if (cmdBuffer.IsFlushNeeded(currentBuffer)) {
     Flush();
@@ -12,6 +13,7 @@ void SsdOperationHandler::WriteAndErase(const ParsedCommand& cmdInfo) {
 }
 
 void SsdOperationHandler::Read(const ParsedCommand& cmdInfo) {
+  if (IsErrorExist(cmdInfo)) return;
   auto currentBuffer = fileHandler.getCommandBuffer();
   std::string value = cmdBuffer.ReadBuffer(cmdInfo, currentBuffer);
 
@@ -88,4 +90,12 @@ void SsdOperationHandler::EraseData(const ParsedCommand& cmdInfo) {
       nandData.erase(it);
     }
   }
+}
+
+bool SsdOperationHandler::IsErrorExist(const ParsedCommand& cmdInfo) {
+    if (cmdInfo.errorFlag) {
+        fileHandler.WriteValueToOutputFile("ERROR");
+        return true;
+    }
+    return false;
 }

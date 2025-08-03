@@ -16,10 +16,8 @@ int main(void) {
 int main(int argc, char* argv[]) {
     CommandParser parser;
     FileIO fileio;
-    CommandBuffer cmdBuffer;
-    SsdOperationHandler opHandler(fileio, cmdBuffer);
 
-    CommandRunner runner(parser, fileio, cmdBuffer, opHandler);
+    CommandRunner runner(parser, fileio);
 
     runner.Run(argc, argv);
 

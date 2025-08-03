@@ -26,8 +26,7 @@ class CommandBuffer {
      const std::string VALUE_NOT_FIND = "";
      const std::string WRITE_OPCODE = "W";
      const std::string ERASE_OPCODE = "E";
-
-  void SelectOptimizer(const ParsedCommand& cmdInfo);
+     CommandBuffer(std::unique_ptr<ICommandOptimizer> optimizer);
   void OptimizeBuffer(const ParsedCommand& cmdInfo);
   vector<string> RegisterBuffer(const ParsedCommand& cmdInfo,
                                 const vector<string>& currentBuffer);

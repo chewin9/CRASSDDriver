@@ -8,13 +8,11 @@
 
 class CommandRunner {
 public:
-    CommandRunner(CommandParser& parser, FileIO& fileio, CommandBuffer& cmdBuffer, SsdOperationHandler& opHandler);
+    CommandRunner(CommandParser& parser, FileIO& fileio);
 
     void Run(int argc, char* argv[]);
 
 private:
     CommandParser& parser;
     FileIO& fileio;
-    CommandBuffer& cmdBuffer;
-    SsdOperationHandler& opHandler;
 };

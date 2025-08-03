@@ -21,9 +21,6 @@ class SSDCommandSequenceTest : public ::testing::Test {
     std::remove("ssd_nand.txt");
     std::remove("ssd_output.txt");
     system("rm -rf buffer && mkdir buffer");
-
-    cmd_buffer = new CommandBuffer;
-    op_handler = new SsdOperationHandler(file_io, *cmd_buffer);
   }
 
   void TearDown() override {
@@ -45,6 +42,16 @@ class SSDCommandSequenceTest : public ::testing::Test {
     std::vector<std::string> args = {"./SSDDriver.exe", opcode, lba};
     if (!val.empty()) args.push_back(val);
     ParsedCommand cmd = MakeCommand(args);
+    std::unique_ptr<ICommandOptimizer> opt;
+    if (cmd.opCode == "W") {
+        opt = std::make_unique<WriteCommandOptimizer>();
+    }
+    else if (cmd.opCode == "E") {
+        opt = std::make_unique<EraseCommandOptimizer>();
+    }
+
+    CommandBuffer cmdbuffer(std::move(opt));
+    op_handler = new SsdOperationHandler(file_io, *cmd_buffer);
     std::unique_ptr<ICommand> command = CommandFactory::create(cmd.opCode, *op_handler);
     ASSERT_NE(command, nullptr);
     command->Execute(cmd);

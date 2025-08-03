@@ -9,4 +9,3 @@ void EraseCommand::Execute(const ParsedCommand& cmdInfo) {
 std::unique_ptr<ICommand> CreateEraseCommand(SsdOperationHandler& h) {
 	return std::make_unique<EraseCommand>(h);
 }
-

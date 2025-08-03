@@ -17,6 +17,7 @@ namespace fs = std::filesystem;
 
 class FileIOFixture : public Test {
  public:
+  CommandParser parser;
   FileIO file_io;
   ParsedCommand pc;
 
@@ -69,7 +70,7 @@ TEST_F(FileIOFixture, WriteErrorOutput) {
 
 TEST_F(FileIOFixture, WriteOutputWithError) {
   pc.errorFlag = true;
-  CommandBuffer cmdbuffer{file_io};
+  CommandBuffer cmdbuffer(std::move(std::make_unique<WriteCommandOptimizer>()));
   SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.WriteAndErase(pc);
   std::ifstream inFile("ssd_output.txt");
@@ -88,7 +89,7 @@ TEST_F(FileIOFixture, WriteOutputWithError) {
 TEST_F(FileIOFixture, WriteOutputWithNewLBA_ThroughReadCheck) {
   // Write
   pc = {"W", 3, "0xABCDEF01", false};
-  CommandBuffer cmdbuffer;
+  CommandBuffer cmdbuffer(std::move(std::make_unique<WriteCommandOptimizer>()));
   SsdOperationHandler opHandler(file_io, cmdbuffer);
   opHandler.WriteAndErase(pc);
 
@@ -109,7 +110,7 @@ TEST_F(FileIOFixture, WriteOutput_OverwritesExistingLBA_ThroughReadCheck) {
   // 1. Write initial value
   {
     ParsedCommand initial = {"W", 5, "0xAAAA0000", false};
-    CommandBuffer cmdbuffer;
+    CommandBuffer cmdbuffer(std::move(std::make_unique<WriteCommandOptimizer>()));
     SsdOperationHandler opHandler(file_io, cmdbuffer);
     opHandler.WriteAndErase(initial);
 
@@ -179,7 +180,6 @@ TEST_F(FileIOFixture, WriteOutput_OverwritesExistingLBA_ThroughReadCheck) {
 
     std::ifstream inFile("ssd_output.txt");
     ASSERT_TRUE(inFile.is_open());
-
     std::string line;
     std::getline(inFile, line);
     inFile.close();
@@ -187,8 +187,10 @@ TEST_F(FileIOFixture, WriteOutput_OverwritesExistingLBA_ThroughReadCheck) {
     EXPECT_EQ(line, "ERROR");
   }
 
+
   TEST_F(FileIOFixture, CheckChangedFileName) {
     std::vector<std::string> in_command = {"1_ABC", "2_DEF", "3_HIJ"};
+
     file_io.ChangeFileName(in_command);
 
     auto load_command = file_io.getCommandBuffer();

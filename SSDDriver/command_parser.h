@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <memory>
 struct ParsedCommand {
   std::string opCode = "";
   int lba = -1;
@@ -20,6 +21,6 @@ class CommandParser {
   static constexpr int MAX_VAL = 99;
   static constexpr int SIZE_OF_HEX_NOTATION = 2;
   static constexpr int SIZE_OF_VALUE = 10;
-
+  
   ParsedCommand ParseCommand(int argc, char* argv[]);
 };

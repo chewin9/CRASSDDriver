@@ -6,27 +6,21 @@
 #include <string>
 #include <vector>
 
-void CommandBuffer::SelectOptimizer(const ParsedCommand& cmdInfo) {
-    if (cmdInfo.opCode == "W") {
-        optimizer = std::make_unique<WriteCommandOptimizer>();
-    }
-    else if (cmdInfo.opCode == "E") {
-        optimizer = std::make_unique<EraseCommandOptimizer>();
-    }
-}
+CommandBuffer::CommandBuffer(std::unique_ptr<ICommandOptimizer> optimizer)
+    : optimizer(std::move(optimizer)) {}
 
 void CommandBuffer::OptimizeBuffer(const ParsedCommand& cmdInfo) {
     ParsedCommand convertedCmd = cmdInfo;
     ConvertWriteZeroValToErase(convertedCmd);
-    
-    SelectOptimizer(cmdInfo);
+
     optimizer->Optimize(cmdInfo, bufferList);
 }
 
 void CommandBuffer::InitializeBuffer(const vector<string>& currentBuffer) {
-  bufferList.clear();
+
   bufferList = ParsingStringtoBuf(currentBuffer);
 }
+
 vector<string> CommandBuffer::RegisterBuffer(
     const ParsedCommand &cmdInfo, const vector<string> &currentBuffer) {
   InitializeBuffer(currentBuffer);

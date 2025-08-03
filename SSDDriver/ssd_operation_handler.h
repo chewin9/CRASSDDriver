@@ -17,7 +17,7 @@ class SsdOperationHandler {
   void EraseFromNand(const ParsedCommand& cmdInfo);
   std::string ReadFromNand(const ParsedCommand& cmdInfo);
   void FlushToNand(std::list<ParsedCommand>& bufferList);
-
+  bool IsErrorExist(const ParsedCommand& cmdInfo);
  public:
   SsdOperationHandler(IFileIO& handler, CommandBuffer& cmdBuffer)
       : fileHandler{handler}, cmdBuffer{cmdBuffer} {}

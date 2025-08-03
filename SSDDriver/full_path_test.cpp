@@ -47,7 +47,15 @@ class SSDCommandTest : public ::testing::Test {
   }
 
   void ExecuteCommand(ParsedCommand cmd) {
-    CommandBuffer cmdbuffer;
+      std::unique_ptr<ICommandOptimizer> opt;
+      if (cmd.opCode == "W") {
+          opt = std::make_unique<WriteCommandOptimizer>();
+      }
+      else if (cmd.opCode == "E") {
+          opt = std::make_unique<EraseCommandOptimizer>();
+      }
+
+      CommandBuffer cmdbuffer(std::move(opt));
     SsdOperationHandler opHandler(fileio, cmdbuffer);
     std::unique_ptr<ICommand> command = CommandFactory::create(cmd.opCode, opHandler);
     ASSERT_NE(command, nullptr);
