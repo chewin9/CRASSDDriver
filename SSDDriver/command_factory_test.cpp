@@ -5,6 +5,7 @@
 #include "command_factory.h"
 #include "writecommand.h"
 #include "ssd_operation_handler.h"
+
 TEST(CommandFactoryTest, CreateReadCommand) { 
 	CommandFactory factory;
   ParsedCommand cmd = {"R", 10, "", false};

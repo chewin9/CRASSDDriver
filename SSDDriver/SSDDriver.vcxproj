@@ -160,6 +160,7 @@
     <ClInclude Include="erasecommand.h" />
     <ClInclude Include="flushcommand.h" />
     <ClInclude Include="ICommand.h" />
+    <ClInclude Include="IFileIO.h" />
     <ClInclude Include="readcommand.h" />
     <ClInclude Include="ssd_operation_handler.h" />
     <ClInclude Include="writecommand.h" />
