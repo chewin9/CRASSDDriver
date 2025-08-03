@@ -15,8 +15,7 @@ class WriteCommandFixture : public Test {
 
   const int MAX_VAL_SIZE = 100;
   std::string normalValue = "0xFFFFFFFF";
-  std::vector<std::string> abnormalValue = {"0xFFF", "0x00000GGG", "FFFFFFFF",
-                                            ""};
+  std::vector<std::string> abnormalValue = {"0xFFF", "0x00000GGG", "FFFFFFFF", ""};
   FileIO fileio;
 };
 
