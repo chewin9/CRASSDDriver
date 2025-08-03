@@ -26,7 +26,6 @@ class CommandBuffer {
      const std::string VALUE_NOT_FIND = "";
      const std::string WRITE_OPCODE = "W";
      const std::string ERASE_OPCODE = "E";
-  const int MAX_RANGE = 10;
 
   void SelectOptimizer(const ParsedCommand& cmdInfo);
   void OptimizeBuffer(const ParsedCommand& cmdInfo);

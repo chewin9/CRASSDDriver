@@ -13,8 +13,6 @@ public:
 class WriteCommandOptimizer : public ICommandOptimizer {
     list<ParsedCommand> writeCommandList;
     list<ParsedCommand> eraseCommandList;
-    const std::string ERASED_VALUE = "0x00000000";
-    const std::string VALUE_NOT_FIND = "";
     const std::string WRITE_OPCODE = "W";
     const std::string ERASE_OPCODE = "E";
 
@@ -29,8 +27,6 @@ class EraseCommandOptimizer : public ICommandOptimizer {
     list<ParsedCommand> writeCommandList;
     list<ParsedCommand> eraseCommandList;
     const int MAX_RANGE = 10;
-    const std::string ERASED_VALUE = "0x00000000";
-    const std::string VALUE_NOT_FIND = "";
     const std::string WRITE_OPCODE = "W";
     const std::string ERASE_OPCODE = "E";
 public:

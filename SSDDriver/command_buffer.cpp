@@ -17,11 +17,10 @@ void CommandBuffer::SelectOptimizer(const ParsedCommand& cmdInfo) {
 
 void CommandBuffer::OptimizeBuffer(const ParsedCommand& cmdInfo) {
     ParsedCommand convertedCmd = cmdInfo;
+    ConvertWriteZeroValToErase(convertedCmd);
+    
     SelectOptimizer(cmdInfo);
-    if (optimizer) {
-        ConvertWriteZeroValToErase(convertedCmd);
-        optimizer->Optimize(cmdInfo, bufferList);
-    }
+    optimizer->Optimize(cmdInfo, bufferList);
 }
 
 void CommandBuffer::InitializeBuffer(const vector<string>& currentBuffer) {
