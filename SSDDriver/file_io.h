@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include "IFileIO.h"
 
-class FileIO : public FileIOInterface {
+class FileIO : public IFileIO {
 public:
     std::unordered_map<int, std::string> LoadDataFromInput() override;
     void WriteValueToOutputFile(const std::string& str) override;

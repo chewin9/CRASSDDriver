@@ -8,7 +8,7 @@
 class SsdOperationHandler {
  private:
   std::unordered_map<int, std::string> nandData;
-  FileIOInterface& fileHandler;
+  IFileIO& fileHandler;
   CommandBuffer& cmdBuffer;
   void UpdateData(const ParsedCommand& cmdInfo);
   std::string ReadData(const ParsedCommand& cmdInfo);
@@ -20,7 +20,7 @@ class SsdOperationHandler {
   void FlushToNand(std::list<ParsedCommand>& bufferList);
 
  public:
-  SsdOperationHandler(FileIOInterface& handler, CommandBuffer& cmdBuffer)
+  SsdOperationHandler(IFileIO& handler, CommandBuffer& cmdBuffer)
       : fileHandler{handler}, cmdBuffer{cmdBuffer} {}
 
   void Write(const ParsedCommand& cmdInfo);

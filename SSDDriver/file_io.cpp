@@ -7,7 +7,7 @@
 namespace fs = std::filesystem;
 
 std::unordered_map<int, std::string> FileIO::LoadDataFromInput() {
-    std::ifstream input(FileIOInterface::SSD_NAND_FILE);
+    std::ifstream input(IFileIO::SSD_NAND_FILE);
     if (!input.is_open()) {
         return {};
     }
@@ -25,7 +25,7 @@ std::unordered_map<int, std::string> FileIO::LoadDataFromInput() {
 }
 
 void FileIO::SaveData(const std::unordered_map<int, std::string>& entries) {
-    std::ofstream output(FileIOInterface::SSD_NAND_FILE, std::ios::out | std::ios::trunc);
+    std::ofstream output(IFileIO::SSD_NAND_FILE, std::ios::out | std::ios::trunc);
     if (!output.is_open()) {
         return;
     }
@@ -35,7 +35,7 @@ void FileIO::SaveData(const std::unordered_map<int, std::string>& entries) {
 }
 
 void FileIO::WriteValueToOutputFile(const std::string& val) {
-    std::ofstream outFile(FileIOInterface::SSD_OUTPUT_FILE);
+    std::ofstream outFile(IFileIO::SSD_OUTPUT_FILE);
     if (!outFile.is_open()) {
         return;
     }
@@ -43,10 +43,10 @@ void FileIO::WriteValueToOutputFile(const std::string& val) {
 }
 
 void FileIO::InitBufferDir() {
-    if (fs::exists(FileIOInterface::SSD_COMMAND_BUFFER_FOLDER)) return;
+    if (fs::exists(IFileIO::SSD_COMMAND_BUFFER_FOLDER)) return;
 
-    fs::create_directory(FileIOInterface::SSD_COMMAND_BUFFER_FOLDER);
-    fs::path dir{ FileIOInterface::SSD_COMMAND_BUFFER_FOLDER };
+    fs::create_directory(IFileIO::SSD_COMMAND_BUFFER_FOLDER);
+    fs::path dir{ IFileIO::SSD_COMMAND_BUFFER_FOLDER };
 
     for (int i = 1; i <= 5; ++i) {
         fs::path filePath = dir / (std::to_string(i) + "_empty");
@@ -55,7 +55,7 @@ void FileIO::InitBufferDir() {
 }
 
 void FileIO::EraseBufferDir() {
-    fs::path dir{ FileIOInterface::SSD_COMMAND_BUFFER_FOLDER };
+    fs::path dir{ IFileIO::SSD_COMMAND_BUFFER_FOLDER };
     std::error_code ec;
 
     if (fs::exists(dir, ec) && fs::is_directory(dir, ec)) {
@@ -65,7 +65,7 @@ void FileIO::EraseBufferDir() {
 
 std::vector<std::string> FileIO::getFileNames() {
     InitBufferDir();
-    fs::path dir{ FileIOInterface::SSD_COMMAND_BUFFER_FOLDER };
+    fs::path dir{ IFileIO::SSD_COMMAND_BUFFER_FOLDER };
 
     std::vector<std::string> filenames;
     std::error_code ec;
@@ -85,7 +85,7 @@ std::vector<std::string> FileIO::getFileNames() {
 
 std::vector<std::string> FileIO::getCommandBuffer() {
     InitBufferDir();
-    fs::path dir{ FileIOInterface::SSD_COMMAND_BUFFER_FOLDER };
+    fs::path dir{ IFileIO::SSD_COMMAND_BUFFER_FOLDER };
 
     std::vector<std::string> filenames;
     std::error_code ec;
@@ -108,7 +108,7 @@ std::vector<std::string> FileIO::getCommandBuffer() {
 }
 
 void FileIO::ChangeFileName(const std::vector<std::string>& in_command) {
-    fs::path dir{ FileIOInterface::SSD_COMMAND_BUFFER_FOLDER };
+    fs::path dir{ IFileIO::SSD_COMMAND_BUFFER_FOLDER };
 
     EraseBufferDir();
     InitBufferDir();

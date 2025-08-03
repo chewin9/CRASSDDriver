@@ -21,20 +21,20 @@ public:
 
     void SetUp() override {
         std::error_code ec;
-        fs::remove_all(FileIOInterface::SSD_COMMAND_BUFFER_FOLDER, ec);
-        std::remove(FileIOInterface::SSD_OUTPUT_FILE.c_str());
-        std::remove(FileIOInterface::SSD_NAND_FILE.c_str());
+        fs::remove_all(IFileIO::SSD_COMMAND_BUFFER_FOLDER, ec);
+        std::remove(IFileIO::SSD_OUTPUT_FILE.c_str());
+        std::remove(IFileIO::SSD_NAND_FILE.c_str());
     }
 
     void TearDown() override {
         std::error_code ec;
-        fs::remove_all(FileIOInterface::SSD_COMMAND_BUFFER_FOLDER, ec);
-        std::remove(FileIOInterface::SSD_OUTPUT_FILE.c_str());
-        std::remove(FileIOInterface::SSD_NAND_FILE.c_str());
+        fs::remove_all(IFileIO::SSD_COMMAND_BUFFER_FOLDER, ec);
+        std::remove(IFileIO::SSD_OUTPUT_FILE.c_str());
+        std::remove(IFileIO::SSD_NAND_FILE.c_str());
     }
 };
 
-class FileIOMock : public FileIOInterface {
+class FileIOMock : public IFileIO {
 public:
     MOCK_METHOD((std::unordered_map<int, std::string>), LoadDataFromInput, (), (override));
     MOCK_METHOD(void, WriteValueToOutputFile, (const std::string& str), (override));

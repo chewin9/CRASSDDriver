@@ -11,7 +11,7 @@ using std::vector;
 
 class CommandBuffer {
  private:
-  FileIOInterface& fileio;
+  IFileIO& fileio;
   list<ParsedCommand> writeCommandList;
   list<ParsedCommand> eraseCommandList;
   list<ParsedCommand> bufferList;
@@ -36,7 +36,7 @@ class CommandBuffer {
   const std::string ERASE_OPCODE = "E";
   const int MAX_RANGE = 10;
 
-  CommandBuffer(FileIOInterface& fileio) : fileio{fileio} {}
+  CommandBuffer(IFileIO& fileio) : fileio{fileio} {}
   void RegisterBuffer(const ParsedCommand& cmdInfo);
   string ReadBuffer(const ParsedCommand& cmdInfo);
   bool IsFlushNeeded();

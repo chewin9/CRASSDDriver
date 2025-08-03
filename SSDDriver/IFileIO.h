@@ -3,9 +3,9 @@
 #include <unordered_map>
 #include <vector>
 
-class FileIOInterface {
+class IFileIO {
 public:
-    virtual ~FileIOInterface() = default;
+    virtual ~IFileIO() = default;
 
     inline static const std::string SSD_NAND_FILE = "ssd_nand.txt";
     inline static const std::string SSD_OUTPUT_FILE = "ssd_output.txt";
