@@ -22,10 +22,10 @@ class CommandBuffer {
   void InitializeBuffer(const vector<string> &currentBuffer);
 
  public:
-     const std::string ERASED_VALUE = "0x00000000";
-     const std::string VALUE_NOT_FIND = "";
-     const std::string WRITE_OPCODE = "W";
-     const std::string ERASE_OPCODE = "E";
+     static constexpr const char* ERASED_VALUE = "0x00000000";
+     static constexpr const char* VALUE_NOT_FIND = "";
+     static constexpr const char* WRITE_OPCODE = "W";
+     static constexpr const char* ERASE_OPCODE = "E";
      CommandBuffer(std::unique_ptr<ICommandOptimizer> optimizer);
   void OptimizeBuffer(const ParsedCommand& cmdInfo);
   vector<string> RegisterBuffer(const ParsedCommand& cmdInfo,

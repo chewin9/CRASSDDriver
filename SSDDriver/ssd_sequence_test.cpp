@@ -38,25 +38,33 @@ class SSDCommandSequenceTest : public ::testing::Test {
   }
 
   void Execute(const std::string& opcode, const std::string& lba,
-               const std::string& val = "") {
-    std::vector<std::string> args = {"./SSDDriver.exe", opcode, lba};
-    if (!val.empty()) args.push_back(val);
-    ParsedCommand cmd = MakeCommand(args);
-    std::unique_ptr<ICommandOptimizer> opt;
-    if (cmd.opCode == "W") {
-        opt = std::make_unique<WriteCommandOptimizer>();
-    }
-    else if (cmd.opCode == "E") {
-        opt = std::make_unique<EraseCommandOptimizer>();
-    }
+      const std::string& val = "") {
+      std::vector<std::string> args = { "./SSDDriver.exe", opcode, lba };
+      if (!val.empty()) args.push_back(val);
 
-    CommandBuffer cmdbuffer(std::move(opt));
-    op_handler = new SsdOperationHandler(file_io, *cmd_buffer);
-    std::unique_ptr<ICommand> command = CommandFactory::create(cmd.opCode, *op_handler);
-    ASSERT_NE(command, nullptr);
-    command->Execute(cmd);
+      ParsedCommand cmd = MakeCommand(args);
+
+      std::unique_ptr<ICommandOptimizer> opt;
+      if (cmd.opCode == "W") {
+          opt = std::make_unique<WriteCommandOptimizer>();
+      }
+      else if (cmd.opCode == "E") {
+          opt = std::make_unique<EraseCommandOptimizer>();
+      }
+
+      // 1. cmdBuffer 힙에 생성 (소유권 보장)
+      auto cmdBuffer = std::make_unique<CommandBuffer>(std::move(opt));
+
+      // 2. opHandler도 unique_ptr로 관리
+      auto opHandler = std::make_unique<SsdOperationHandler>(file_io, *cmdBuffer);
+
+      // 3. command 생성 및 실행
+      std::unique_ptr<ICommand> command = CommandFactory::create(cmd.opCode, *opHandler);
+      ASSERT_NE(command, nullptr);
+      command->Execute(cmd);
+
+      // 4. 메모리 자동 정리 (RAII)
   }
-
   std::string ReadOutputFile() {
     std::ifstream in("ssd_output.txt");
     std::string line;
