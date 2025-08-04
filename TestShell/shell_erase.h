@@ -3,8 +3,8 @@
 #include "ishell_command.h"
 #include <string>
 #include <vector>
-
-#define CONSOLE_TEST false
+#include "logger.h"
+#define CONSOLE_TEST true
 
 class Erase {
 public:

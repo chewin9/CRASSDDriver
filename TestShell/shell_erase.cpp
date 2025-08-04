@@ -92,6 +92,8 @@ void ShellErase::performEraseToSSD(int index, int size) {
 	executor_->Process(cmdLine);
 
 #if(CONSOLE_TEST)
+	std::string log = "(" + std::to_string(index) + ", " + std::to_string(size) + ")\n";
+	Logger::getInstance().print(__FUNCTION__, log);
 	std::cout << "(" << index << ", " << size << ")\n";
 #endif
 }
