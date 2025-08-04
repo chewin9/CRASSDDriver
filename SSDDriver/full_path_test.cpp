@@ -195,3 +195,21 @@ TEST_F(SSDCommandTest, Run_WriteThenRead_ReturnsWrittenValue) {
 
     EXPECT_EQ(ReadOutputFile(), "0xDEADBEEF");
 }
+
+TEST_F(SSDCommandTest, Run_WriteThenRead_ZeroVal) {
+    CommandParser parser;
+    FileIO fileio;
+    CommandRunner runner(parser, fileio);
+
+    const char* write_argv[] = { "prog", "W", "0", "0x00000000" };
+    runner.Run(4, const_cast<char**>(write_argv));
+}
+
+TEST_F(SSDCommandTest, Run_WriteThenReadWithErrorFlag) {
+    CommandParser parser;
+    FileIO fileio;
+    CommandRunner runner(parser, fileio);
+
+    const char* write_argv[] = { "prog", "W", "-1", "0x00000000" };
+    runner.Run(4, const_cast<char**>(write_argv));
+}
