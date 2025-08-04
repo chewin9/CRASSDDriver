@@ -45,14 +45,14 @@ bool PartialLBAWrite::Run(IProcessExecutor* exe, IFile* file)
 
 	PrintScriptEnter();
 
-	for (int loopcount = 0; loopcount < MAX_LOOP_COUNT; loopcount++)
+	for (unsigned int loopcount = 0; loopcount < MAX_LOOP_COUNT; loopcount++)
 	{
-		for (int areacount = 0; areacount < MAX_TEST_AREA; areacount++)
+		for (unsigned int areacount = 0; areacount < MAX_TEST_AREA; areacount++)
 		{
 			accessor.WriteBlock(exe, areacount, 1, std::stoul(value_list[areacount], nullptr, HEX));
 		}
 
-		for (int areacount = 0; areacount < MAX_TEST_AREA; areacount++)
+		for (unsigned int areacount = 0; areacount < MAX_TEST_AREA; areacount++)
 		{
 			IsPass = IsPass && accessor.ReadCompare(exe, file, areacount, 1, std::stoul(value_list[areacount], nullptr, HEX));
 		}
@@ -125,7 +125,7 @@ bool EraseAndWriteAging::Run(IProcessExecutor* exe, IFile* file) {
 }
 
 bool TestScriptFactory::isMatch(std::string input, std::string scriptname) {
-	int pos;
+	size_t pos;
 	if((pos = input.find('_')) == std::string::npos) return false;
 
 	if (pos == input.size() - 1)

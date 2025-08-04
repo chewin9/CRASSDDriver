@@ -20,7 +20,6 @@ public:
 	}
 
 	virtual bool Run(IProcessExecutor* exe, IFile* file) = 0;
-	std::string GetName();
 
 protected:
 	std::string m_name = nullptr;
