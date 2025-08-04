@@ -8,6 +8,7 @@
 #include "command_buffer.h"
 #include "command_factory.h"
 #include "command_parser.h"
+#include "command_runner.h"
 #include "file_io.h"
 #include "ssd_operation_handler.h"
 
@@ -161,7 +162,8 @@ TEST_F(SSDCommandTest, RandomCommandExecution_MixedOps) {
                                                     {"R", "56"},
                                                     {"R", "70"},
                                                     {"E", "62", "9"},
-                                                    {"E", "10", "10"}};
+                                                    {"E", "10", "10"},
+                                                    {"F"} };
 
   for (const auto& cmdArgs : commands) {
     std::vector<std::string> args = {"./SSDDriver.exe"};
@@ -175,4 +177,39 @@ TEST_F(SSDCommandTest, RandomCommandExecution_MixedOps) {
       std::cout << "Read LBA " << cmd.lba << " ¡æ " << result << std::endl;
     }
   }
+}
+
+TEST_F(SSDCommandTest, Run_WriteThenRead_ReturnsWrittenValue) {
+    CommandParser parser;
+    FileIO fileio;
+    CommandRunner runner(parser, fileio);
+
+    const char* write_argv[] = { "prog", "W", "5", "0xDEADBEEF" };
+    runner.Run(4, const_cast<char**>(write_argv));
+
+    const char* read_argv[] = { "prog", "R", "5" };
+    runner.Run(3, const_cast<char**>(read_argv));
+
+    const char* erase_argv[] = { "prog", "E", "5", "1" };
+    runner.Run(4, const_cast<char**>(erase_argv));
+
+    EXPECT_EQ(ReadOutputFile(), "0xDEADBEEF");
+}
+
+TEST_F(SSDCommandTest, Run_WriteThenRead_ZeroVal) {
+    CommandParser parser;
+    FileIO fileio;
+    CommandRunner runner(parser, fileio);
+
+    const char* write_argv[] = { "prog", "W", "0", "0x00000000" };
+    runner.Run(4, const_cast<char**>(write_argv));
+}
+
+TEST_F(SSDCommandTest, Run_WriteThenReadWithErrorFlag) {
+    CommandParser parser;
+    FileIO fileio;
+    CommandRunner runner(parser, fileio);
+
+    const char* write_argv[] = { "prog", "W", "-1", "0x00000000" };
+    runner.Run(4, const_cast<char**>(write_argv));
 }

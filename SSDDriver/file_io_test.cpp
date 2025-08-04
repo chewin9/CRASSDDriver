@@ -215,6 +215,17 @@ TEST_F(FileIOMockTest, Write_WithErrorFlag_WritesErrorOnly) {
   handler.WriteAndErase(pc);
 }
 
+TEST_F(FileIOMockTest, InitAndErasebuffer) {
+    pc = { "W", 1, "", true, 0 };
+
+    EXPECT_CALL(mock, WriteValueToOutputFile("ERROR")).Times(1);
+    EXPECT_CALL(mock, LoadDataFromInput()).Times(0);
+    EXPECT_CALL(mock, InitBufferDir()).Times(0);
+    EXPECT_CALL(mock, EraseBufferDir()).Times(0);
+
+    handler.WriteAndErase(pc);
+}
+
 TEST_F(FileIOMockTest, Read_ValueExists_WritesValue) {
   pc = {"R", 7, "", false, 0};
 
