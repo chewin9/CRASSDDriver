@@ -38,8 +38,6 @@ public:
 };
 
 
-
-#if (CONSOLE_TEST)
 TEST_F(ShellEraseTestFixture, TSErase01) {
 	shellErase->Run("erase 5 10");
 	checkExpectedConsoleOutput("(5, 10)\n");
@@ -89,4 +87,3 @@ TEST_F(ShellEraseTestFixture, TSInvalidErase05) {
 	shellErase->Run("erase 0 0xA");
 	checkExpectedConsoleOutput("INVALID PARAMETER\n");
 }
-#endif
