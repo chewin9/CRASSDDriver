@@ -17,10 +17,6 @@ TestScriptRunner::TestScriptRunner(IProcessExecutor* exe, IFile* _file) : execut
 #endif
 }
 
-std::string TestScript::GetName() {
-	return m_name;
-}
-
 std::shared_ptr<TestScript> TestScriptRunner::getScript(const std::string& commandLine) {
 	return TestScriptFactory::getInstance().createTestScript(commandLine);
 }
