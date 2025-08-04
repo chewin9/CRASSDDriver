@@ -47,47 +47,26 @@ bool PartialLBAWrite::Run(IProcessExecutor* exe, IFile* file)
 
 	for (int loopcount = 0; loopcount < MAX_LOOP_COUNT; loopcount++)
 	{
-		PartialBlockWrite(exe);
-
-		IsPass = GetPartialReadAndCompareResult(exe, file);
-
-		if (IsPass == false) break;
-	}
-
-	PrintScriptExit(IsPass);
-
-	return IsPass;
-}
-
-bool PartialLBAWrite::GetPartialReadAndCompareResult(IProcessExecutor* exe, IFile* file)
-{
-	bool IsPass = true;
-	CommandBuilder command;
-
-	PRINT("");
-
-	for (int readcount = 0; readcount < MAX_TEST_AREA; ++readcount) {
-		exe->Process(command.makeReadCommand(readcount));
-		try {
-			IsPass = IsPass && (stoul(file->ReadOutputFile("ssd_output.txt").substr(2, 10)) == std::stoul(value_list[readcount], nullptr, HEX));
+		for (int areacount = 0; areacount < MAX_TEST_AREA; areacount++)
+		{
+			accessor.WriteBlock(exe, areacount, 1, std::stoul(value_list[areacount], nullptr, HEX));
 		}
-		catch (std::exception e) {
-			PRINT("Exception");
+
+		for (int areacount = 0; areacount < MAX_TEST_AREA; areacount++)
+		{
+			IsPass = IsPass && accessor.ReadCompare(exe, file, areacount, 1, std::stoul(value_list[areacount], nullptr, HEX));
+		}
+
+		if (IsPass == false) 
+		{
+			PrintScriptExit(false);
 			return false;
 		}
 	}
 
-	PRINT(((IsPass) ? "PASS" : "FAIL"));
-	return IsPass;
-}
-
-void PartialLBAWrite::PartialBlockWrite(IProcessExecutor* exe)
-{
-	CommandBuilder command;
-	for (int writecount = 0; writecount < MAX_TEST_AREA; writecount++)
-	{
-		exe->Process(command.makeWriteCommand(writecount, std::stoul(value_list[writecount], nullptr, HEX)));
-	}
+	PRINT("Pass");
+	PrintScriptExit(true);
+	return true;
 }
 
 bool WriteReadAging::Run(IProcessExecutor* exe, IFile* file) {

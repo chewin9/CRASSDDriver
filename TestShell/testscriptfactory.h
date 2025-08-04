@@ -16,9 +16,6 @@ public:
 private:
 	const unsigned int MAX_LOOP_COUNT = 30;
 	const unsigned int MAX_TEST_AREA = 5;
-
-	bool GetPartialReadAndCompareResult(IProcessExecutor* exe, IFile* file);
-	void PartialBlockWrite(IProcessExecutor* exe);
 };
 
 class WriteReadAging : public TestScript {
