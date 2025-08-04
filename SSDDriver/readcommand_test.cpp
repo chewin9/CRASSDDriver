@@ -20,19 +20,19 @@ class ReadCommandFixture : public Test {
 TEST_F(ReadCommandFixture, NormalRead) {
   for (int normalLba = 0; normalLba < MAX_LBA; normalLba++) {
     ParsedCommand cmdInfo = {"R", normalLba};
-    CommandBuffer cmdbuffer{fileio};
+    CommandBuffer cmdbuffer{nullptr};
     SsdOperationHandler opHandler(fileio, cmdbuffer);
     ReadCommand rc(opHandler);
-    EXPECT_TRUE(rc.Execute(cmdInfo));
+    rc.Execute(cmdInfo);
   }
 }
 
 TEST_F(ReadCommandFixture, AbNormalRead) {
   for (int normalLba = 0; normalLba < MAX_LBA; normalLba++) {
     ParsedCommand cmdInfo = {"R", normalLba, NO_NEED_VALUE, ENABLE_ERROR_FLAG};
-    CommandBuffer cmdbuffer{fileio};
+    CommandBuffer cmdbuffer{nullptr};
     SsdOperationHandler opHandler(fileio, cmdbuffer);
     ReadCommand rc(opHandler);
-    EXPECT_FALSE(rc.Execute(cmdInfo));
+    rc.Execute(cmdInfo);
   }
 }

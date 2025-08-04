@@ -1,24 +1,26 @@
-#include "ICommand.h"
-#include "command_factory.h"
+// main.cpp (클라이언트 코드)
+#include "command_runner.h"
 #include "command_parser.h"
-#include "gmock/gmock.h"
+#include "file_io.h"
+#include "command_buffer.h"
+#include "ssd_operation_handler.h"
+#include "command_creator.h"
 
 #if (_DEBUG)
+#include "gmock/gmock.h"
 int main(void) {
-  ::testing::InitGoogleMock();
-  return RUN_ALL_TESTS();
+    ::testing::InitGoogleMock();
+    return RUN_ALL_TESTS();
 }
 #else
 int main(int argc, char* argv[]) {
-  CommandParser parser;
-  FileIO fileio;
+    CommandParser parser;
+    FileIO fileio;
 
-  ParsedCommand cmdInfo = parser.ParseCommand(argc, argv);
-  CommandBuffer cmdBuffer{fileio};
-  SsdOperationHandler opHandler(fileio, cmdBuffer);
-  ICommand* command = CommandFactory::create(cmdInfo, opHandler);
-  if (command == nullptr) return 0;
-  command->Execute(cmdInfo);
-  delete command;
+    CommandRunner runner(parser, fileio);
+
+    runner.Run(argc, argv);
+
+    return 0;
 }
 #endif

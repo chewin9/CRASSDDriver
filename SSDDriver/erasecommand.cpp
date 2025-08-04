@@ -1,7 +1,11 @@
 #include "erasecommand.h"
 
-bool EraseCommand::Execute(const ParsedCommand& cmdInfo) {
+#include "command_factory.h"
 
-	bool result = opHandler.Erase(cmdInfo);
-	return result;
+void EraseCommand::Execute(const ParsedCommand& cmdInfo) {
+	opHandler.WriteAndErase(cmdInfo);
+}
+
+std::unique_ptr<ICommand> CreateEraseCommand(SsdOperationHandler& h) {
+	return std::make_unique<EraseCommand>(h);
 }

@@ -6,19 +6,26 @@
 #include <string>
 #include <vector>
 
-void CommandBuffer::InitializeBuffer() {
-  writeCommandList = {};
-  eraseCommandList = {};
-  bufferList = {};
-}
-void CommandBuffer::RegisterBuffer(const ParsedCommand &cmdInfo) {
-  InitializeBuffer();
-  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
-  bufferList = ParsingStringtoBuf(bufferArr);
+CommandBuffer::CommandBuffer(std::unique_ptr<ICommandOptimizer> optimizer)
+    : optimizer(std::move(optimizer)) {}
 
+void CommandBuffer::OptimizeBuffer(const ParsedCommand& cmdInfo) {
+    ParsedCommand convertedCmd = cmdInfo;
+    ConvertWriteZeroValToErase(convertedCmd);
+
+    optimizer->Optimize(cmdInfo, bufferList);
+}
+
+void CommandBuffer::InitializeBuffer(const vector<string>& currentBuffer) {
+
+  bufferList = ParsingStringtoBuf(currentBuffer);
+}
+
+vector<string> CommandBuffer::RegisterBuffer(
+    const ParsedCommand &cmdInfo, const vector<string> &currentBuffer) {
+  InitializeBuffer(currentBuffer);
   OptimizeBuffer(cmdInfo);
-  bufferArr = ParsingBuftoString(bufferList);
-  fileio.ChangeFileName(bufferArr);
+  return ParsingBuftoString(bufferList);
 }
 
 void CommandBuffer::ConvertWriteZeroValToErase(ParsedCommand &cmdInfo) {
@@ -29,127 +36,20 @@ void CommandBuffer::ConvertWriteZeroValToErase(ParsedCommand &cmdInfo) {
   }
 }
 
-void CommandBuffer::DivideWriteAndEraseBuffer() {
-  for (auto i : bufferList) {
-    if (i.opCode == WRITE_OPCODE)
-      writeCommandList.push_back(i);
-    else if (i.opCode == ERASE_OPCODE)
-      eraseCommandList.push_back(i);
-  }
-}
-
-void CommandBuffer::MergeWriteAndEraseBuffer(ParsedCommand cmdInfo) {
-  eraseCommandList.splice(eraseCommandList.end(), writeCommandList);
-  bufferList = eraseCommandList;
-}
-
-void CommandBuffer::OptimizeWriteCommand(ParsedCommand &cmdInfo) {
-  for (auto it = writeCommandList.begin(); it != writeCommandList.end();) {
-    if (it->lba == cmdInfo.lba) {
-      it->value = cmdInfo.value;
-      eraseCommandList.splice(eraseCommandList.end(), writeCommandList);
-      bufferList = eraseCommandList;
-      return;
-    }
-    ++it;
-  }
-  writeCommandList.push_back(cmdInfo);
-}
-
-void CommandBuffer::IgnoreWrite(int& mergedStart, int& mergedEnd) {
-  for (auto it = writeCommandList.begin(); it != writeCommandList.end();) {
-    int writeLba = it->lba;
-    if (writeLba >= mergedStart && writeLba <= mergedEnd) {
-      it = writeCommandList.erase(it);
-    } else {
-      ++it;
-    }
-  }
-}
-
-bool CommandBuffer::MergeErase(int& mergedStart, int& mergedEnd) {
-  bool flag = false;
-  for (auto it = eraseCommandList.begin(); it != eraseCommandList.end();) {
-    if ((it->lba == mergedEnd + 1 || it->lba + it->erase_size == mergedStart ||
-        (it->lba <= mergedStart &&
-         it->lba + it->erase_size - 1 >= mergedStart) ||
-         (it->lba <= mergedEnd && it->lba + it->erase_size - 1 >= mergedEnd)) ||
-        (mergedStart <= it->lba && it->lba <= mergedEnd &&
-         mergedStart <= it->lba + it->erase_size - 1 &&
-         it->lba + it->erase_size - 1 <= mergedEnd)) {
-      mergedStart = std::min(mergedStart, it->lba);
-      mergedEnd = std::max(mergedEnd, it->lba + it->erase_size - 1);
-      it = eraseCommandList.erase(it);
-      flag = true;
-    } 
-    
-    else {
-      ++it;
-    }
-  }
-
-  return flag;
-}
-
-void CommandBuffer::RearrangeMergedErase(int &mergedStart, int &mergedEnd) {
-  int curStart = mergedStart;
-  while (curStart <= mergedEnd) {
-    int curEnd = std::min(curStart + MAX_RANGE - 1, mergedEnd);
-    eraseCommandList.push_back(
-        {"E", curStart, "", false, curEnd - curStart + 1});
-    curStart = curEnd + 1;
-  }
-}
-
-void CommandBuffer::OptimizeEraseCommand(ParsedCommand cmdInfo) {
-  int mergedStart = cmdInfo.lba;
-  int mergedEnd = cmdInfo.lba + cmdInfo.erase_size - 1;
-
-  IgnoreWrite(mergedStart, mergedEnd);
-  bool merged = MergeErase(mergedStart, mergedEnd);
-
-  if (merged) {
-    RearrangeMergedErase(mergedStart, mergedEnd);
-    return;
-  } 
-
-   eraseCommandList.push_back(cmdInfo);
-  
-}
-
-void CommandBuffer::OptimizeBuffer(const ParsedCommand &cmd) {
-  ParsedCommand cmdInfo = cmd;
-  ConvertWriteZeroValToErase(cmdInfo);
-  DivideWriteAndEraseBuffer();
-
-  if (cmdInfo.opCode == WRITE_OPCODE) {
-    OptimizeWriteCommand(cmdInfo);
-    MergeWriteAndEraseBuffer(cmdInfo);
-    return;
-  }
-
-  OptimizeEraseCommand(cmdInfo);
-  MergeWriteAndEraseBuffer(cmdInfo);
-
-  return;
-}
-
-bool CommandBuffer::IsFlushNeeded() {
-  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
-  if (bufferArr.size() >= 5) return true;
+bool CommandBuffer::IsFlushNeeded(const vector<string> &currentBuffer) {
+  if (currentBuffer.size() >= 5) return true;
   return false;
 }
 
-std::list<ParsedCommand> CommandBuffer::GetCommandBuffer() {
-  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
-  std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
+std::list<ParsedCommand> CommandBuffer::GetCommandBuffer(
+    const vector<string> &currentBuffer) {
+  std::list<ParsedCommand> bufferList = ParsingStringtoBuf(currentBuffer);
   return bufferList;
 }
 
-std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo) {
-  std::vector<std::string> bufferArr = fileio.getCommandBuffer();
-
-  std::list<ParsedCommand> bufferList = ParsingStringtoBuf(bufferArr);
+std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo,
+                                      const vector<string> &currentBuffer) {
+  std::list<ParsedCommand> bufferList = ParsingStringtoBuf(currentBuffer);
 
   int readLba = cmdInfo.lba;
   for (auto cmd = bufferList.rbegin(); cmd != bufferList.rend(); ++cmd) {
@@ -168,7 +68,7 @@ std::string CommandBuffer::ReadBuffer(const ParsedCommand &cmdInfo) {
 }
 
 std::list<ParsedCommand> CommandBuffer::ParsingStringtoBuf(
-    std::vector<std::string> &bufferArr) {
+    const std::vector<std::string> &bufferArr) {
   std::list<ParsedCommand> parsedList;
 
   for (const auto &bufferStr : bufferArr) {

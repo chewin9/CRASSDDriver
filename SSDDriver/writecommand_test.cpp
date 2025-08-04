@@ -22,16 +22,16 @@ class WriteCommandFixture : public Test {
 TEST_F(WriteCommandFixture, WriteNewFile) {
   for (int i = 0; i < MAX_VAL_SIZE; i++) {
     ParsedCommand cmdInfo = {"W", normalLba, normalValue, false};
-    CommandBuffer cmdbuffer{fileio};
+    CommandBuffer cmdbuffer(std::move(std::make_unique<WriteCommandOptimizer>()));
     SsdOperationHandler opHandler(fileio, cmdbuffer);
     WriteCommand write_command(opHandler);
-    EXPECT_EQ(true, write_command.Execute(cmdInfo));
+    write_command.Execute(cmdInfo);
   }
 }
 
 TEST_F(WriteCommandFixture, OverwirteNewLBA) {
   ParsedCommand cmdInfo = {"W", normalLba, normalValue, false};
-  CommandBuffer cmdbuffer{fileio};
+  CommandBuffer cmdbuffer(std::move(std::make_unique<WriteCommandOptimizer>()));
   SsdOperationHandler opHandler(fileio, cmdbuffer);
   WriteCommand write_command(opHandler);
   write_command.Execute(cmdInfo);
@@ -45,5 +45,5 @@ TEST_F(WriteCommandFixture, OverwirteNewLBA) {
   new_value = "0x1298CDEF";
   ParsedCommand cmdInfo_new_lba = {"W", new_lba, new_value, false};
   WriteCommand write_command_with_new_lba(opHandler);
-  EXPECT_EQ(true, write_command.Execute(cmdInfo_new_lba));
+  write_command.Execute(cmdInfo_new_lba);
 }

@@ -15,16 +15,14 @@ class SsdOperationHandler {
   void EraseData(const ParsedCommand& cmdInfo);
   void WriteToNand(const ParsedCommand& cmdInfo);
   void EraseFromNand(const ParsedCommand& cmdInfo);
-  bool IsErrorExist(const ParsedCommand& cmdInfo);
   std::string ReadFromNand(const ParsedCommand& cmdInfo);
   void FlushToNand(std::list<ParsedCommand>& bufferList);
-
+  bool IsErrorExist(const ParsedCommand& cmdInfo);
  public:
   SsdOperationHandler(IFileIO& handler, CommandBuffer& cmdBuffer)
       : fileHandler{handler}, cmdBuffer{cmdBuffer} {}
 
-  void Write(const ParsedCommand& cmdInfo);
-  bool Read(const ParsedCommand& cmdInfo);
-  bool Erase(const ParsedCommand& cmdInfo);
+  void WriteAndErase(const ParsedCommand& cmdInfo);
+  void Read(const ParsedCommand& cmdInfo);
   void Flush();
 };

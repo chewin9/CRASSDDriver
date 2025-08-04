@@ -1,46 +1,37 @@
 #include "ssd_operation_handler.h"
 
-void SsdOperationHandler::Write(const ParsedCommand& cmdInfo) {
+void SsdOperationHandler::WriteAndErase(const ParsedCommand& cmdInfo) {
   if (IsErrorExist(cmdInfo)) return;
-
-  if (cmdInfo.erase_size == 0) return;
-
-  if (cmdBuffer.IsFlushNeeded()) {
+  auto currentBuffer = fileHandler.getCommandBuffer();
+  if (cmdBuffer.IsFlushNeeded(currentBuffer)) {
     Flush();
+    currentBuffer.clear();
   }
-  cmdBuffer.RegisterBuffer(cmdInfo);
-  return;
+
+  auto newBuffer = cmdBuffer.RegisterBuffer(cmdInfo, currentBuffer);
+  fileHandler.ChangeFileName(newBuffer);
 }
 
-bool SsdOperationHandler::Read(const ParsedCommand& cmdInfo) {
-  if (IsErrorExist(cmdInfo)) return false;
+void SsdOperationHandler::Read(const ParsedCommand& cmdInfo) {
+  if (IsErrorExist(cmdInfo)) return;
+  auto currentBuffer = fileHandler.getCommandBuffer();
+  std::string value = cmdBuffer.ReadBuffer(cmdInfo, currentBuffer);
 
-  std::string value = cmdBuffer.ReadBuffer(cmdInfo);
   if (value == "") {
     value = ReadFromNand(cmdInfo);
   }
   fileHandler.WriteValueToOutputFile(value);
-  return true;
-}
-
-bool SsdOperationHandler::Erase(const ParsedCommand& cmdInfo) {
-  if (IsErrorExist(cmdInfo)) return false;
-  if (cmdBuffer.IsFlushNeeded()) {
-    Flush();
-  }
-  cmdBuffer.RegisterBuffer(cmdInfo);
-  return true;
 }
 
 void SsdOperationHandler::Flush() {
+  auto currentBuffer = fileHandler.getCommandBuffer();
+  std::list<ParsedCommand> bufferList =
+      cmdBuffer.GetCommandBuffer(currentBuffer);
 
-  std::list<ParsedCommand> bufferList = cmdBuffer.GetCommandBuffer();
   fileHandler.EraseBufferDir();
   fileHandler.InitBufferDir();
   FlushToNand(bufferList);
-
 }
-
 
 void SsdOperationHandler::WriteToNand(const ParsedCommand& cmdInfo) {
   nandData = fileHandler.LoadDataFromInput();
@@ -102,9 +93,9 @@ void SsdOperationHandler::EraseData(const ParsedCommand& cmdInfo) {
 }
 
 bool SsdOperationHandler::IsErrorExist(const ParsedCommand& cmdInfo) {
-  if (cmdInfo.errorFlag) {
-    fileHandler.WriteValueToOutputFile("ERROR");
-    return true;
-  }
-  return false;
+    if (cmdInfo.errorFlag) {
+        fileHandler.WriteValueToOutputFile("ERROR");
+        return true;
+    }
+    return false;
 }

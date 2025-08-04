@@ -11,7 +11,7 @@ using namespace ::testing;
 class EraseCommandFixture : public Test {
  protected:
   FileIO fileIo;
-  CommandBuffer cmdbuffer{fileIo};
+  CommandBuffer cmdbuffer{std::move(std::make_unique<WriteCommandOptimizer>())};
   SsdOperationHandler handler{fileIo, cmdbuffer};
   EraseCommand erase_command{handler};
 
@@ -22,15 +22,15 @@ class EraseCommandFixture : public Test {
 
 TEST_F(EraseCommandFixture, EraseExistingLba_NoErrorFlag_ReturnsTrue) {
   ParsedCommand cmdInfo{"E", validLBA, "", false, eraseSize};
-  EXPECT_TRUE(erase_command.Execute(cmdInfo));
+  erase_command.Execute(cmdInfo);
 }
 
 TEST_F(EraseCommandFixture, EraseNonExistingLba_NoErrorFlag_ReturnsTrue) {
   ParsedCommand cmdInfo{"E", invalidLBA, "", false, eraseSize + 3};
-  EXPECT_TRUE(erase_command.Execute(cmdInfo));
+  erase_command.Execute(cmdInfo);
 }
 
 TEST_F(EraseCommandFixture, EraseAnyLba_WithErrorFlag_ReturnsFalse) {
   ParsedCommand cmdInfo{"E", validLBA, "", true, eraseSize};
-  EXPECT_FALSE(erase_command.Execute(cmdInfo));
+  erase_command.Execute(cmdInfo);
 }
